@@ -230,12 +230,12 @@ def enrich(
                     return failure("invalid_response")
                 else:
                     payload = bytearray()
-                    for chunk in response.iter_bytes(chunk_size=8192):
+                    for chunk in response.iter_bytes():
                         if clock() >= deadline:
                             return failure("deadline_exceeded")
-                        payload.extend(chunk)
-                        if len(payload) > MAX_RESPONSE_BYTES:
+                        if len(payload) + len(chunk) > MAX_RESPONSE_BYTES:
                             return failure("response_too_large")
+                        payload.extend(chunk)
                     result = decode_comparison(
                         event,
                         bytes(payload),

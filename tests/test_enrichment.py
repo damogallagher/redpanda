@@ -488,3 +488,25 @@ def test_stream_limit_stops_reading_and_closes_response():
     result = fetch(lambda _: httpx.Response(200, stream=stream))
     assert result.status == "response_too_large"
     assert stream.count == 33 and stream.closed
+
+
+def test_slow_trickle_checks_deadline_before_buffer_fills():
+    timer = FakeTime()
+
+    class SlowStream(httpx.SyncByteStream):
+        count = 0
+        closed = False
+
+        def __iter__(self):
+            for _ in range(100):
+                timer.now += 4
+                self.count += 1
+                yield b"x"
+
+        def close(self):
+            self.closed = True
+
+    stream = SlowStream()
+    result = fetch(lambda _: httpx.Response(200, stream=stream), timer)
+    assert result.status == "deadline_exceeded"
+    assert stream.count == 5 and stream.closed

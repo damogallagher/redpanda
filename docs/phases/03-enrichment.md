@@ -31,7 +31,7 @@ To use the same uv version as CI without replacing a global installation:
 make verify-phase-3 UV='uvx --from uv==0.13.3 uv'
 ```
 
-Expected: lint/format/strict types, configuration checks, **213 unit tests**, **10 integration/configuration tests**, **40 native Connect tests**, a container build/configuration check, and offline fixture inspection pass. Python application coverage is **100% lines and branches**, with zero omissions or exclusions. Shell and Connect behavior has separate tests; it is not included in the Python percentage.
+Expected: lint/format/strict types, configuration checks, **214 unit tests**, **10 integration/configuration tests**, **40 native Connect tests**, a container build/configuration check, and offline fixture inspection pass. Python application coverage is **100% lines and branches**, with zero omissions or exclusions. Shell and Connect behavior has separate tests; it is not included in the Python percentage.
 
 Expected final line:
 
@@ -117,7 +117,7 @@ Omitting `--fixture-response` selects the real API. The event must follow [edit-
 |---|---|
 | Request identity | Fixed HTTPS English Wikipedia endpoint; positive, distinct revision IDs; explicit from/to direction; redirects disabled; descriptive User-Agent; `maxlag=5` |
 | Response identity | Both returned revision IDs must match the request, both namespaces must be article namespace `0`, and both page IDs must match. Renames are retained as canonical from/to titles |
-| Response bytes | Maximum 256 KiB, streamed in 8 KiB chunks. Request identity encoding and reject unrequested compression before decoding. Stop/close on overflow; `response_too_large` marks content truncated |
+| Response bytes | Maximum 256 KiB, streamed as network chunks arrive, with deadline checks before buffering each chunk. Request identity encoding and reject unrequested compression before decoding. Stop/close on overflow; `response_too_large` marks content truncated |
 | Evidence | Whole hunks, at most 4,096 characters per side, 20 hunks, and 16,000 characters total. Oversized/excess hunks are omitted and `evidence_limit` is explicit, even if some hunks remain |
 | Markup | Decode entities once; preserve wikitext, spaces, citations, and before/after direction. Accept only supported table structure and inline formatting; nesting capped at 16. Unsupported/malformed markup becomes `unsupported_diff` |
 | Missing/deleted | `nosuchrevid`, `baddiff`, and missing-content API errors become `revision_unavailable`; do not pretend to distinguish deletion from permission restrictions |
