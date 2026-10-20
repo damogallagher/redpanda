@@ -91,3 +91,13 @@ Final cleanup inspection found the optional fixture server was excluded by Compo
 Review [PR #6](https://github.com/damogallagher/redpanda/pull/6). The clean user checkout is on `phase/02-ingestion`; ignored `.env` and existing demo data were preserved. All 91 relative documentation links resolve, the original assignment checksum matches, and the final external cleanup inspection found no disposable Phase 2 fixture containers or volumes.
 
 GitHub Ubuntu 24.04 CI passed on `621802f` in 1 minute 42 seconds ([run and artifacts](https://github.com/damogallagher/redpanda/actions/runs/39450490259)). The closing commit records this result and the final visible response only. PR #6 is left open for Damien; no Phase 3 work started.
+
+## 20 October 2026 — Local/frontier startup follow-up
+
+Damien requested separate scripts and private environment profiles, copied over `.env` on selection. Added `scripts/start-local.sh`, `scripts/start-frontier.sh`, their shared implementation, and complete secret-free `.env.local.example` / `.env.frontier.example` templates to the open Phase 2 PR #6. Private profile files stay ignored and outside the Docker build context.
+
+The launchers validate with Compose and the existing configuration CLI before stopping the old stack, retain all named volumes, atomically install a private `.env`, and start services in the background. Profile selection clears conflicting inherited settings, never executes dotenv as shell, and uses a lock against simultaneous switches. Failed preflight/shutdown keeps the old `.env`; failed startup keeps the selected profile for retry.
+
+Implementation/tests `d550e78` passed the cumulative gate: 99 unit tests (13 new launcher checks), 10 integration/configuration tests (two new profile contracts), 40 native Connect tests, 100% Python line and branch coverage with no exclusions. The focused `make test-startup` target passed all 15 cases. See [startup guide](startup.md) and [evidence](evidence/startup-launchers.json).
+
+Created Damien's private profiles from his existing settings, preserving the project/database configuration and copying the existing API key into `.env.frontier` without displaying it. Ran local → frontier → local successfully: frontier ran no Ollama, Connect was ready in both modes, the database migration and downloaded model IDs survived, and local mode is running again. No paid model requests were made. The three private environment files have mode 0600 and are ignored by Git; startup logs were checked for absence of the API key.

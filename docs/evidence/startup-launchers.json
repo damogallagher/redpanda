@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-20",
+  "tested_commit": "d550e78a6becd3593daaa7723bfa0f5937f40942",
+  "command": "make verify-phase-2 UV='uvx --from uv==0.13.3 uv'",
+  "exit_status": 0,
+  "focused_command": "make test-startup UV='uvx --from uv==0.13.3 uv'",
+  "focused_result": {
+    "passed": 15,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 2.871
+  },
+  "unit": {
+    "passed": 99,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 2.789
+  },
+  "integration_configuration": {
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 46.4
+  },
+  "native_connect": {
+    "passed": 40,
+    "failed": 0
+  },
+  "coverage": {
+    "covered_lines": 176,
+    "missing_lines": 0,
+    "excluded_lines": 0,
+    "covered_branches": 32,
+    "missing_branches": 0,
+    "line_percent": 100,
+    "branch_percent": 100
+  },
+  "coverage_scope": "All first-party Python application modules. Shell launchers have behavior tests, not Python coverage.",
+  "checks": [
+    "shell syntax",
+    "13 real launcher subprocess tests with a recording Docker boundary",
+    "2 real Compose profile contracts",
+    "all Phase 2 checks, including container packaging and native Connect lint/tests"
+  ],
+  "manual_switch": {
+    "project": "redpanda",
+    "local_started": true,
+    "local_env_matches_profile": true,
+    "frontier_started": true,
+    "frontier_env_matches_profile": true,
+    "frontier_running_services": [
+      "connect",
+      "postgres",
+      "redpanda"
+    ],
+    "frontier_connect_ready": true,
+    "database_migration_preserved_after_frontier": true,
+    "live_model_requests": 0,
+    "local_restored": true,
+    "local_model_initialized": true,
+    "local_connect_ready": true,
+    "database_migration_preserved_after_restore": true,
+    "downloaded_model_ids_preserved": true,
+    "profile_permissions": "0600",
+    "secrets_absent_from_startup_logs": true,
+    "private_frontier_key_retained": true,
+    "tested_commit": "3732492",
+    "note": "Launcher scripts are byte-identical in the cumulative verified commit."
+  },
+  "limitations": [
+    "Hosted settings were validated without a paid authentication/model request.",
+    "Startup success precedes completion of a first-time local model download.",
+    "A failed up retains the selected .env for retry; there is no automatic rollback."
+  ],
+  "focused_tested_commit": "3732492"
+}

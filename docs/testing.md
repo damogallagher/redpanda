@@ -28,13 +28,14 @@ CI runs deterministic checks on every PR with least-privilege permissions and pi
 
 ## Command interface
 
-Available now: `make check`, `make test-unit`, `make test-foundation`, `make test-integration`, `make test-connect`, `make test-container`, `make verify-phase-1`, `make verify-phase-2`, `make smoke-ingestion`, and `make smoke-model`. Full end-to-end, evaluation, and later phase targets remain planned.
+Available now: `make check`, `make test-unit`, `make test-foundation`, `make test-integration`, `make test-connect`, `make test-startup`, `make test-container`, `make verify-phase-1`, `make verify-phase-2`, `make smoke-ingestion`, and `make smoke-model`. Full end-to-end, evaluation, and later phase targets remain planned.
 
 - `make check`: formatting, lint, types, and applicable config checks (unit coverage is a separate target).
 - `make test-unit`: deterministic unit suite with 100% line/branch coverage enforcement.
 - `make test-connect`: native Connect processor tests and configuration lint.
 - `make test-foundation`: the four Phase 1 integration checks only.
-- `make test-integration`: all eight deterministic real Redpanda/Postgres/HTTP ingestion tests.
+- `make test-integration`: all ten deterministic real Redpanda/Postgres/HTTP ingestion and Compose profile checks.
+- `make test-startup`: 13 launcher behavior tests plus two actual Compose profile contracts.
 - `make smoke-ingestion`: opt-in 30-second public-source observation; excluded from CI.
 - `make test-e2e`: deterministic fixture-to-API verification.
 - `make evaluate`: versioned live-model evaluation on development or held-out data, clearly selected.

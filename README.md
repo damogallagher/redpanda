@@ -4,6 +4,7 @@ Wikipedia edit triage in Python, using Redpanda and a selectable local or hosted
 
 **Phase 2 adds working ingestion.** Redpanda Connect reads Wikipedia changes, filters and validates them, and publishes inspectable edit/error records. Phase 1 provides the broker, database, model adapters, and schema contracts. Revision enrichment, multi-step reasoning, result storage, and the API arrive in later phases; there is no review queue yet.
 
+- [Start or switch local/frontier mode](docs/startup.md)
 - [Original assignment, unchanged](docs/assignment/fde-take-home-exercise.md)
 - [Phase 2: ingestion, exact test commands, and live evidence](docs/phases/02-ingestion.md)
 - [Phase 1: what changed, how to test, and evidence](docs/phases/01-foundation.md)
@@ -29,7 +30,7 @@ Expected final line:
 PASS: Phase 2 ingestion checks. Live source smoke is a separate check.
 ```
 
-Expected: **86 Python unit tests, 8 integration tests, 40 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make verify-phase-2 UV='uvx --from uv==0.13.3 uv'`.
+Expected: **99 unit tests (including launcher checks), 10 integration/configuration tests, 40 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make verify-phase-2 UV='uvx --from uv==0.13.3 uv'`.
 
 To demonstrate live ingestion without a model or key, run `make smoke-ingestion` (about 40 seconds with cached images). It samples the public stream for 30 seconds in an isolated project, prints validated topic records and counts, and cleans up. See [Phase 2](docs/phases/02-ingestion.md) for exact expected fixture outputs, interactive `rpk` inspection, metrics, cleanup, and reconnect limitations.
 
@@ -37,14 +38,22 @@ To demonstrate live ingestion without a model or key, run `make smoke-ingestion`
 
 The default local model is **Qwen2.5 7B** (about 4.7 GB of weights). Allow approximately 12 GB free disk for the local setup and 12 GiB of Docker memory; the recorded run used a 32 GiB Apple Silicon machine. These are practical starting allocations, not validated minimums. Use hosted inference on smaller machines.
 
-If `.env` does not exist, create it without overwriting existing credentials:
+Create the private profiles once on a fresh clone, preserving existing files:
 
 ```sh
-test -f .env || cp .env.example .env
-docker compose up
+test -f .env.local || (umask 077; cp .env.local.example .env.local)
+test -f .env.frontier || (umask 077; cp .env.frontier.example .env.frontier)
 ```
 
-`topics` and `model-init` are one-time initialization services: **exit code 0 is success**. Wait for `model-init` to report `success`. First startup downloads model weights; later starts reuse the persistent volume. Redpanda, Postgres, Connect, and Ollama remain running. Connect starts ingesting with deterministic 1% selection; it makes no model calls. In a second terminal:
+Start local mode:
+
+```sh
+./scripts/start-local.sh
+```
+
+The script validates `.env.local`, stops the previous mode while retaining volumes, copies it over `.env`, and starts the stack in the background. Edit `.env.local` for lasting local settings. See the [startup guide](docs/startup.md) for switching, failure behavior, and focused tests.
+
+`topics` and `model-init` are one-time initialization services: **exit code 0 is success**. Wait for `model-init` to report `success`. First startup downloads model weights; later starts reuse the persistent volume. Redpanda, Postgres, Connect, and Ollama remain running. Connect starts ingesting with deterministic 1% selection; it makes no model calls. After model initialization completes:
 
 ```sh
 make smoke-model
@@ -65,25 +74,13 @@ Expected: four topics (`edits`, `results`, `ingest-errors`, `processing-errors`)
 
 The first supported hosted provider is OpenAI, using its Chat Completions API. A user-supplied key and provider billing are required. The model name is configurable; **GPT-6.1 Sol** was verified in the smoke check. Other models/providers are not automatically guaranteed compatible.
 
-When switching modes, first run `docker compose down` using the old settings; this stops containers and preserves volumes. Edit your untracked `.env` to set:
-
-```dotenv
-COMPOSE_FILE=compose.infrastructure.yml
-LLM_BACKEND=openai
-LLM_MODEL=gpt-6.1-sol
-LLM_BASE_URL=https://api.openai.com/v1
-OPENAI_API_KEY=your-own-key
-LLM_TIMEOUT_SECONDS=120
-LLM_MAX_TOKENS=1024
-```
-
-Then:
+Edit `.env.frontier` and set your `OPENAI_API_KEY`. Its template already selects `COMPOSE_FILE=compose.infrastructure.yml`, `LLM_BACKEND=openai`, `LLM_MODEL=gpt-6.1-sol`, and `LLM_BASE_URL=https://api.openai.com/v1`. Then:
 
 ```sh
-docker compose up
+./scripts/start-frontier.sh
 ```
 
-In another terminal:
+The script validates the profile, stops the current stack without deleting volumes, copies `.env.frontier` over `.env`, and starts the hosted configuration. Startup makes no paid model request. To explicitly verify a real request afterward:
 
 ```sh
 make smoke-model
@@ -99,7 +96,7 @@ For native-host Ollama, install/start Ollama and pull your chosen model on the h
 ollama pull qwen2.5:7b
 ```
 
-Set these values in `.env`, then use the same `docker compose up` / `make smoke-model` commands:
+This optional manual path uses native-host Ollama rather than the bundled-local launcher. Set these values in `.env`, then use `docker compose up` / `make smoke-model`:
 
 ```dotenv
 COMPOSE_FILE=compose.infrastructure.yml
@@ -110,15 +107,15 @@ LLM_BASE_URL=http://host.docker.internal:11434
 
 The native server must accept connections from Docker; the Compose tool container supplies a host-gateway mapping. If it refuses connections, check the server's listen address and firewall. Native-host inference is an optional path; the recorded local smoke used containerized Ollama. Changing a model requires its own quality check in later phases.
 
-To change the model managed by Docker, use `COMPOSE_FILE=docker-compose.yml`, `LLM_BASE_URL=http://ollama:11434`, and set **both** `OLLAMA_MODEL` (download) and `LLM_MODEL` (request) to the same tag. The local adapter disables thinking where supported and requests deterministic sampling; output shape still requires later application validation. Image digests and Python dependencies are pinned. Model tags can move: record the actual model digest for evaluation runs.
+To change the model managed by the local launcher, edit `.env.local`: keep `COMPOSE_FILE=docker-compose.yml` and `LLM_BASE_URL=http://ollama:11434`, and set **both** `OLLAMA_MODEL` (download) and `LLM_MODEL` (request) to the same tag. Rerun `./scripts/start-local.sh`. The local adapter disables thinking where supported and requests deterministic sampling; output shape still requires later application validation. Image digests and Python dependencies are pinned. Model tags can move: record the actual model digest for evaluation runs.
 
 ## Stop and resume
 
 ```sh
-docker compose down
+docker compose --profile tools down --remove-orphans
 ```
 
-This preserves database, broker, and model volumes. Restart with `docker compose up`. Automated infrastructure tests clean up their own separate volumes. Do not use `down --volumes` on a demo stack whose data or downloaded weights you want to keep.
+This preserves database, broker, and model volumes. Restart with `./scripts/start-local.sh` or `./scripts/start-frontier.sh`; each selects and copies its own profile. Automated infrastructure tests clean up their own separate volumes. Do not use `down --volumes` on a demo stack whose data or downloaded weights you want to keep.
 
 This is the assignment's single-node development deployment: internal broker/database networking, loopback diagnostics, and a development database password. It is not an authenticated, highly available production deployment. The phase records distinguish verified behavior from later operational work.
 

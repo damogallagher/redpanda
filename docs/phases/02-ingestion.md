@@ -2,7 +2,7 @@
 
 Status: implemented; awaiting Damien's review and merge in [PR #6](https://github.com/damogallagher/redpanda/pull/6).
 Branch: `phase/02-ingestion`, from merged PR #5 at `cf2cf4c`.
-Implementation and cleanup tested: `0b9e370`. Later commits add documentation/evidence only.
+Ingestion and cleanup tested: `0b9e370`. The later [startup follow-up](../startup.md), tested at `d550e78`, adds launchers and profile tests; original ingestion evidence remains unchanged.
 
 ## What this phase adds
 
@@ -74,20 +74,20 @@ If your installed uv differs, use the exact version without changing your global
 make verify-phase-2 UV='uvx --from uv==0.13.3 uv'
 ```
 
-Expected: 86 unit tests, 8 integration tests, 40 native Connect tests, zero missing/excluded application lines, zero missing branches, successful lint/types/configuration/container checks, and:
+Expected now: 99 unit tests (including launcher behavior), 10 integration/configuration tests, 40 native Connect tests, zero missing/excluded application lines, zero missing branches, successful lint/types/configuration/container checks, and:
 
 ```text
 PASS: Phase 2 ingestion checks. Live source smoke is a separate check.
 ```
 
-The eight integration tests include the four Phase 1 checks (including the PostgreSQL maintenance upgrade) and four ingestion checks. Allow roughly one minute with cached images; first downloads/builds take longer. Reports are written to ignored `reports/` and uploaded by CI as `phase-2-test-reports`.
+The ten integration/configuration tests include the four Phase 1 checks (including the PostgreSQL maintenance upgrade), four ingestion checks, and two startup-profile contract checks. The [startup follow-up](../startup.md) adds local/frontier launchers and records its own verification evidence. Allow roughly one minute with cached images; first downloads/builds take longer. Reports are written to ignored `reports/` and uploaded by CI as `phase-2-test-reports`.
 
 For focused checks:
 
 ```sh
 make test-connect       # native processor tests and config lint; Docker only
-make test-integration   # all 8 real infrastructure/ingestion tests
-make test-unit          # 86 tests, 100% Python line AND branch coverage
+make test-integration   # all 10 infrastructure/ingestion/profile checks
+make test-unit          # 99 tests, 100% Python line AND branch coverage
 make verify-phase-1     # still checks the foundation only
 ```
 

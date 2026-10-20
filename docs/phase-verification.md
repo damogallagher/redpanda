@@ -1,6 +1,6 @@
 # Verify each phase
 
-**Current status: Phases 1 and 2 are implemented.** Run `make verify-phase-2` for cumulative deterministic checks. Use [Phase 2](phases/02-ingestion.md) for the separate live-feed smoke and [Phase 1](phases/01-foundation.md) for model checks. Phases 3–6 remain planned and their commands do not exist yet.
+**Current status: Phases 1 and 2 are implemented.** [Local/frontier startup scripts](startup.md) now provide repeatable mode switching. Run `make verify-phase-2` for cumulative deterministic checks. Use [Phase 2](phases/02-ingestion.md) for the separate live-feed smoke and [Phase 1](phases/01-foundation.md) for model checks. Phases 3–6 remain planned and their commands do not exist yet.
 
 [Original assignment](assignment/fde-take-home-exercise.md) · [Phase records](phases/README.md) · [Testing policy](testing.md) · [Progress](progress.md)
 
