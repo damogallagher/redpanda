@@ -18,6 +18,8 @@ Wikipedia edit triage in Python, using Redpanda and a selectable local or hosted
 - [Verify every phase](docs/phase-verification.md) · [Implementation plan](docs/implementation-plan.md)
 - [Test policy](docs/testing.md) · [Progress](docs/progress.md) · [Prompt/response log](docs/ai-log/README.md)
 
+For a clean Ollama → frontier submission walkthrough with exact commands and expected results, see [the demo guide](docs/submission-demo.md).
+
 ## Simple command menu
 
 | I want to… | Run |
