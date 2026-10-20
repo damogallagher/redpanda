@@ -1,6 +1,6 @@
 # Phase 01: Foundation and feasibility
 
-Status: implemented and locally verified; awaiting PR review. Damien reviews and merges.
+Status: implemented and locally verified; PR #3 merged by Damien on 20 October 2026.
 Branch: `phase/01-foundation`. Base: merged Phase 0/documentation work (`8e0fa6e`).
 
 ## What was built
@@ -18,6 +18,8 @@ Branch: `phase/01-foundation`. Base: merged Phase 0/documentation work (`8e0fa6e
 No live Wikipedia ingestion, multi-step reasoning, sink, or serving API is included. The model smoke is a connectivity/feasibility probe only; the later worker will own retries, total item deadlines, output parsing, confidence policy, and evidence grounding. HTTP timeouts here are per operation, not a global item deadline.
 
 ## Versions and resources
+
+See the subsequent [dependency version review](../dependency-versions.md) for recommended maintenance updates. The versions below are the ones used for this phase's recorded verification.
 
 - Python 3.13.16, uv 0.13.1; runtime/test dependencies and hashes in `uv.lock`.
 - Redpanda v26.2.5; Postgres 16.14-bookworm; Ollama 0.40.6; Python slim image. All container bases use multi-architecture manifest digests for ARM64/AMD64.
