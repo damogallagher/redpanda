@@ -1,5 +1,8 @@
 {
   "date": "2026-10-20",
+  "ci_run": "https://github.com/damogallagher/redpanda/actions/runs/39418079879",
+  "ci_commit": "e853a1f",
+  "ci_conclusion": "success",
   "tested_commit": "68d33a3",
   "command": "make verify-phase-1 UV='uvx --from uv==0.13.3 uv'",
   "platform": "macOS ARM64, Python 3.13.16, Docker Desktop Linux ARM64",

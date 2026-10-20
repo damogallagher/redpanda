@@ -70,6 +70,10 @@ Tested implementation commit: `68d33a3`. The full Phase 1 command above passed l
 
 See the [machine-readable evidence](../evidence/phase-1-dependency-updates.json). The original [Phase 1 evidence](../evidence/phase-1-verification.json) is retained unchanged. No live model request was needed because model dependencies and behavior did not change. Phase 2 has not started.
 
+Review [PR #5](https://github.com/damogallagher/redpanda/pull/5). The [GitHub Linux CI run](https://github.com/damogallagher/redpanda/actions/runs/39418079879) passed on `e853a1f` in 1 minute 7 seconds; this commit contains the same implementation as `68d33a3` plus documentation. Subsequent documentation-only commits do not change the tested implementation; the PR shows their latest checks.
+
+Documentation checks passed: 83 relative links across 22 Markdown files resolved, the original assignment's SHA-256 matched, and whitespace checks passed. No disposable test containers or volumes remained after verification.
+
 ## Upstream references
 
 - [PostgreSQL 16.15 release notes](https://www.postgresql.org/docs/16/release-16-15.html): no dump/restore is needed from 16.x. The release also describes special handling for certain extensions and logical decoding configurations; this foundation uses none of those.
