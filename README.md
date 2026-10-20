@@ -32,7 +32,7 @@ Expected final line:
 PASS: Phase 4 reasoning and durable-delivery checks. Live model evaluation is separate.
 ```
 
-Expected: **331 unit tests (including launcher checks), 21 integration/configuration tests, 40 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make verify-phase-4 UV='uvx --from uv==0.13.3 uv'`.
+Expected: **333 unit tests (including launcher checks), 21 integration/configuration tests, 40 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make verify-phase-4 UV='uvx --from uv==0.13.3 uv'`.
 
 To demonstrate live ingestion without a model or key, run `make smoke-ingestion` (about 40 seconds with cached images). It samples the public stream for 30 seconds in an isolated project, prints validated topic records and counts, and cleans up. See [Phase 2](docs/phases/02-ingestion.md) for exact expected fixture outputs, interactive `rpk` inspection, metrics, cleanup, and reconnect limitations.
 

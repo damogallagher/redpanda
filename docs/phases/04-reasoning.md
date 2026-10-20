@@ -1,6 +1,6 @@
 # Phase 4: Multi-step reasoning and durable delivery
 
-Status: implemented and verified locally. PR and CI handover are recorded below.
+Status: implemented and verified locally. [PR #8](https://github.com/damogallagher/redpanda/pull/8) is open for Damien’s review.
 Branch: `phase/04-reasoning`, based on merged PR #7 (`efbd03a`). Damien reviews and merges.
 
 ## What changed
@@ -30,7 +30,7 @@ Or use the exact CI tool version:
 make verify-phase-4 UV='uvx --from uv==0.13.3 uv'
 ```
 
-Expected: **331 unit tests**, **21 integration/configuration tests**, **40 native Connect tests**, lint/format/strict types, shell/Compose checks, container build, and offline enrichment inspection pass. Application coverage must be exactly **100% lines and branches**, with zero excluded or missing lines/branches. Shell, Compose and Connect tests are separate from that Python metric.
+Expected: **333 unit tests**, **21 integration/configuration tests**, **40 native Connect tests**, lint/format/strict types, shell/Compose checks, container build, and offline enrichment inspection pass. Application coverage must be exactly **100% lines and branches**, with zero excluded or missing lines/branches. Shell, Compose and Connect tests are separate from that Python metric.
 
 ```text
 PASS: Phase 4 reasoning and durable-delivery checks. Live model evaluation is separate.
@@ -109,10 +109,10 @@ This is development tuning, not held-out accuracy. Both providers have determini
 | Boundary | Behavior |
 |---|---|
 | Evidence | Missing, truncated, oversized, or empty source yields explicit insufficient evidence, zero calls. Other enrichment failures become processing errors |
-| Model JSON | Strict types/enums, finite confidence, no unknown fields or duplicate JSON keys. A single JSON object or exact Markdown fence is accepted; surrounding prose/multiple objects require repair |
+| Model JSON | Strict types/enums, finite confidence, no unknown fields or duplicate JSON keys. Excessive JSON nesting is rejected as invalid output. A single JSON object or exact Markdown fence is accepted; surrounding prose/multiple objects require repair |
 | Grounding | Every source hunk must be represented; quotes must be exact, changed excerpts from the same hunk. Empty quote only for an entirely empty side. At most eight extracted changes, 512 characters per quote; edits needing more abstain rather than silently drop hunks |
 | Uncertainty | Repeated invalid output, unresolved confidence or contradictions become insufficient evidence. Confidence is a model routing signal, not calibrated accuracy. A valid-looking semantic error can still escape detection |
-| Time/calls | Four calls maximum, two attempts per step, one-second technical retry wait. Shared 240-second cooperative budget starts before enrichment. Model I/O waits are capped by the smaller of configured timeout and remaining budget; checks occur between chunks and after responses. An in-flight operation can overshoot by a bounded wait; there is no hard cancellation guarantee |
+| Time/calls | Four calls maximum, two attempts per step, one-second technical retry wait. Shared 240-second cooperative budget starts before enrichment. Model I/O waits are capped by the smaller of configured timeout and remaining budget; checks occur between chunks and after responses. These bound individual waits, not total request wall time: slowly progressing I/O inside the HTTP library can exceed the nominal budget before control returns. There is no hard cancellation guarantee |
 | Bytes/tokens | Input event 8 KiB, prompt 32,000 characters, model response 64 KiB, completion budget defaults to 1,024 tokens. Streaming checks bound application buffering and reject unexpected compression. Existing Phase 3 evidence limits still apply |
 | Errors | Malformed event/key, exhausted model transport retries/deadline, and technical enrichment failure go to `processing-errors`. Envelope includes position, optional validated event, payload hash and step outcomes, not raw malformed content or credentials |
 | Acknowledgements | Auto-commit and auto-offset-store disabled. Idempotent producer, `acks=all`, explicit delivery callback, then synchronous offset+1 commit with per-partition errors checked. Either failure stops the worker |
@@ -134,10 +134,10 @@ Test cleanup is automatic. To stop the user's application while keeping data and
 
 ## Observed verification
 
-Tested implementation: `229c09e70a8287460472294423a631b00e81acdd`. [Verification JSON](../evidence/phase-4-verification.json), [real-broker delivery records](../evidence/phase-4-delivery.json), [mutation evidence](../evidence/phase-4-mutations.json), and [model evaluation](../evaluations/development.md).
+Tested implementation: `63de01e91f0b670806ad186a14c5029b8cf634ed`. [Verification JSON](../evidence/phase-4-verification.json), [real-broker delivery records](../evidence/phase-4-delivery.json), [mutation evidence](../evidence/phase-4-mutations.json), and [model evaluation](../evaluations/development.md).
 
-- Full `make verify-phase-4 UV='uvx --from uv==0.13.3 uv'`: **exit 0**. **331 unit**, **21 integration/configuration**, and **40 native Connect** cases passed; lint, format, strict types, shell/Compose configuration, packaged container and fixture inspection also passed.
-- Coverage: **826/826 executable lines**, **236/236 branches**, **zero exclusions**. Unit runtime 2.44 seconds; integration runtime 75.79 seconds.
+- Full `make verify-phase-4 UV='uvx --from uv==0.13.3 uv'`: **exit 0**. **333 unit**, **21 integration/configuration**, and **40 native Connect** cases passed; lint, format, strict types, shell/Compose configuration, packaged container and fixture inspection also passed.
+- Coverage: **829/829 executable lines**, **236/236 branches**, **zero exclusions**. Unit runtime 2.74 seconds; integration runtime 74.49 seconds.
 - All eleven broker scenarios passed. Failed result/error publication left offset `-1001`; restarting after topic creation committed offset `2` and delivered both edits. Failed commit after acknowledged output produced three records for two inputs, with the duplicate key preserved. SIGTERM during a call drained one edit and committed offset `1`.
 - Removing duplicate-key rejection and lowering the confidence threshold each made the targeted tests fail (exit 1). Restoring the source passed all 56 reasoning tests. A slow-stream regression stops after five simulated chunks and closes the stream rather than buffering all 100.
 - Local prompt v1 scored 5/6; v2 scored 6/6 with ten calls in 67.232 seconds. Both transcripts are retained. These are development observations, with no new hosted model call or held-out quality claim.
@@ -148,3 +148,9 @@ No Phase 5 code has started. The user's existing local services were not restart
 ## References
 
 The adapter follows the official [Confluent Python API](https://docs.confluent.io/platform/current/clients/confluent-kafka-python/html/index.html) for delivery callbacks and synchronous commits, and [librdkafka configuration](https://docs.confluent.io/platform/current/clients/librdkafka/html/md_CONFIGURATION.html) for manual offset control, idempotence and poll limits. The pinned [2.16.0 package](https://pypi.org/project/confluent-kafka/2.16.0/) provides Python 3.13 wheels for the tested macOS ARM64/Linux environments.
+
+## Review handover
+
+[PR #8](https://github.com/damogallagher/redpanda/pull/8) remains unmerged. The [first Linux CI run](https://github.com/damogallagher/redpanda/actions/runs/39471232357) passed on `1d56d5a` in 2m20s. The final parser hardening additionally rejects excessive nesting in both provider envelopes and model JSON; its 333-test local gate is recorded above. [Current PR checks](https://github.com/damogallagher/redpanda/pull/8/checks) show verification of the latest head, with downloadable `phase-4-test-reports` artifacts.
+
+Damien's clean checkout is on `phase/04-reasoning`. The exact `make demo-reasoning UV='uvx --from uv==0.13.3 uv'` command passed there: two scenarios in 14.52 seconds, including printed rpk results and failed-publication replay. All three private profiles remained byte-for-byte unchanged. The existing four running demo services and their volumes were retained; the updated launcher starts the new worker when Damien chooses to run it. Review/merge stays with Damien; Phase 5 is not started.

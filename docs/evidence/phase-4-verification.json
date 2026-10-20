@@ -1,5 +1,5 @@
 {
-  "implementation_commit": "229c09e70a8287460472294423a631b00e81acdd",
+  "implementation_commit": "63de01e91f0b670806ad186a14c5029b8cf634ed",
   "command": "make verify-phase-4 UV='uvx --from uv==0.13.3 uv'",
   "exit_code": 0,
   "suites": {
@@ -8,9 +8,9 @@
       "errors": "0",
       "failures": "0",
       "skipped": "0",
-      "tests": "331",
-      "time": "2.442",
-      "timestamp": "2026-10-20T18:59:19.584675+01:00"
+      "tests": "333",
+      "time": "2.742",
+      "timestamp": "2026-10-20T19:05:55.244913+01:00"
     },
     "integration": {
       "name": "pytest",
@@ -18,13 +18,13 @@
       "failures": "0",
       "skipped": "0",
       "tests": "21",
-      "time": "75.787",
-      "timestamp": "2026-10-20T18:59:22.222044+01:00"
+      "time": "74.486",
+      "timestamp": "2026-10-20T19:05:58.193732+01:00"
     }
   },
   "coverage": {
-    "covered_lines": 826,
-    "num_statements": 826,
+    "covered_lines": 829,
+    "num_statements": 829,
     "percent_covered": 100.0,
     "percent_covered_display": "100.00",
     "missing_lines": 0,
@@ -78,5 +78,19 @@
     "Time budget is cooperative, not hard wall-clock cancellation.",
     "Persistence/API and final operational acceptance are Phases 5 and 6."
   ],
-  "cleanup": "No triage-test containers, networks or volumes remained; user demo resources retained."
+  "cleanup": "No triage-test containers, networks or volumes remained; user demo resources retained.",
+  "handover_demo": {
+    "command": "make demo-reasoning UV='uvx --from uv==0.13.3 uv'",
+    "checkout": "/Users/damien/Development/sourceControl/redpanda",
+    "tests": 2,
+    "passed": 2,
+    "seconds": 14.52,
+    "commit": "1d56d5a"
+  },
+  "first_linux_ci": {
+    "commit": "1d56d5a",
+    "url": "https://github.com/damogallagher/redpanda/actions/runs/39471232357",
+    "conclusion": "success",
+    "seconds": 140
+  }
 }
