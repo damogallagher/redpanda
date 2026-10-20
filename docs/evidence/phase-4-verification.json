@@ -92,5 +92,20 @@
     "url": "https://github.com/damogallagher/redpanda/actions/runs/39471232357",
     "conclusion": "success",
     "seconds": 140
-  }
+  },
+  "linux_ci": {
+    "commit": "1154c867fd51f44a023dfc4654c564702fde5105",
+    "url": "https://github.com/damogallagher/redpanda/actions/runs/39472093773",
+    "conclusion": "success",
+    "artifact": "phase-4-test-reports"
+  },
+  "handover_unit": {
+    "tests": 333,
+    "seconds": 3.03,
+    "line_coverage": 100,
+    "branch_coverage": 100,
+    "missing_lines": 0,
+    "missing_branches": 0
+  },
+  "final_relative_links_checked": 131
 }
