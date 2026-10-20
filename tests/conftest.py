@@ -49,11 +49,16 @@ def compose():
         yield run
     finally:
         # This unique project was created by this test; no shared/user volumes are removed.
-        subprocess.run(
-            [*base, "down", "--volumes", "--remove-orphans"],
-            cwd=ROOT,
-            env=env,
-            check=True,
-            capture_output=True,
-            timeout=120,
-        )
+        # Compose down ignores inactive profiles, even with --remove-orphans.
+        run("--profile", "tools", "down", "--volumes", "--remove-orphans", timeout=120)
+        for command in (["ps", "-aq"], ["volume", "ls", "-q"], ["network", "ls", "-q"]):
+            remaining = subprocess.run(
+                ["docker", *command, "--filter", f"label=com.docker.compose.project={project}"],
+                cwd=ROOT,
+                env=env,
+                text=True,
+                check=True,
+                capture_output=True,
+                timeout=20,
+            ).stdout.strip()
+            assert not remaining, f"Test-owned resources remain after cleanup: {remaining}"
