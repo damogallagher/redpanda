@@ -1,6 +1,6 @@
 # Verify each phase
 
-**Current status: planning only.** The assignment and documentation checks below are available now. Phases 1–6 are not implemented, there is no Makefile yet, and their commands are implementation requirements rather than runnable instructions. Each phase PR must replace proposed details with tested commands and actual evidence before that phase is marked complete.
+**Current status: Phase 1 is implemented.** Run `make verify-phase-1` for its deterministic checks; use the [README](../README.md) and [Phase 1 record](phases/01-foundation.md) for the separate real-model smoke. Phases 2–6 remain planned and their commands do not exist yet.
 
 [Original assignment](assignment/fde-take-home-exercise.md) · [Phase records](phases/README.md) · [Testing policy](testing.md) · [Progress](progress.md)
 
@@ -16,19 +16,19 @@ Commands must use isolated test resources. Every implemented phase record must i
 
 ## Commands at a glance
 
-Only Phase 0 is available now. `make verify-phase-N` is the agreed future entry point for deterministic verification; external-source/model smoke tests are separate so the repeatable checks do not depend on live services.
+Phases 0 and 1 are available now. `make verify-phase-N` is the agreed entry point for deterministic verification; external-source/model smoke tests are separate so the repeatable checks do not depend on live services.
 
 | Phase | Command from repository root | Evidence of intended behavior | Availability |
 |---|---|---|---|
 | [0: planning](phases/00-plan.md) | `shasum -a 256 docs/assignment/fde-take-home-exercise.md` | Hash matches the [recorded original](assignment/README.md); documentation links and phase criteria are present | Available |
-| [1: foundation](phases/01-foundation.md) | `make verify-phase-1` | Configuration and schema tests pass; broker/database become ready; setup can run twice safely | Planned |
+| [1: foundation](phases/01-foundation.md) | `make verify-phase-1` | Configuration and schema tests pass; broker/database become ready; setup can run twice safely | Implemented |
 | [2: ingestion](phases/02-ingestion.md) | `make verify-phase-2` | Known fixture records reach the correct topics with exact keys/fields; unwanted records are absent | Planned |
 | [3: enrichment](phases/03-enrichment.md) | `make verify-phase-3` | Known revisions yield expected before/after evidence; unavailable content has an explicit status | Planned |
 | [4: reasoning](phases/04-reasoning.md) | `make verify-phase-4` | Valid extraction/assessment results; bounded retries and abstention; no offset commit on publish failure | Planned |
 | [5: serving](phases/05-serving.md) | `make verify-phase-5` | Seeded event reaches the API; replay leaves one logical stored result; sink recovers after outage | Planned |
 | [6: acceptance](phases/06-acceptance.md) | `make verify-phase-6` | Cumulative tests, clean-start fixture path, and recovery drills pass; coverage has no missing lines/branches | Planned |
 
-The table specifies assertions, not observed results. Live model quality and hardware feasibility require additional evidence even when deterministic checks pass.
+The table specifies assertions; actual Phase 1 observations are in its linked phase record. Live model quality and hardware feasibility require additional evidence even when deterministic checks pass.
 
 ## Phase 0 — inspect the plan and original
 
@@ -45,7 +45,7 @@ git diff --check origin/main...HEAD
 
 ## Phase 1 — prove the foundation starts
 
-**Future automated command:** `make verify-phase-1`.
+**Available command:** `make verify-phase-1`. See the [Phase 1 record](phases/01-foundation.md) for exact setup, actual outcomes, and troubleshooting.
 
 - Validate configuration and event/result schemas; reject missing/invalid configuration with a useful error.
 - Start real broker/database test instances and verify readiness. Initialize topics/schema twice and assert the second run succeeds without duplication.

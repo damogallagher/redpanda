@@ -1,6 +1,6 @@
 # Test and acceptance policy
 
-Status: contract for future implementation. No test suite or application exists in this planning PR.
+Status: Phase 1 tests and coverage gate are implemented. The remaining layers are added with their phases; see the phase verification guide for availability.
 
 For a reviewer-friendly command matrix and concrete expected behavior, use the [phase verification guide](phase-verification.md).
 
@@ -26,9 +26,9 @@ The planning-only PR has no coverage percentage. From the first executable appli
 
 CI runs deterministic checks on every PR with least-privilege permissions and pinned dependencies/actions. Real-feed/model runs are separately recorded and must not make every unit test flaky. A controlled integration failure must fail the CI job, not be hidden by retry-until-green behavior.
 
-## Proposed command interface
+## Command interface
 
-Implemented incrementally, never claimed as passing before it exists:
+Available now: `make check`, `make test-unit`, `make test-integration`, `make test-container`, `make verify-phase-1`, and `make smoke-model`. Connect, end-to-end, evaluation, and later phase targets remain planned.
 
 - `make check`: formatting, lint, types, unit coverage, and applicable config checks.
 - `make test-unit`: deterministic unit suite with 100% line/branch coverage enforcement.

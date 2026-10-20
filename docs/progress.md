@@ -38,3 +38,18 @@ Next step: after the planning PR is merged, create `phase/01-foundation` from up
 Branch: `docs/assignment-and-phase-verification`. Review/merge remains Damien's responsibility. Phase 1 should start from main after these documentation additions are merged.
 
 Documentation follow-up PR: [#2](https://github.com/damogallagher/redpanda/pull/2), opened for Damien's review. Verified content commit: `7c7a3c3`; the following audit-only commit records the PR and closing response.
+
+
+## 20 October 2026 — Phase 1 foundation
+
+PR #2 is merged. Created `phase/01-foundation` from main at `8e0fa6e`.
+
+Built the local infrastructure, repeatable topic/database initialization, typed settings, versioned schemas, explicit Ollama/OpenAI model adapters, diagnostics CLI, non-root container, locked dependencies, Make commands, and CI workflow. README now has local/hosted/native-host setup and executable Phase 1 verification instructions. Added repository continuation instructions and this session's visible interaction log.
+
+Real smoke requests succeeded for local Qwen2.5 7B and hosted GPT-6.1 Sol. The selected local model returned a concise semantic comparison; the smaller Qwen3 4B candidate returned unwanted verbose content. Both candidate and selected evidence are retained. No claim of model accuracy is made from these individual probes.
+
+The API key was read only from the user-supplied untracked `.env` for the authorized hosted smoke, never copied to repository files or printed. Tests do not call paid inference. No subsequent phase was started.
+
+Final local verification passed on application commit `e278b5b`: 86 unit tests, 3 real infrastructure tests, 100% line coverage (176/176) and branch coverage (32/32), no excluded lines. Both real model smoke checks passed. Machine-readable results are in `docs/evidence/phase-1-verification.json`. Review [PR #3](https://github.com/damogallagher/redpanda/pull/3). The initial GitHub Linux CI run passed; the PR displays current checks after the final review fixes. Next step: Damien reviews the Phase 1 PR; after merge, request Phase 2 to add Connect ingestion.
+
+Local handover: the verification demo used Compose project `redpanda-phase1`. Its containers are stopped after verification, with volumes retained. To reuse those downloaded weights on this machine, set `COMPOSE_PROJECT_NAME=redpanda-phase1` in the untracked `.env` before following the README; preserve the existing API key. This is optional and unnecessary for reviewers on other machines. Disposable integration projects were removed by their test fixture.
