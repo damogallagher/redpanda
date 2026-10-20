@@ -148,3 +148,7 @@ An actual container scan prompted a two-stage runtime build and pinned Debian 13
 Review [PR #11](https://github.com/damogallagher/redpanda/pull/11). The user checkout is on the review branch; no merge or later phase is performed. Damien still writes the assignment's independent personal README sections.
 
 Final Phase 6 Linux CI passed on `8ea8ec4` in 5 minutes 36 seconds ([run/artifacts](https://github.com/damogallagher/redpanda/actions/runs/39483507050)). Downloaded artifacts confirm 416 unit tests, 29 integration checks and 100% lines/branches with zero failures/skips/exclusions. The final evidence/conversation update changes documentation only. All 165 local Markdown links resolve; the clean user checkout is on the Phase 6 review branch, with private profiles unchanged. PR #11 remains unmerged.
+
+## 20 October 2026 — CI and dependency maintenance
+
+Damien reported the failed main-branch run `39478225848` and requested current actions/libraries without warnings. The failure matches the timeout-clock test fixed by Phase 6 `8ea8ec4`. Updated all three actions to latest verified stable commits with native Node 24, FastAPI to 0.156.1 and uv to 0.13.4; added HTTPX2 for Starlette tests and made Python warnings errors. All 41 locked/build package versions match current PyPI releases. The [maintenance record](phases/06-ci-maintenance.md) and [conversation](ai-log/sessions/2026-10-20-actions-maintenance.md) document the follow-up in the open Phase 6 PR #11. Focused tests and the full 416-test unit gate pass; Docker and GitHub verification are in progress.

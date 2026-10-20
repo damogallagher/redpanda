@@ -5,7 +5,7 @@ description = "A small, evidence-based Wikipedia edit review pipeline"
 requires-python = ">=3.13,<3.14"
 dependencies = [
     "confluent-kafka==2.16.0",
-    "fastapi==0.156.0",
+    "fastapi==0.156.1",
     "httpx==0.28.1",
     "psycopg[binary]==3.3.6",
     "pydantic==2.14.1",
@@ -28,6 +28,7 @@ packages = ["src/triage"]
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = "-ra --strict-markers"
+filterwarnings = ["error"]
 markers = [
     "integration: requires real Docker infrastructure",
     "live: opt-in public Wikimedia smoke; excluded from deterministic checks",
@@ -57,6 +58,7 @@ files = ["src/triage"]
 
 [dependency-groups]
 dev = [
+    "httpx2==2.15.1",
     "mypy==2.4.0",
     "pytest==9.1.1",
     "pytest-cov==7.1.0",

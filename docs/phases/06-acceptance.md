@@ -25,7 +25,7 @@ make demo-failures
 make demo-test-failure
 ```
 
-The first three exit 0 when their assertions pass. The fourth **intentionally exits nonzero**, showing an invented quotation rejected by the real grounding validator. It is outside normal discovery, changes no production code and is not counted as a passing test. To see normal green results afterward run `make test` again. See the operator guide for the narrower commands and expected output. The pinned-tool equivalent is `make test UV='uvx --from uv==0.13.3 uv'`.
+The first three exit 0 when their assertions pass. The fourth **intentionally exits nonzero**, showing an invented quotation rejected by the real grounding validator. It is outside normal discovery, changes no production code and is not counted as a passing test. To see normal green results afterward run `make test` again. See the operator guide for the narrower commands and expected output. The pinned-tool equivalent is `make test UV='uvx --from uv==0.13.4 uv'`.
 
 | Check | Expected / observed |
 |---|---|
@@ -62,3 +62,7 @@ On this 32 GiB ARM64 Mac, use the ready command menu; reviewers can select hoste
 The original assignment still requires Damien's independently written Tradeoffs, Surprises/production-failure observations and customer-value README sections. Those remain his work. The single-node deployment has no HA, TLS/auth, backup/restore or production database-role separation; upstream SSE delivery is not gap-free. The security scan retains upstream base-image findings. Review [deployment limits](../handover.md) before exposing the application beyond a local machine.
 
 [Linux CI passed](https://github.com/damogallagher/redpanda/actions/runs/39483507050) on `8ea8ec4` in 5 minutes 36 seconds, with 416 unit / 29 integration checks and 100% line/branch coverage. The local final gate passed on application commit `7fc26f1`; the subsequent test-only clock fix passed 33 focused adapter tests and full Linux CI. Closing commits record evidence/conversation only. The user checkout is on the review branch with profiles preserved. No further phase is started and the PR is not merged by the agent.
+
+## Actions and dependency follow-up
+
+The [CI maintenance record](06-ci-maintenance.md) documents the reported main-branch failure, current action/dependency pins, strict warning policy, and follow-up verification. Earlier phase results above remain tied to their recorded commits.

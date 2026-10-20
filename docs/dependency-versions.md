@@ -54,3 +54,18 @@ Added `confluent-kafka==2.16.0` for the worker's Kafka boundary, with wheel hash
 ## Phase 6 security-driven application image update
 
 The Python runtime remains 3.13.16 and all Python dependencies remain locked. The application Dockerfile now uses the official `3.13.16-slim-trixie` multi-architecture manifest and a separate build stage; the running image excludes pip/uv/ensurepip and source/build tooling. This targeted Debian 12 → 13 base change addresses findings from an actual container scan. Postgres remains 16.15 and its data format is unchanged. See the [security review](security-review.md) for the exact digest, scanner evidence, remaining advisories and scope. Native ARM64 and Ubuntu AMD64 acceptance are checked separately; model/provider versions remain explicit.
+
+## Phase 6 CI follow-up — 20 October 2026
+
+Rechecked **all 39 registry packages in `uv.lock`, plus Hatchling and uv**, against official PyPI metadata. All 41 match current stable releases after the update. See the [complete version/source list](evidence/actions-dependency-review.json) and [verification record](phases/06-ci-maintenance.md). This is a dated review; exact pins deliberately do not change automatically on release day.
+
+| Component | Before → current | Source / reason |
+|---|---|---|
+| actions/checkout | 5 → 7.0.1 | [Official release](https://github.com/actions/checkout/releases/tag/v7.0.1); Node 24, full commit pin |
+| astral-sh/setup-uv | 7 → 10.3.0 | [Official release](https://github.com/astral-sh/setup-uv/releases/tag/v10.3.0); Node 24, full commit pin |
+| actions/upload-artifact | 4 → 7.0.2 | [Official release](https://github.com/actions/upload-artifact/releases/tag/v7.0.2); Node 24 and updated artifact library remove deprecations |
+| uv | 0.13.3 → 0.13.4 | [Official release](https://github.com/astral-sh/uv/releases/tag/0.13.4); bundled CA security update, same pin in CI and Docker build |
+| FastAPI | 0.156.0 → 0.156.1 | [Official release](https://github.com/fastapi/fastapi/releases/tag/0.156.1); request-field metadata fix |
+| HTTPX2 (dev only) | absent → 2.15.1 | [PyPI release](https://pypi.org/project/httpx2/2.15.1/); Starlette 1.9 TestClient selects this supported transport |
+
+HTTPX 0.28.1 is still the latest stable release of the application's separate `httpx` distribution. HTTPX2 and its new transitive packages are development-only; they are not installed in the runtime image. Pytest treats warnings as errors instead of hiding the deprecated fallback. GitHub's [Node migration notice](https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/) calls for action versions that declare Node 24; no runtime override or deprecation suppression is used.

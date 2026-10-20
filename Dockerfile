@@ -4,7 +4,7 @@ WORKDIR /app
 
 FROM base AS build
 ENV UV_NO_CACHE=1
-RUN pip install --no-cache-dir uv==0.13.3
+RUN pip install --no-cache-dir uv==0.13.4
 COPY pyproject.toml uv.lock ./
 COPY src ./src
 RUN uv sync --frozen --no-dev --no-editable

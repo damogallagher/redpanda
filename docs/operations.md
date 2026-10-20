@@ -1,6 +1,6 @@
 # Run, test, stop, and reset
 
-Start Docker Desktop. From the repository folder, use the commands below. Prerequisites: Docker Compose 2.20+, Make, and uv (CI uses 0.13.3). First use downloads Python/packages/images. Do one operation at a time; do not switch profiles or clean up during a test.
+Start Docker Desktop. From the repository folder, use the commands below. Prerequisites: Docker Compose 2.20+, Make, and uv (CI uses 0.13.4). First use downloads Python/packages/images. Do one operation at a time; do not switch profiles or clean up during a test. Python warnings fail the test gate; the [CI maintenance record](phases/06-ci-maintenance.md) explains dependency pins and how to inspect GitHub test artifacts.
 
 ## Five-minute reviewer path (cached images)
 
@@ -129,4 +129,4 @@ curl --fail http://localhost:4196/metrics
 
 Lag is unconsumed work, not necessarily data loss. The single sequential worker has no autoscaling or sustainable-throughput guarantee. Model latency dominates; the acceptance report records measured call times, while recovery tests prove backlog drains with controlled fast responses. Do not publish raw Compose configuration, `.env`, container inspection environments, or private logs: these can contain credentials.
 
-If your uv version differs: `make test UV='uvx --from uv==0.13.3 uv'`, or `UV='uvx --from uv==0.13.3 uv' ./scripts/test-local.sh`. Run scripts from any directory; they resolve their own repository root.
+If your uv version differs: `make test UV='uvx --from uv==0.13.4 uv'`, or `UV='uvx --from uv==0.13.4 uv' ./scripts/test-local.sh`. Run scripts from any directory; they resolve their own repository root.

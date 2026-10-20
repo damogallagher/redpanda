@@ -1,0 +1,360 @@
+{
+  "reviewed_on": "2026-10-20",
+  "scope": "All 39 registry packages in uv.lock, plus Hatchling and uv. Latest stable releases at review time, not a promise of automatic future updates.",
+  "packages": [
+    {
+      "package": "annotated-doc",
+      "pinned": "0.0.5",
+      "latest": "0.0.5",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/annotated-doc/json"
+    },
+    {
+      "package": "annotated-types",
+      "pinned": "0.8.0",
+      "latest": "0.8.0",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/annotated-types/json"
+    },
+    {
+      "package": "anyio",
+      "pinned": "4.15.1",
+      "latest": "4.15.1",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/anyio/json"
+    },
+    {
+      "package": "ast-serialize",
+      "pinned": "0.13.1",
+      "latest": "0.13.1",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/ast-serialize/json"
+    },
+    {
+      "package": "certifi",
+      "pinned": "2026.10.19",
+      "latest": "2026.10.19",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/certifi/json"
+    },
+    {
+      "package": "click",
+      "pinned": "8.5.0",
+      "latest": "8.5.0",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/click/json"
+    },
+    {
+      "package": "colorama",
+      "pinned": "0.4.6",
+      "latest": "0.4.6",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/colorama/json"
+    },
+    {
+      "package": "confluent-kafka",
+      "pinned": "2.16.0",
+      "latest": "2.16.0",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/confluent-kafka/json"
+    },
+    {
+      "package": "coverage",
+      "pinned": "7.16.2",
+      "latest": "7.16.2",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/coverage/json"
+    },
+    {
+      "package": "fastapi",
+      "pinned": "0.156.1",
+      "latest": "0.156.1",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/fastapi/json"
+    },
+    {
+      "package": "h11",
+      "pinned": "0.16.0",
+      "latest": "0.16.0",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/h11/json"
+    },
+    {
+      "package": "hatchling",
+      "pinned": "1.32.4",
+      "latest": "1.32.4",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/hatchling/json"
+    },
+    {
+      "package": "httpcore",
+      "pinned": "1.0.9",
+      "latest": "1.0.9",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/httpcore/json"
+    },
+    {
+      "package": "httpcore2",
+      "pinned": "2.15.1",
+      "latest": "2.15.1",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/httpcore2/json"
+    },
+    {
+      "package": "httpx",
+      "pinned": "0.28.1",
+      "latest": "0.28.1",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/httpx/json"
+    },
+    {
+      "package": "httpx2",
+      "pinned": "2.15.1",
+      "latest": "2.15.1",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/httpx2/json"
+    },
+    {
+      "package": "httpx2-jsfetch",
+      "pinned": "1.0",
+      "latest": "1.0",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/httpx2-jsfetch/json"
+    },
+    {
+      "package": "idna",
+      "pinned": "3.20",
+      "latest": "3.20",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/idna/json"
+    },
+    {
+      "package": "iniconfig",
+      "pinned": "2.3.1",
+      "latest": "2.3.1",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/iniconfig/json"
+    },
+    {
+      "package": "librt",
+      "pinned": "0.16.0",
+      "latest": "0.16.0",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/librt/json"
+    },
+    {
+      "package": "mypy",
+      "pinned": "2.4.0",
+      "latest": "2.4.0",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/mypy/json"
+    },
+    {
+      "package": "mypy-extensions",
+      "pinned": "1.1.0",
+      "latest": "1.1.0",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/mypy-extensions/json"
+    },
+    {
+      "package": "opentelemetry-api",
+      "pinned": "1.45.1",
+      "latest": "1.45.1",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/opentelemetry-api/json"
+    },
+    {
+      "package": "packaging",
+      "pinned": "26.3",
+      "latest": "26.3",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/packaging/json"
+    },
+    {
+      "package": "pathspec",
+      "pinned": "1.1.1",
+      "latest": "1.1.1",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/pathspec/json"
+    },
+    {
+      "package": "pluggy",
+      "pinned": "1.7.0",
+      "latest": "1.7.0",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/pluggy/json"
+    },
+    {
+      "package": "psycopg",
+      "pinned": "3.3.6",
+      "latest": "3.3.6",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/psycopg/json"
+    },
+    {
+      "package": "psycopg-binary",
+      "pinned": "3.3.6",
+      "latest": "3.3.6",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/psycopg-binary/json"
+    },
+    {
+      "package": "pydantic",
+      "pinned": "2.14.1",
+      "latest": "2.14.1",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/pydantic/json"
+    },
+    {
+      "package": "pydantic-core",
+      "pinned": "2.50.1",
+      "latest": "2.50.1",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/pydantic-core/json"
+    },
+    {
+      "package": "pygments",
+      "pinned": "2.21.0",
+      "latest": "2.21.0",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/pygments/json"
+    },
+    {
+      "package": "pytest",
+      "pinned": "9.1.1",
+      "latest": "9.1.1",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/pytest/json"
+    },
+    {
+      "package": "pytest-cov",
+      "pinned": "7.1.0",
+      "latest": "7.1.0",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/pytest-cov/json"
+    },
+    {
+      "package": "ruff",
+      "pinned": "0.17.1",
+      "latest": "0.17.1",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/ruff/json"
+    },
+    {
+      "package": "starlette",
+      "pinned": "1.9.0",
+      "latest": "1.9.0",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/starlette/json"
+    },
+    {
+      "package": "truststore",
+      "pinned": "0.10.5",
+      "latest": "0.10.5",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/truststore/json"
+    },
+    {
+      "package": "typing-extensions",
+      "pinned": "4.16.0",
+      "latest": "4.16.0",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/typing-extensions/json"
+    },
+    {
+      "package": "typing-inspection",
+      "pinned": "0.4.4",
+      "latest": "0.4.4",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/typing-inspection/json"
+    },
+    {
+      "package": "tzdata",
+      "pinned": "2026.5",
+      "latest": "2026.5",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/tzdata/json"
+    },
+    {
+      "package": "uv",
+      "pinned": "0.13.4",
+      "latest": "0.13.4",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/uv/json"
+    },
+    {
+      "package": "uvicorn",
+      "pinned": "0.54.0",
+      "latest": "0.54.0",
+      "matches_latest": true,
+      "yanked": false,
+      "source": "https://pypi.org/pypi/uvicorn/json"
+    }
+  ],
+  "actions": [
+    {
+      "repository": "actions/checkout",
+      "latest_stable": "v7.0.1",
+      "commit": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "runtime": "node24",
+      "release": "https://github.com/actions/checkout/releases/tag/v7.0.1",
+      "manifest": "https://github.com/actions/checkout/blob/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml"
+    },
+    {
+      "repository": "astral-sh/setup-uv",
+      "latest_stable": "v10.3.0",
+      "commit": "1c37ad07a6a961277cf70c0d37d6f313000f5884",
+      "runtime": "node24",
+      "release": "https://github.com/astral-sh/setup-uv/releases/tag/v10.3.0",
+      "manifest": "https://github.com/astral-sh/setup-uv/blob/1c37ad07a6a961277cf70c0d37d6f313000f5884/action.yml"
+    },
+    {
+      "repository": "actions/upload-artifact",
+      "latest_stable": "v7.0.2",
+      "commit": "cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+      "runtime": "node24",
+      "release": "https://github.com/actions/upload-artifact/releases/tag/v7.0.2",
+      "manifest": "https://github.com/actions/upload-artifact/blob/cf430e030ddbb5b0abf93d22962f4752f3646cd9/action.yml"
+    }
+  ]
+}
