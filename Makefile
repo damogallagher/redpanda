@@ -27,7 +27,10 @@ test-integration: sync
 
 test-container:
 	docker compose --env-file /dev/null -f compose.infrastructure.yml build model-check
-	docker compose --env-file /dev/null -f compose.infrastructure.yml run --rm --no-deps model-check triage check-config
+	docker compose --env-file /dev/null -f compose.infrastructure.yml run --rm --no-deps \
+		-e LLM_BACKEND=ollama -e LLM_MODEL=qwen2.5:7b -e LLM_BASE_URL=http://ollama:11434 \
+		-e LLM_TIMEOUT_SECONDS=120 -e LLM_MAX_TOKENS=1024 -e OPENAI_API_KEY= \
+		model-check triage check-config
 
 verify-phase-1: check test-unit test-integration test-container
 	@echo "PASS: Phase 1 deterministic checks. Real model smoke is a separate check."

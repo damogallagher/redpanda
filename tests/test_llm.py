@@ -18,7 +18,8 @@ OPENAI = {
 }
 
 
-def test_ollama_request_contract_and_no_credential_forwarding():
+@pytest.mark.parametrize("timeout", [120, 0.25])
+def test_ollama_request_contract_and_no_credential_forwarding(timeout):
     def handler(request):
         assert str(request.url) == "http://localhost:11434/api/chat"
         assert request.method == "POST"
@@ -34,11 +35,14 @@ def test_ollama_request_contract_and_no_credential_forwarding():
             ],
             "options": {"num_predict": 1024, "temperature": 0},
         }
-        assert request.extensions["timeout"]["read"] == 120
+        assert request.extensions["timeout"]["read"] == timeout
+        assert request.extensions["timeout"]["connect"] == min(5.0, timeout)
         return httpx.Response(200, json=OLLAMA)
 
     with httpx.Client(transport=httpx.MockTransport(handler)) as client:
-        settings = Settings.from_env({"OPENAI_API_KEY": "must-not-be-sent"})
+        settings = Settings.from_env(
+            {"OPENAI_API_KEY": "must-not-be-sent", "LLM_TIMEOUT_SECONDS": str(timeout)}
+        )
         assert complete(settings, "system", "user", client) == "The claim changed."
 
 

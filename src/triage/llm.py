@@ -59,7 +59,9 @@ def complete(settings: Settings, system: str, user: str, client: httpx.Client) -
             json=body,
             headers=headers,
             follow_redirects=False,
-            timeout=httpx.Timeout(settings.timeout_seconds, connect=5),
+            timeout=httpx.Timeout(
+                settings.timeout_seconds, connect=min(5.0, settings.timeout_seconds)
+            ),
         ) as response:
             response.raise_for_status()
             data = bytearray()
