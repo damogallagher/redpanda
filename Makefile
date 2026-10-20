@@ -2,8 +2,16 @@
 .PHONY: verify-phase-4 test-reasoning demo-reasoning evaluate-development
 .PHONY: verify-phase-5 test-serving test-e2e demo-results seed-results
 UV ?= uv
+export UV
 
 help:
+	@echo "make test            - all deterministic checks; no model/key needed"
+	@echo "make test-local      - real Ollama acceptance; up to 28 calls"
+	@echo "make test-frontier   - real hosted acceptance; up to 28 paid calls"
+	@echo "make demo-success    - successful fixture source → results API"
+	@echo "make demo-failures   - expected faults and recovery; PASS means safe handling"
+	@echo "make clean-docker    - stop this project; retain data and models"
+	@echo "make clean-ollama    - stop local project; retain model weights"
 	@echo "make verify-phase-5  - cumulative persistence and results API checks"
 	@echo "make demo-results    - isolated storage/replay/recovery and fixture end-to-end demo"
 	@echo "make seed-results    - publish three synthetic results to your selected demo stack"
@@ -114,3 +122,22 @@ test-e2e demo-results: sync
 
 seed-results:
 	./scripts/seed-results.sh
+
+.PHONY: test verify-phase-6 test-local test-frontier demo-success demo-failures clean-docker clean-ollama accept-live-local
+
+test verify-phase-6: check test-unit test-integration test-container test-connect inspect-enrichment
+	@echo "PASS: Phase 6 deterministic acceptance. Real model/live-source checks are separate."
+
+test-local test-frontier clean-docker clean-ollama:
+	./scripts/$@.sh
+
+demo-success: sync
+	$(UV) run --frozen pytest tests/test_serving_integration.py -k fixture_source -s --junitxml=reports/success-demo.xml
+	@echo "PASS: source → reasoning → storage → API (controlled Wikipedia/model responses)."
+
+demo-failures: sync
+	$(UV) run --frozen pytest tests/test_worker_integration.py tests/test_serving_integration.py tests/test_acceptance_integration.py -s --junitxml=reports/failure-demo.xml
+	@echo "PASS: injected failures were detected and recovery assertions passed."
+
+accept-live-local: sync
+	$(UV) run --frozen pytest tests/test_live_acceptance.py -s --junitxml=reports/live-acceptance.xml
