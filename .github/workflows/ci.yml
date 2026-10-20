@@ -15,7 +15,7 @@ jobs:
           persist-credentials: false
       - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
         with:
-          version: "0.13.1"
+          version: "0.13.3"
       - name: Validate Phase 1 (no hosted credentials or model downloads)
         run: make verify-phase-1
       - name: Publish test and coverage evidence
