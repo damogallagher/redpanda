@@ -1,0 +1,44 @@
+{
+  "chapters": 34,
+  "phases": 7,
+  "trace_scenarios": 6,
+  "trace_step_transitions": 42,
+  "provider_case_views": 18,
+  "quiz_items": 10,
+  "presentation_slides": 14,
+  "widths": [
+    1440,
+    768,
+    390,
+    320
+  ],
+  "page_errors": [],
+  "unexpected_network_requests": [],
+  "horizontal_page_overflow": [],
+  "passed": true,
+  "date": "2026-10-20",
+  "source_commit": "859b1662f574a6ff749689834f2dfc3ef48c9748",
+  "pdf_pages": 36,
+  "pdf_chapters": 34,
+  "pdf_rendered_and_visually_reviewed": true,
+  "pdf_contents_targets_verified": true,
+  "pdf_text_within_page_bounds": true,
+  "source_file_targets_verified": true,
+  "embedded_transcripts_equal_source": true,
+  "fullscreen_verified": true,
+  "application_files_changed": false,
+  "application_tests_rerun_for_artifact_change": false,
+  "application_coverage_reference": "100% lines/branches in recorded CI 39494682046 at 71a0680, not measured by artifact QA",
+  "live_model_calls_during_authoring": 0,
+  "artifact_sha256": {
+    "redpanda-study-guide.pdf": "7a932dc31253c5e796301a4b5ed92a4cbd24ec08e293c8af51c6ba62d919947a",
+    "redpanda-study-companion.html": "20ea8096aa9a0981ed78d8c102af7e9a798537b634a89a0d12446076fb3ee775",
+    "redpanda-study-guide.md": "6200e46b041247e264c850d630e94bac322b53e89933fd23134b55695f8b61f5",
+    "START-HERE.md": "335802c6d68142b11cb0fd1bdfdddf220933ab5326f1811d5c9ad58decf9c5a2"
+  },
+  "qa_fixes": [
+    "Consolidated PDF contents into one page and retained each chapter on its own page.",
+    "Fixed mobile overflow from long source tokens and ensured headings clear sticky navigation."
+  ],
+  "scope": "PDF/HTML/document content and interactions; not new application runtime acceptance."
+}
