@@ -42,7 +42,7 @@ Keep `COMPOSE_PROJECT_NAME` and `POSTGRES_PASSWORD` identical in both profiles w
 4. If `.env` exists, stop its stack, including optional tool services, without removing named volumes. A failure here leaves `.env` unchanged.
 5. Atomically replace `.env` with the selected configuration and start the corresponding Compose services. Remove temporary files and release the lock.
 
-Local mode uses `docker-compose.yml`: Redpanda, Postgres, Connect, Ollama, and one-time topic/model initialization. Frontier mode uses `compose.infrastructure.yml`: Redpanda, Postgres, Connect, and topic initialization, with no Ollama container or local weight download. At Phase 2, ingestion runs but no reasoning worker calls a model automatically. Switching modes briefly stops ingestion; the existing public-stream gap limitations still apply.
+Local mode uses `docker-compose.yml`: Redpanda, Postgres, Connect, the reasoning worker, Ollama, and one-time topic/model initialization. Frontier mode uses `compose.infrastructure.yml`: Redpanda, Postgres, Connect, the reasoning worker, and topic initialization, with no Ollama container or local weight download. **Phase 4 starts model processing automatically.** The worker waits for topic initialization; bundled local mode also waits for the model download. `WORKER_MAX_ITEMS=10` is the default in both profiles: up to four calls per edit, at most 40 calls per worker run. Frontier calls incur provider charges. Set `WORKER_MAX_ITEMS=0` explicitly for continuous processing. Existing profiles without this variable inherit the ten-edit default. `KAFKA_GROUP_ID=triage-v1` preserves progress across restarts and mode switches. Switching modes briefly stops ingestion; the existing public-stream gap limitations still apply.
 
 `Started` means Compose started the services successfully. Local weights may still be downloading. Check initialization before sending a model smoke request:
 
@@ -54,13 +54,23 @@ curl --fail http://127.0.0.1:4195/ready
 
 Use your configured `CONNECT_PORT` if different. `topics` and `model-init` exiting with code 0 is normal. Readiness confirms Connect's input/output connection state, not model readiness or gap-free delivery.
 
-An optional real model request remains explicit:
+Inspect the worker and its outputs:
+
+```sh
+docker compose logs -f worker
+docker compose exec redpanda rpk topic consume results --num 1 --format '%k\t%v\n'
+docker compose exec redpanda rpk group describe triage-v1
+```
+
+`worker` exiting 0 after ten committed edits is expected. It can wait while no edits are available. `docker compose start worker` processes the next batch using committed offsets. A nonzero exit needs inspection and restart after fixing delivery. A stop signal drains the current record; allow up to nine minutes for slow model I/O. Changing model settings alone does not reanalyse already committed events. See the [Phase 4 guide](phases/04-reasoning.md) for replay and duplicate semantics.
+
+An optional connectivity smoke is available:
 
 ```sh
 make smoke-model
 ```
 
-In frontier mode this calls the paid API. Startup itself only validates the settings; it does not make this request. For native-host Ollama, use the README's optional manual path rather than the bundled-local startup profile.
+In frontier mode this calls the paid API. The preflight makes no model request, but the started worker does. The optional smoke adds one request. For native-host Ollama, use the README's optional manual path rather than the bundled-local startup profile.
 
 To stop the current mode while retaining data and downloaded weights:
 
@@ -74,7 +84,7 @@ Do not add `--volumes` if you want to retain this stack's data. Launch either sc
 
 ```sh
 make test-startup UV='uvx --from uv==0.13.3 uv'
-make verify-phase-2 UV='uvx --from uv==0.13.3 uv'
+make verify-phase-4 UV='uvx --from uv==0.13.3 uv'
 ```
 
 The focused target runs 13 launcher tests against a recording Docker boundary and two real Compose/profile contract tests. Assertions cover both modes, file copying and permissions, source-profile preservation, startup order, no volume deletion, inherited-variable isolation, missing profiles, preflight/shutdown/startup failure, concurrent execution, and working directories containing spaces. Native Compose tests establish the actual service/backend/model settings and rejection of an empty hosted key. The cumulative gate also keeps 100% Python application line and branch coverage; shell glue is verified through behavior tests rather than counted as Python coverage.
@@ -86,7 +96,7 @@ The focused target runs 13 launcher tests against a recording Docker boundary an
 - **Lock error:** wait for the other launcher. Only if no launcher is running (for example after a forced process kill), remove the empty lock directory with `rmdir .env.switch.lock` and retry.
 - **Model still loading:** wait for successful `model-init` completion before `make smoke-model`; hosted mode avoids this download.
 
-Verified implementation/tests: `d550e78`. The cumulative gate passed with 99 unit tests, 10 integration/configuration checks, 40 native Connect tests, and 176/176 Python lines plus 32/32 branches covered (zero missing/excluded lines). Both launchers ran successfully on Damien’s machine; local → frontier → local retained the migration record and downloaded model IDs, and local mode was left running. No paid model call was made.
+Historical Phase 2 launcher verification: `d550e78`. The cumulative gate passed with 99 unit tests, 10 integration/configuration checks, 40 native Connect tests, and 176/176 Python lines plus 32/32 branches covered (zero missing/excluded lines). Both launchers ran successfully on Damien’s machine; local → frontier → local retained the migration record and downloaded model IDs, and local mode was left running. No paid model call was made.
 
 GitHub Linux CI also passed on `a3a127e`: [workflow and artifacts](https://github.com/damogallagher/redpanda/actions/runs/39453543842). The closing audit commit changes documentation only.
 

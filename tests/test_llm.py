@@ -161,3 +161,75 @@ def test_oversized_response_is_rejected():
         pytest.raises(ModelError, match="response exceeds"),
     ):
         complete(Settings(), "s", "u", client)
+
+
+def test_deadline_before_request_never_calls_provider():
+    with (
+        httpx.Client(
+            transport=httpx.MockTransport(lambda _: pytest.fail("unexpected request"))
+        ) as c,
+        pytest.raises(ModelError, match="deadline exceeded"),
+    ):
+        complete(Settings(), "s", "u", c, deadline=0, clock=lambda: 0)
+
+
+def test_remaining_budget_reduces_request_timeout():
+    def handler(request):
+        assert request.extensions["timeout"]["read"] == 2
+        return httpx.Response(200, json=OLLAMA)
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as c:
+        complete(Settings(), "s", "u", c, deadline=2, clock=lambda: 0)
+
+
+@pytest.mark.parametrize("body", [b"", json.dumps(OLLAMA).encode()])
+def test_deadline_during_response_and_after_empty_body(body):
+    now = [0]
+
+    def handler(_):
+        now[0] = 3
+        return httpx.Response(200, content=body)
+
+    with (
+        httpx.Client(transport=httpx.MockTransport(handler)) as c,
+        pytest.raises(ModelError, match="deadline exceeded"),
+    ):
+        complete(Settings(), "s", "u", c, deadline=2, clock=lambda: now[0])
+
+
+def test_model_rejects_unrequested_compression():
+    with (
+        httpx.Client(
+            transport=httpx.MockTransport(
+                lambda _: httpx.Response(200, headers={"Content-Encoding": "gzip"})
+            )
+        ) as c,
+        pytest.raises(ModelError, match="unexpected compression"),
+    ):
+        complete(Settings(), "s", "u", c)
+
+
+def test_slow_stream_stops_at_deadline_without_buffering_the_rest():
+    now = [0]
+    observed = []
+    closed = []
+
+    class Trickle(httpx.SyncByteStream):
+        def __iter__(self):
+            for index in range(100):
+                observed.append(index)
+                now[0] += 1
+                yield b" "
+
+        def close(self):
+            closed.append(True)
+
+    with (
+        httpx.Client(
+            transport=httpx.MockTransport(lambda _: httpx.Response(200, stream=Trickle()))
+        ) as client,
+        pytest.raises(ModelError, match="deadline exceeded"),
+    ):
+        complete(Settings(), "s", "u", client, deadline=5, clock=lambda: now[0])
+    assert observed == [0, 1, 2, 3, 4]
+    assert closed == [True]

@@ -1,0 +1,165 @@
+{
+  "$defs": {
+    "EditEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "wiki": {
+          "const": "enwiki",
+          "title": "Wiki",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 512,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Title",
+          "type": "string"
+        },
+        "old_revision_id": {
+          "exclusiveMinimum": 0,
+          "title": "Old Revision Id",
+          "type": "integer"
+        },
+        "revision_id": {
+          "exclusiveMinimum": 0,
+          "title": "Revision Id",
+          "type": "integer"
+        },
+        "occurred_at": {
+          "format": "date-time",
+          "title": "Occurred At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "wiki",
+        "title",
+        "old_revision_id",
+        "revision_id",
+        "occurred_at"
+      ],
+      "title": "EditEvent",
+      "type": "object"
+    },
+    "Position": {
+      "additionalProperties": false,
+      "properties": {
+        "topic": {
+          "title": "Topic",
+          "type": "string"
+        },
+        "partition": {
+          "minimum": 0,
+          "title": "Partition",
+          "type": "integer"
+        },
+        "offset": {
+          "minimum": 0,
+          "title": "Offset",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "topic",
+        "partition",
+        "offset"
+      ],
+      "title": "Position",
+      "type": "object"
+    },
+    "Step": {
+      "additionalProperties": false,
+      "properties": {
+        "stage": {
+          "enum": [
+            "extract",
+            "assess",
+            "review"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "outcome": {
+          "enum": [
+            "valid",
+            "invalid_output",
+            "model_error"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        }
+      },
+      "required": [
+        "stage",
+        "outcome"
+      ],
+      "title": "Step",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "source": {
+      "$ref": "#/$defs/Position"
+    },
+    "event": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/EditEvent"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "code": {
+      "enum": [
+        "invalid_event",
+        "model_failed",
+        "deadline_exceeded",
+        "enrichment_failed"
+      ],
+      "title": "Code",
+      "type": "string"
+    },
+    "detail": {
+      "title": "Detail",
+      "type": "string"
+    },
+    "payload_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Payload Sha256",
+      "type": "string"
+    },
+    "steps": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Step"
+      },
+      "maxItems": 4,
+      "title": "Steps",
+      "type": "array"
+    }
+  },
+  "required": [
+    "source",
+    "event",
+    "code",
+    "detail",
+    "payload_sha256"
+  ],
+  "title": "ProcessingError",
+  "type": "object"
+}

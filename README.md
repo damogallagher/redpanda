@@ -2,8 +2,9 @@
 
 Wikipedia edit triage in Python, using Redpanda and a selectable local or hosted model.
 
-**Phase 3 adds revision enrichment.** Redpanda Connect ingests validated Wikipedia edits; the new client and CLI fetch the actual revision diff and produce bounded before/after evidence with provenance or an explicit failure outcome. Multi-step reasoning, result storage, and the API arrive in later phases; there is no review queue yet.
+**Phase 4 adds multi-step reasoning and durable delivery.** Redpanda Connect ingests Wikipedia edits; a Python worker fetches revision evidence, extracts changes, assesses them, and reviews uncertain output. It publishes validated results or explicit errors before committing the input offset. Persistence and the readable API arrive in Phase 5.
 
+- [Phase 4: reasoning, delivery, and a repeatable walkthrough](docs/phases/04-reasoning.md)
 - [Phase 3: inspect revision evidence and test failure behavior](docs/phases/03-enrichment.md)
 - [Start or switch local/frontier mode](docs/startup.md)
 - [Original assignment, unchanged](docs/assignment/fde-take-home-exercise.md)
@@ -20,18 +21,18 @@ Prerequisites: Docker with Compose **2.20 or newer**, Make, and [uv](https://doc
 From the repository root:
 
 ```sh
-make verify-phase-3
+make verify-phase-4
 ```
 
-This runs formatting/lint/type checks, unit tests with **100% line and branch coverage**, configuration checks, real broker/database and HTTP ingestion tests, native Connect tests, an application-container build/configuration check, and offline inspection of an attributed Wikipedia diff. The infrastructure tests create unique disposable projects and remove only their own volumes. Initial dependency/image downloads need internet; subsequent unit tests require no network. Test reports appear in `reports/` and as PR workflow artifacts.
+This runs formatting/lint/type checks, unit tests with **100% line and branch coverage**, configuration checks, real broker/database and HTTP ingestion tests, native Connect tests, an application-container build/configuration check, offline inspection of an attributed Wikipedia diff, and real-broker acknowledgement/replay/shutdown tests. The infrastructure tests create unique disposable projects and remove only their own volumes. Initial dependency/image downloads need internet; subsequent unit tests require no network. Test reports appear in `reports/` and as PR workflow artifacts.
 
 Expected final line:
 
 ```text
-PASS: Phase 3 enrichment checks. Live Wikipedia comparison is a separate check.
+PASS: Phase 4 reasoning and durable-delivery checks. Live model evaluation is separate.
 ```
 
-Expected: **214 unit tests (including launcher checks), 10 integration/configuration tests, 40 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make verify-phase-3 UV='uvx --from uv==0.13.3 uv'`.
+Expected: **331 unit tests (including launcher checks), 21 integration/configuration tests, 40 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make verify-phase-4 UV='uvx --from uv==0.13.3 uv'`.
 
 To demonstrate live ingestion without a model or key, run `make smoke-ingestion` (about 40 seconds with cached images). It samples the public stream for 30 seconds in an isolated project, prints validated topic records and counts, and cleans up. See [Phase 2](docs/phases/02-ingestion.md) for exact expected fixture outputs, interactive `rpk` inspection, metrics, cleanup, and reconnect limitations.
 
@@ -47,7 +48,33 @@ Expected: JSON with `source: "fixture"`, `status: "ready"`, provenance, and befo
 make smoke-enrichment
 ```
 
-This separate live check makes at most two public requests and no model calls. See the [Phase 3 walkthrough](docs/phases/03-enrichment.md) for the exact revision IDs, expected evidence, unavailable/oversized demonstrations, exit codes, and limits. `make test-enrichment` runs the focused offline tests. Enrichment is currently a reusable client/CLI; the running ingestion services are connected to it in Phase 4.
+This separate live check makes at most two public requests and no model calls. See the [Phase 3 walkthrough](docs/phases/03-enrichment.md) for the exact revision IDs, expected evidence, unavailable/oversized demonstrations, exit codes, and limits. `make test-enrichment` runs the focused offline tests. The Phase 4 worker uses this same enrichment client.
+
+## Follow an edit through reasoning and delivery
+
+```sh
+make demo-reasoning
+```
+
+No model or key is needed. This starts an isolated Redpanda, prints a two-step `review` result, then proves a failed output publication leaves the input offset unchanged and restarting delivers both pending edits. It cleans up its own resources. The [Phase 4 guide](docs/phases/04-reasoning.md) explains exact expected values, other failure cases, and at-least-once delivery.
+
+For real model quality using six saved inputs, select/start a model below, wait until it is ready, then run:
+
+```sh
+make evaluate-development
+```
+
+Expect six allowed decisions and saved prompts/responses in `reports/development.json`; a failure exits nonzero. The [development rubric](docs/evaluations/development.md) separates these examples from a general accuracy claim. Hosted evaluation incurs charges; local evaluation uses downloaded weights. No live Wikipedia requests or Kafka offset changes occur.
+
+Inspect the running worker:
+
+```sh
+docker compose logs -f worker
+docker compose exec redpanda rpk topic consume results --num 1 --format '%k\t%v\n'
+docker compose exec redpanda rpk group describe triage-v1
+```
+
+`results` contains decisions, source evidence, extracted changes, and step outcomes. Technical errors go to `processing-errors`. After a successful ten-edit batch, `docker compose start worker` processes the next batch. A failed publication stops the worker and leaves the input uncommitted for restart; acknowledged output may duplicate if an offset commit fails. Phase 5 will deduplicate storage by analysis key.
 
 ## Run with a local model
 
@@ -68,7 +95,7 @@ Start local mode:
 
 The script validates `.env.local`, stops the previous mode while retaining volumes, copies it over `.env`, and starts the stack in the background. Edit `.env.local` for lasting local settings. See the [startup guide](docs/startup.md) for switching, failure behavior, and focused tests.
 
-`topics` and `model-init` are one-time initialization services: **exit code 0 is success**. Wait for `model-init` to report `success`. First startup downloads model weights; later starts reuse the persistent volume. Redpanda, Postgres, Connect, and Ollama remain running. Connect starts ingesting with deterministic 1% selection; it makes no model calls. After model initialization completes:
+`topics` and `model-init` are one-time initialization services: **exit code 0 is success**. Wait for `model-init` to report `success`. First startup downloads model weights; later starts reuse the persistent volume. Redpanda, Postgres, Connect, and Ollama remain running. Connect starts ingesting with deterministic 1% selection. The worker waits for model initialization, then processes **ten edits** by default and exits successfully. Each ready edit normally takes two model calls, at most four. Set `WORKER_MAX_ITEMS=0` in the selected profile for continuous processing. After model initialization completes, an optional extra connectivity check is:
 
 ```sh
 make smoke-model
@@ -95,13 +122,13 @@ Edit `.env.frontier` and set your `OPENAI_API_KEY`. Its template already selects
 ./scripts/start-frontier.sh
 ```
 
-The script validates the profile, stops the current stack without deleting volumes, copies `.env.frontier` over `.env`, and starts the hosted configuration. Startup makes no paid model request. To explicitly verify a real request afterward:
+The script validates the profile, stops the current stack without deleting volumes, copies `.env.frontier` over `.env`, and starts the hosted configuration. **Startup now begins paid model processing**, bounded to ten edits / at most 40 calls per worker run by default. The configuration preflight itself is offline. To make an additional connectivity check afterward:
 
 ```sh
 make smoke-model
 ```
 
-Hosted mode starts **no Ollama container and downloads no local weights**. The smoke makes one paid request with a 1,024-token completion budget, including any reasoning tokens. There is no automatic retry or fallback between providers. Secrets stay in `.env` and out of Git, build context, CLI output, and committed evidence. Allow about 4 GiB of Docker memory for this foundation without local inference.
+Hosted mode starts **no Ollama container and downloads no local weights**. The smoke makes one paid request with a 1,024-token completion budget, including any reasoning tokens. The smoke makes one attempt. Reasoning has a shared four-call budget including repairs/retries; there is no fallback between providers. Secrets stay in `.env` and out of Git, build context, CLI output, and committed evidence. Allow about 4 GiB of Docker memory for this foundation without local inference.
 
 ## Use native Ollama or another local model
 
@@ -122,7 +149,7 @@ LLM_BASE_URL=http://host.docker.internal:11434
 
 The native server must accept connections from Docker; the Compose tool container supplies a host-gateway mapping. If it refuses connections, check the server's listen address and firewall. Native-host inference is an optional path; the recorded local smoke used containerized Ollama. Changing a model requires its own quality check in later phases.
 
-To change the model managed by the local launcher, edit `.env.local`: keep `COMPOSE_FILE=docker-compose.yml` and `LLM_BASE_URL=http://ollama:11434`, and set **both** `OLLAMA_MODEL` (download) and `LLM_MODEL` (request) to the same tag. Rerun `./scripts/start-local.sh`. The local adapter disables thinking where supported and requests deterministic sampling; output shape still requires later application validation. Image digests and Python dependencies are pinned. Model tags can move: record the actual model digest for evaluation runs.
+To change the model managed by the local launcher, edit `.env.local`: keep `COMPOSE_FILE=docker-compose.yml` and `LLM_BASE_URL=http://ollama:11434`, and set **both** `OLLAMA_MODEL` (download) and `LLM_MODEL` (request) to the same tag. Rerun `./scripts/start-local.sh`. The local adapter disables thinking where supported and requests deterministic sampling; the worker validates output shape and source quotes. Image digests and Python dependencies are pinned. Model tags can move: record the actual model digest for evaluation runs.
 
 ## Stop and resume
 

@@ -1,0 +1,452 @@
+{
+  "$defs": {
+    "AnalysisResult": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "event": {
+          "$ref": "#/$defs/EditEvent"
+        },
+        "analysis_version": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Analysis Version",
+          "type": "string"
+        },
+        "backend": {
+          "enum": [
+            "ollama",
+            "openai"
+          ],
+          "title": "Backend",
+          "type": "string"
+        },
+        "model": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Model",
+          "type": "string"
+        },
+        "prompt_version": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Prompt Version",
+          "type": "string"
+        },
+        "decision": {
+          "enum": [
+            "routine",
+            "review",
+            "insufficient_evidence"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "explanation": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Explanation",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "maxItems": 20,
+          "title": "Evidence",
+          "type": "array"
+        },
+        "attempts": {
+          "maximum": 4,
+          "minimum": 0,
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "latency_ms": {
+          "minimum": 0,
+          "title": "Latency Ms",
+          "type": "integer"
+        },
+        "content_truncated": {
+          "title": "Content Truncated",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "event",
+        "analysis_version",
+        "backend",
+        "model",
+        "prompt_version",
+        "decision",
+        "confidence",
+        "explanation",
+        "evidence",
+        "attempts",
+        "latency_ms",
+        "content_truncated"
+      ],
+      "title": "AnalysisResult",
+      "type": "object"
+    },
+    "Change": {
+      "additionalProperties": false,
+      "properties": {
+        "hunk": {
+          "maximum": 19,
+          "minimum": 0,
+          "title": "Hunk",
+          "type": "integer"
+        },
+        "kind": {
+          "enum": [
+            "wording",
+            "meaning",
+            "evidence",
+            "unclear"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "summary": {
+          "maxLength": 400,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Summary",
+          "type": "string"
+        },
+        "before": {
+          "maxLength": 512,
+          "title": "Before",
+          "type": "string"
+        },
+        "after": {
+          "maxLength": 512,
+          "title": "After",
+          "type": "string"
+        }
+      },
+      "required": [
+        "hunk",
+        "kind",
+        "summary",
+        "before",
+        "after"
+      ],
+      "title": "Change",
+      "type": "object"
+    },
+    "EditEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "wiki": {
+          "const": "enwiki",
+          "title": "Wiki",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 512,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Title",
+          "type": "string"
+        },
+        "old_revision_id": {
+          "exclusiveMinimum": 0,
+          "title": "Old Revision Id",
+          "type": "integer"
+        },
+        "revision_id": {
+          "exclusiveMinimum": 0,
+          "title": "Revision Id",
+          "type": "integer"
+        },
+        "occurred_at": {
+          "format": "date-time",
+          "title": "Occurred At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "wiki",
+        "title",
+        "old_revision_id",
+        "revision_id",
+        "occurred_at"
+      ],
+      "title": "EditEvent",
+      "type": "object"
+    },
+    "EnrichmentResult": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "event": {
+          "$ref": "#/$defs/EditEvent"
+        },
+        "source": {
+          "enum": [
+            "wikipedia",
+            "fixture"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ready",
+            "no_text_change",
+            "evidence_limit",
+            "revision_unavailable",
+            "rate_limited",
+            "upstream_unavailable",
+            "http_error",
+            "timeout",
+            "network_error",
+            "invalid_response",
+            "provenance_mismatch",
+            "unsupported_diff",
+            "response_too_large",
+            "deadline_exceeded"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "attempts": {
+          "maximum": 2,
+          "minimum": 0,
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "provenance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Provenance"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "evidence": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "maxItems": 20,
+          "title": "Evidence",
+          "type": "array"
+        },
+        "content_truncated": {
+          "default": false,
+          "title": "Content Truncated",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "event",
+        "source",
+        "status",
+        "attempts"
+      ],
+      "title": "EnrichmentResult",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "before": {
+          "maxLength": 4096,
+          "title": "Before",
+          "type": "string"
+        },
+        "after": {
+          "maxLength": 4096,
+          "title": "After",
+          "type": "string"
+        }
+      },
+      "required": [
+        "before",
+        "after"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "Extraction": {
+      "additionalProperties": false,
+      "properties": {
+        "changes": {
+          "items": {
+            "$ref": "#/$defs/Change"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Changes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "changes"
+      ],
+      "title": "Extraction",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "endpoint": {
+          "const": "https://en.wikipedia.org/w/api.php",
+          "default": "https://en.wikipedia.org/w/api.php",
+          "title": "Endpoint",
+          "type": "string"
+        },
+        "page_id": {
+          "exclusiveMinimum": 0,
+          "title": "Page Id",
+          "type": "integer"
+        },
+        "from_title": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "From Title",
+          "type": "string"
+        },
+        "to_title": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "To Title",
+          "type": "string"
+        },
+        "source_url": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Source Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "page_id",
+        "from_title",
+        "to_title",
+        "source_url"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "Step": {
+      "additionalProperties": false,
+      "properties": {
+        "stage": {
+          "enum": [
+            "extract",
+            "assess",
+            "review"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "outcome": {
+          "enum": [
+            "valid",
+            "invalid_output",
+            "model_error"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        }
+      },
+      "required": [
+        "stage",
+        "outcome"
+      ],
+      "title": "Step",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "analysis": {
+      "$ref": "#/$defs/AnalysisResult"
+    },
+    "enrichment": {
+      "$ref": "#/$defs/EnrichmentResult"
+    },
+    "extraction": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Extraction"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "steps": {
+      "items": {
+        "$ref": "#/$defs/Step"
+      },
+      "maxItems": 4,
+      "title": "Steps",
+      "type": "array"
+    },
+    "outcome": {
+      "enum": [
+        "assessed",
+        "reviewed",
+        "invalid_output",
+        "low_confidence",
+        "contradiction",
+        "incomplete_source",
+        "no_change"
+      ],
+      "title": "Outcome",
+      "type": "string"
+    }
+  },
+  "required": [
+    "analysis",
+    "enrichment",
+    "extraction",
+    "steps",
+    "outcome"
+  ],
+  "title": "ReasonedEdit",
+  "type": "object"
+}

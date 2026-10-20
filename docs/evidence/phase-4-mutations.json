@@ -1,0 +1,17 @@
+{
+  "mutations": [
+    {
+      "mutation": "duplicate-keys",
+      "expected_exit": 1,
+      "observed_exit": 1,
+      "test": "test_duplicate_keys_in_otherwise_valid_model_output_are_rejected"
+    },
+    {
+      "mutation": "confidence-boundary",
+      "expected_exit": 1,
+      "observed_exit": 1,
+      "test": "test_confidence_boundary"
+    }
+  ],
+  "restored_suite_exit": 0
+}

@@ -34,7 +34,8 @@ entry = {
     'args': args, 'stage': stage, 'cwd': os.getcwd(), 'profile': profile.read_text(),
     'inherited_overrides': [k for k in os.environ if k in {
         'LLM_BACKEND', 'OPENAI_API_KEY', 'COMPOSE_FILE', 'COMPOSE_PROJECT_NAME',
-        'COMPOSE_PROFILES', 'POSTGRES_PASSWORD', 'INGEST_SAMPLE_ALL', 'OLLAMA_MODEL'}],
+        'COMPOSE_PROFILES', 'POSTGRES_PASSWORD', 'INGEST_SAMPLE_ALL', 'OLLAMA_MODEL',
+        'KAFKA_BROKERS', 'KAFKA_GROUP_ID', 'WORKER_MAX_ITEMS'}],
     'docker_host': os.environ.get('DOCKER_HOST'),
 }
 with open(os.environ['DOCKER_TEST_LOG'], 'a') as log:
@@ -58,6 +59,9 @@ if os.environ.get('DOCKER_TEST_FAIL') == stage:
         "POSTGRES_PASSWORD": "wrong-password",
         "INGEST_SAMPLE_ALL": "true",
         "OLLAMA_MODEL": "wrong-model",
+        "KAFKA_BROKERS": "wrong-broker:9092",
+        "KAFKA_GROUP_ID": "wrong-group",
+        "WORKER_MAX_ITEMS": "0",
     }
 
     def run(mode="local", *, failure="", args=()):
@@ -97,7 +101,7 @@ def test_selects_profile_replaces_env_and_retains_volumes(launcher, mode):
     ]
     assert calls[2]["profile"] == "PREVIOUS=retain-until-validated\n"
     assert calls[2]["args"][-4:] == ["--profile", "tools", "down", "--remove-orphans"]
-    assert calls[3]["args"][-3:] == ["up", "-d", "--remove-orphans"]
+    assert calls[3]["args"][-4:] == ["up", "--build", "-d", "--remove-orphans"]
     assert (repo / ".env").read_bytes() == selected
     assert (repo / ".env").stat().st_mode & 0o777 == 0o600
     assert (repo / f".env.{mode}").read_bytes() == selected

@@ -8,4 +8,6 @@ At each phase boundary, append the latest prompts and responses and check the lo
 
 This repository is public. Never commit access tokens, passwords, private customer content, raw environment dumps, or secret-bearing tool output. Replace sensitive spans with `[REDACTED: reason]` and record the redaction. Do not silently paraphrase a transcript. No secrets have been requested for logging.
 
-Runtime model prompts are a separate artifact: version the actual prompt templates in source, and retain model input/output plus provenance for curated, sanitized evaluation runs. Routine runtime transcripts stay in bounded local storage with documented retention; do not automatically publish every live record to GitHub.
+Runtime model prompts are a separate artifact: version the actual prompt templates in source, and retain model input/output plus provenance for curated, sanitized evaluation runs. The Phase 4 worker retains metadata logs only (Docker rotation: 10 MiB × 3 files), not complete routine prompts/responses. Explicit curated evaluation runs save transcripts to ignored reports for review before publication; do not automatically publish every live record to GitHub.
+
+Latest: [Phase 4 prompts and responses](sessions/2026-10-20-phase-4.md).

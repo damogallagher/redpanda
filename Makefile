@@ -1,7 +1,11 @@
 .PHONY: help sync check test-unit test-foundation test-integration test-container test-connect test-startup verify-phase-1 verify-phase-2 verify-phase-3 inspect-enrichment test-enrichment smoke-enrichment smoke-model smoke-ingestion
+.PHONY: verify-phase-4 test-reasoning demo-reasoning evaluate-development
 UV ?= uv
 
 help:
+	@echo "make verify-phase-4  - cumulative reasoning and durable-delivery checks"
+	@echo "make demo-reasoning  - inspect real broker results and failed-publication replay"
+	@echo "make evaluate-development - six cases against the selected real model"
 	@echo "make verify-phase-3  - cumulative checks plus revision enrichment and fixture inspection"
 	@echo "make inspect-enrichment - print attributed before/after evidence, offline"
 	@echo "make smoke-enrichment - fetch one public revision pair; no model calls"
@@ -74,3 +78,20 @@ verify-phase-3: check test-unit test-integration test-container test-connect ins
 
 smoke-enrichment: sync
 	$(UV) run --frozen pytest tests/test_live_enrichment.py -s --junitxml=reports/live-enrichment.xml
+
+# Real broker, controlled HTTP/model boundaries; no model or API key required.
+test-reasoning: sync
+	$(UV) run --frozen pytest tests/test_reasoning.py tests/test_broker.py tests/test_worker.py tests/test_worker_integration.py --junitxml=reports/reasoning.xml
+
+demo-reasoning: sync
+	$(UV) run --frozen pytest tests/test_worker_integration.py -k '[valid] or result-replay' -s --junitxml=reports/reasoning-demo.xml
+
+verify-phase-4: check test-unit test-integration test-container test-connect inspect-enrichment
+	@echo "PASS: Phase 4 reasoning and durable-delivery checks. Live model evaluation is separate."
+
+# Deliberate live calls using the selected profile. The model must already be ready.
+evaluate-development:
+	@mkdir -p reports
+	docker compose build model-check
+	docker compose run --rm --no-deps -v "$(CURDIR)/tests/fixtures:/fixtures:ro" model-check python /fixtures/development/evaluate.py > reports/development.json
+	@echo "PASS: six development cases; prompts, responses and outcomes in reports/development.json"

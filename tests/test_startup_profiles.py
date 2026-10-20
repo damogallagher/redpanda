@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from triage.config import Settings
+from triage.worker import worker_settings
 
 pytestmark = pytest.mark.integration
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,7 +19,7 @@ def test_startup_profile_contract(mode):
     env = {
         key: value
         for key, value in os.environ.items()
-        if not key.startswith(("COMPOSE_", "LLM_", "INGEST_"))
+        if not key.startswith(("COMPOSE_", "LLM_", "INGEST_", "KAFKA_", "WORKER_"))
         and key not in {"OPENAI_API_KEY", "OLLAMA_MODEL", "POSTGRES_PASSWORD", "CONNECT_PORT"}
     }
     config = json.loads(
@@ -46,7 +47,16 @@ def test_startup_profile_contract(mode):
     assert config["name"] == "redpanda"
     settings = services["model-check"]["environment"]
     assert {"redpanda", "postgres", "connect", "topics"} <= services.keys()
+    assert services["worker"]["environment"] == settings
+    assert (
+        services["worker"]["depends_on"]["topics"]["condition"] == "service_completed_successfully"
+    )
+    assert worker_settings(settings).max_items == 10
     if mode == "local":
+        assert (
+            services["worker"]["depends_on"]["model-init"]["condition"]
+            == "service_completed_successfully"
+        )
         assert {"ollama", "model-init"} <= services.keys()
         assert settings["LLM_BACKEND"] == "ollama"
         assert settings["LLM_BASE_URL"] == "http://ollama:11434"

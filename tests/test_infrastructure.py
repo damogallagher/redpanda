@@ -16,6 +16,7 @@ def test_hosted_stack_has_no_local_inference_service(compose):
         "connect",
         "fixture-source",
         "model-check",
+        "worker",
     }
 
 

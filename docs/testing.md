@@ -1,6 +1,6 @@
 # Test and acceptance policy
 
-Status: Phases 1–3 tests and the coverage gate are implemented. The remaining layers are added with their phases; see the phase verification guide for availability.
+Status: Phases 1–4 tests and the coverage gate are implemented. The remaining layers are added with their phases; see the phase verification guide for availability.
 
 For a reviewer-friendly command matrix and concrete expected behavior, use the [phase verification guide](phase-verification.md).
 
@@ -28,20 +28,23 @@ CI runs deterministic checks on every PR with least-privilege permissions and pi
 
 ## Command interface
 
-Available now: `make check`, `make test-unit`, `make test-foundation`, `make test-integration`, `make test-connect`, `make test-startup`, `make test-container`, `make verify-phase-1`, `make verify-phase-2`, `make verify-phase-3`, `make test-enrichment`, `make inspect-enrichment`, `make smoke-enrichment`, `make smoke-ingestion`, and `make smoke-model`. Full end-to-end, evaluation, and later phase targets remain planned.
+Available now: `make check`, `make test-unit`, `make test-foundation`, `make test-integration`, `make test-connect`, `make test-startup`, `make test-container`, `make verify-phase-1`, `make verify-phase-2`, `make verify-phase-3`, `make test-enrichment`, `make inspect-enrichment`, `make smoke-enrichment`, `make smoke-ingestion`, `make smoke-model`, `make verify-phase-4`, `make test-reasoning`, `make demo-reasoning`, and `make evaluate-development`. Full end-to-end and held-out evaluation remain planned.
 
 - `make check`: formatting, lint, types, and applicable config checks (unit coverage is a separate target).
 - `make test-unit`: deterministic unit suite with 100% line/branch coverage enforcement.
 - `make test-connect`: native Connect processor tests and configuration lint.
 - `make test-foundation`: the four Phase 1 integration checks only.
-- `make test-integration`: all ten deterministic real Redpanda/Postgres/HTTP ingestion and Compose profile checks.
+- `make test-integration`: all 21 deterministic real Redpanda/Postgres/HTTP ingestion and Compose profile checks.
 - `make test-startup`: 13 launcher behavior tests plus two actual Compose profile contracts.
 - `make test-enrichment`: exact revision evidence, provenance, bounds, retries, failure outcomes, and CLI checks.
 - `make inspect-enrichment`: print the attributed fixture result using the packaged CLI, offline.
 - `make smoke-enrichment`: opt-in comparison of one known public revision pair; excluded from CI.
 - `make smoke-ingestion`: opt-in 30-second public-source observation; excluded from CI.
-- `make test-e2e`: deterministic fixture-to-API verification.
-- `make evaluate`: versioned live-model evaluation on development or held-out data, clearly selected.
+- `make test-reasoning`: reasoning/worker unit cases plus real-broker delivery tests.
+- `make demo-reasoning`: print a validated result and the failed-publication/replay evidence.
+- `make evaluate-development`: six predeclared cases with the selected live model and saved transcripts.
+- `make test-e2e` (planned): deterministic fixture-to-API verification.
+- `make evaluate` (planned): versioned live-model evaluation on development or held-out data, clearly selected.
 - `make verify-phase-N`: cumulative relevant deterministic checks; live demonstrations are separate.
 
 Use isolated Compose project names/volumes for tests. Cleanup may remove only test-owned resources. Never delete a user's existing volumes as part of a routine test.
