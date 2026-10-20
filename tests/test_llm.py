@@ -43,7 +43,9 @@ def test_ollama_request_contract_and_no_credential_forwarding(timeout):
         settings = Settings.from_env(
             {"OPENAI_API_KEY": "must-not-be-sent", "LLM_TIMEOUT_SECONDS": str(timeout)}
         )
-        assert complete(settings, "system", "user", client) == "The claim changed."
+        assert (
+            complete(settings, "system", "user", client, clock=lambda: 0.0) == "The claim changed."
+        )
 
 
 def test_openai_request_contract_and_exactly_one_call():
