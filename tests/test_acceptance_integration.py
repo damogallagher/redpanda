@@ -97,8 +97,13 @@ def test_interruption_replays_backlog_into_unique_rows(compose, tmp_path, fault)
         base_url="http://" + compose("port", "api", "8000").strip(), trust_env=False
     ) as client:
         for rev in [revision, revision + 1]:
-            eventually(lambda rev=rev: client.get(f"/results/enwiki/{rev}").status_code == 200)
-            detail = client.get(f"/results/enwiki/{rev}").json()
+            eventually(
+                lambda rev=rev: (
+                    client.get(f"/results/enwiki/{rev}?analysis_version=triage-v1").status_code
+                    == 200
+                )
+            )
+            detail = client.get(f"/results/enwiki/{rev}?analysis_version=triage-v1").json()
             assert detail["result"]["analysis"]["decision"] == "review"
     assert (
         sql(

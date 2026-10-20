@@ -103,7 +103,10 @@ def test_fresh_local_bootstrap_and_live_edit(tmp_path):
             compose("stop", "connect")
             rows = client.get("/results", params={"analysis_version": "triage-v1"}).json()["items"]
             details = [
-                client.get(f"/results/enwiki/{row['revision_id']}").json()["result"] for row in rows
+                client.get(
+                    f"/results/enwiki/{row['revision_id']}?analysis_version=triage-v1"
+                ).json()["result"]
+                for row in rows
             ]
             assert details and any(len(r["steps"]) >= 2 for r in details)
             assert all(r["enrichment"]["source"] == "wikipedia" for r in details)
