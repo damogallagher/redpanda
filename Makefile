@@ -1,10 +1,11 @@
-.PHONY: help sync check test-unit test-foundation test-integration test-container test-connect verify-phase-1 verify-phase-2 smoke-model smoke-ingestion
+.PHONY: help sync check test-unit test-foundation test-integration test-container test-connect test-startup verify-phase-1 verify-phase-2 smoke-model smoke-ingestion
 UV ?= uv
 
 help:
 	@echo "make verify-phase-2  - cumulative checks plus native Connect ingestion tests"
 	@echo "make verify-phase-1  - repeatable checks; Docker required, no LLM/key needed"
 	@echo "make test-unit       - offline unit tests with 100% line/branch coverage"
+	@echo "make test-startup    - launcher behavior and local/frontier profile contracts"
 	@echo "make test-foundation - Phase 1 broker/database checks only"
 	@echo "make test-integration - isolated broker/database tests and cleanup"
 	@echo "make smoke-model     - one real model call; selected backend must be ready"
@@ -17,6 +18,7 @@ check: sync
 	$(UV) run --frozen ruff check src tests
 	$(UV) run --frozen ruff format --check src tests
 	$(UV) run --frozen mypy src
+	@for script in scripts/*.sh; do sh -n "$$script" || exit; done
 	docker compose -f docker-compose.yml config --quiet
 	docker compose -f compose.infrastructure.yml config --quiet
 
@@ -24,6 +26,9 @@ check: sync
 test-unit: sync
 	$(UV) run --frozen pytest -m 'not integration' --cov --cov-report=term-missing --cov-report=json:reports/coverage.json --cov-report=xml:reports/coverage.xml --junitxml=reports/unit.xml
 	$(UV) run --frozen python -c 'import json; t=json.load(open("reports/coverage.json"))["totals"]; assert t["missing_lines"] == t["missing_branches"] == 0, t'
+
+test-startup: sync
+	$(UV) run --frozen pytest tests/test_launchers.py tests/test_startup_profiles.py --junitxml=reports/startup.xml
 
 test-foundation: sync
 	$(UV) run --frozen pytest tests/test_infrastructure.py tests/test_postgres_upgrade.py --junitxml=reports/integration.xml
