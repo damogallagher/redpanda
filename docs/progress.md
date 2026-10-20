@@ -63,3 +63,13 @@ Recommendation: retain PostgreSQL major 16 as named in the assignment, but updat
 This follow-up changes documentation and the visible interaction log only. Runtime files, dependency pins, and previous test evidence remain unchanged. Phase 2 has not started.
 
 Documentation validation: all 22 relative file links across the four changed Markdown files resolve; `git diff --check` passed. No runtime tests were rerun for this documentation-only review.
+
+## 20 October 2026 — Phase 1 dependency updates
+
+PR #4 is merged. Created `maintenance/phase-1-dependency-updates` from main `cf664e1` for the requested PostgreSQL 16.15, Hatchling 1.32.4, and uv 0.13.3 upgrades. Docker and CI use the same uv pin. PostgreSQL uses a verified ARM64/AMD64 manifest digest. The runtime/test lockfile passes `uv lock --check` without changes.
+
+Added a disposable PostgreSQL upgrade integration test: seed 16.14, stop it, recreate with 16.15 using the same test volume, verify unchanged data and migration timestamp, then verify new writes. Cleanup targets only the test's unique Compose project.
+
+Implementation commit `68d33a3` passed `make verify-phase-1 UV='uvx --from uv==0.13.3 uv'`: 86 unit tests, 4 integration tests, 176/176 executable lines and 32/32 branches covered, zero failures/skips/exclusions. Formatting, lint, strict types, Compose validation, and the rebuilt packaged CLI passed. The [maintenance guide](phases/01-dependency-updates.md) and [verification JSON](evidence/phase-1-dependency-updates.json) record exact commands and outcomes.
+
+The user's global uv installation, `.env`, and demo data volumes were not modified. No live model calls were made. Restored the previous review's final response to the log because its commit landed on the branch after PR #4 merged. Phase 2 remains unstarted; Damien reviews and merges this maintenance PR.
