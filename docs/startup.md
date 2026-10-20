@@ -88,4 +88,6 @@ The focused target runs 13 launcher tests against a recording Docker boundary an
 
 Verified implementation/tests: `d550e78`. The cumulative gate passed with 99 unit tests, 10 integration/configuration checks, 40 native Connect tests, and 176/176 Python lines plus 32/32 branches covered (zero missing/excluded lines). Both launchers ran successfully on Damien’s machine; local → frontier → local retained the migration record and downloaded model IDs, and local mode was left running. No paid model call was made.
 
+GitHub Linux CI also passed on `a3a127e`: [workflow and artifacts](https://github.com/damogallagher/redpanda/actions/runs/39453543842). The closing audit commit changes documentation only.
+
 Recorded verification and manual switch results are in [startup evidence](evidence/startup-launchers.json). See [Docker's variable precedence](https://docs.docker.com/compose/how-tos/environment-variables/variable-interpolation/) and [volume-preserving shutdown behavior](https://docs.docker.com/reference/cli/docker/compose/down/) for the underlying Compose semantics.

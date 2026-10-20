@@ -72,5 +72,8 @@
     "Startup success precedes completion of a first-time local model download.",
     "A failed up retains the selected .env for retry; there is no automatic rollback."
   ],
-  "focused_tested_commit": "3732492"
+  "focused_tested_commit": "3732492",
+  "ci_run": "https://github.com/damogallagher/redpanda/actions/runs/39453543842",
+  "ci_commit": "a3a127e59d9bfd44362dcf887ec84434fa7b6c5f",
+  "ci_conclusion": "success"
 }
