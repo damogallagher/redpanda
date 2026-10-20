@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "stage": "ingestion",
+  "reason": "invalid_record",
+  "source": "fixture",
+  "source_id": "fixture-invalid",
+  "payload_sha256": "e2a7fcf2d6e330cb6adac4c6b9985847ab1837ec1b27b0bd28b72182e12bee87"
+}

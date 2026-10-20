@@ -1,0 +1,114 @@
+# Wikimedia's event-first SSE profile; see docs/phases/02-ingestion.md.
+http:
+  address: 0.0.0.0:4195
+
+input:
+  http_client:
+    url: ${INGEST_STREAM_URL:https://stream.wikimedia.org/v2/stream/recentchange}
+    headers:
+      Accept: text/event-stream
+      User-Agent: RedpandaEditTriage/0.1 (https://github.com/damogallagher/redpanda)
+    retries: 3
+    retry_period: 1s
+    max_retry_backoff: 30s
+    stream:
+      enabled: true
+      reconnect: ${INGEST_RECONNECT:true}
+      scanner:
+        re_match:
+          pattern: '(?m)^event:'
+          max_buffer_size: 131072
+    auto_replay_nacks: true
+
+pipeline:
+  threads: 1
+  processors:
+    - mapping: |
+        meta payload_sha256 = content().hash("sha256").encode("hex")
+        meta source = env("INGEST_SOURCE").or("wikimedia-recentchange")
+        meta ingest_version = "1"
+        meta source_id = content().string().replace_all("\r\n", "\n").split("\n").filter(line -> line.has_prefix("id:")).map_each(line -> line.re_replace("^id: ?", "")).index(-1).catch("").slice(0, 2048)
+    - try:
+        - mapping: |
+            let raw = content().string().replace_all("\r\n", "\n")
+            let lines = $raw.split("\n")
+            let data = $lines.filter(line -> line.has_prefix("data:")).map_each(line -> line.re_replace("^data: ?", "")).join("\n")
+            let events = $lines.filter(line -> line.has_prefix("event:")).map_each(line -> line.re_replace("^event: ?", ""))
+            if $raw.length() > 65536 {
+              root = throw("frame too large")
+            } else if $data == "" && $events.length() == 0 && $lines.filter(line -> line != "" && !line.has_prefix(":") && !line.has_prefix("id:") && !line.has_prefix("retry:")).length() == 0 {
+              root = {}
+              meta outcome = "heartbeat"
+            } else if !$raw.has_suffix("\n\n") || $events.length() != 1 {
+              root = throw("incomplete or ambiguous SSE frame")
+            } else if $events.index(0) != "message" {
+              root = {}
+              meta outcome = "filtered"
+            } else {
+              let change = $data.parse_json()
+              if $change.type() != "object" {
+                root = throw("expected a change object")
+              } else if $change.wiki.type() != "string" || $change.wiki == "" || $change.type.type() != "string" || $change.namespace.type() != "number" || $change.bot.type() != "bool" {
+                root = throw("invalid routing fields")
+              } else if $change.namespace.floor() != $change.namespace {
+                root = throw("invalid namespace")
+              } else if $change.wiki != "enwiki" || $change.type != "edit" || $change.namespace != 0 || $change.bot {
+                root = {}
+                meta outcome = "filtered"
+              } else if $change.title.type() != "string" || $change.revision.old.type() != "number" || $change.revision.new.type() != "number" || $change.timestamp.type() != "number" {
+                root = throw("invalid candidate fields")
+              } else if $change.title.trim() == "" || $change.title.length() > 512 || $change.revision.old <= 0 || $change.revision.new <= 0 || $change.revision.old >= 9007199254740992 || $change.revision.new >= 9007199254740992 || $change.revision.old.floor() != $change.revision.old || $change.revision.new.floor() != $change.revision.new || $change.revision.old == $change.revision.new || $change.timestamp < 0 || $change.timestamp > 253402300799 || $change.timestamp.floor() != $change.timestamp {
+                root = throw("candidate outside supported bounds")
+              } else {
+                root = {
+                  "schema_version": 1,
+                  "wiki": "enwiki",
+                  "title": $change.title,
+                  "old_revision_id": $change.revision.old,
+                  "revision_id": $change.revision.new,
+                  "occurred_at": $change.timestamp.ts_format("2006-01-02T15:04:05Z", "UTC")
+                }
+                meta event_key = "enwiki:%.0f".format($change.revision.new)
+                meta outcome = if env("INGEST_SAMPLE_ALL").or("false") == "true" || $change.revision.new % 100 == 0 { "accepted" } else { "sampled_out" }
+              }
+            }
+    - catch:
+        - mapping: |
+            root = {
+              "schema_version": 1,
+              "stage": "ingestion",
+              "reason": "invalid_record",
+              "source": @source,
+              "source_id": @source_id,
+              "payload_sha256": @payload_sha256
+            }
+            meta outcome = "invalid"
+            meta event_key = "ingest:" + @payload_sha256
+    - metric:
+        type: counter
+        name: triage_ingest_frames
+        labels:
+          outcome: ${! meta("outcome") }
+    - mapping: |
+        root = if @outcome == "accepted" || @outcome == "invalid" { this } else { deleted() }
+
+output:
+  redpanda:
+    seed_brokers: [redpanda:9092]
+    topic: '${! if meta("outcome") == "accepted" { "edits" } else { "ingest-errors" } }'
+    key: ${! meta("event_key") }
+    max_in_flight: 1
+    acks: all
+    idempotent_write: true
+    allow_auto_topic_creation: false
+    max_buffered_records: 100
+    max_buffered_bytes: 1MiB
+    metadata:
+      include_patterns: ['^(source|source_id|ingest_version)$']
+
+metrics:
+  prometheus: {}
+logger:
+  level: INFO
+  format: json
+shutdown_timeout: 20s

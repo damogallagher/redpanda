@@ -1,6 +1,6 @@
 # Test and acceptance policy
 
-Status: Phase 1 tests and coverage gate are implemented. The remaining layers are added with their phases; see the phase verification guide for availability.
+Status: Phase 1 and Phase 2 tests and coverage gate are implemented. The remaining layers are added with their phases; see the phase verification guide for availability.
 
 For a reviewer-friendly command matrix and concrete expected behavior, use the [phase verification guide](phase-verification.md).
 
@@ -28,15 +28,18 @@ CI runs deterministic checks on every PR with least-privilege permissions and pi
 
 ## Command interface
 
-Available now: `make check`, `make test-unit`, `make test-integration`, `make test-container`, `make verify-phase-1`, and `make smoke-model`. Connect, end-to-end, evaluation, and later phase targets remain planned.
+Available now: `make check`, `make test-unit`, `make test-foundation`, `make test-integration`, `make test-connect`, `make test-startup`, `make test-container`, `make verify-phase-1`, `make verify-phase-2`, `make smoke-ingestion`, and `make smoke-model`. Full end-to-end, evaluation, and later phase targets remain planned.
 
-- `make check`: formatting, lint, types, unit coverage, and applicable config checks.
+- `make check`: formatting, lint, types, and applicable config checks (unit coverage is a separate target).
 - `make test-unit`: deterministic unit suite with 100% line/branch coverage enforcement.
 - `make test-connect`: native Connect processor tests and configuration lint.
-- `make test-integration`: isolated real Redpanda/Postgres integration tests.
+- `make test-foundation`: the four Phase 1 integration checks only.
+- `make test-integration`: all ten deterministic real Redpanda/Postgres/HTTP ingestion and Compose profile checks.
+- `make test-startup`: 13 launcher behavior tests plus two actual Compose profile contracts.
+- `make smoke-ingestion`: opt-in 30-second public-source observation; excluded from CI.
 - `make test-e2e`: deterministic fixture-to-API verification.
 - `make evaluate`: versioned live-model evaluation on development or held-out data, clearly selected.
-- `make verify-phase-N`: cumulative relevant checks plus that phase's demonstration.
+- `make verify-phase-N`: cumulative relevant deterministic checks; live demonstrations are separate.
 
 Use isolated Compose project names/volumes for tests. Cleanup may remove only test-owned resources. Never delete a user's existing volumes as part of a routine test.
 
