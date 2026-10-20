@@ -2,6 +2,8 @@
 
 Status: contract for future implementation. No test suite or application exists in this planning PR.
 
+For a reviewer-friendly command matrix and concrete expected behavior, use the [phase verification guide](phase-verification.md).
+
 ## Coverage gate
 
 Require 100% executed lines AND 100% branches for all first-party production Python modules, including API, worker, adapters, configuration, and executable Python utilities. Collect over the entire source directory, including unimported modules. Unit tests run without internet or model credentials. Use injected boundary clients, fake time, and deterministic model responses; test real application behavior around those boundaries.

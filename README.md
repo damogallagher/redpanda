@@ -6,6 +6,8 @@ Start with the [implementation plan](docs/implementation-plan.md), then the [pha
 
 The agreed example is Wikipedia edit triage, implemented in Python with a choice of local Ollama or hosted frontier inference. Submission is due Friday, 23 October 2026. Damien reviews and merges each phase. This is entirely new work with a fresh repository history.
 
+- [Original assignment — unchanged](docs/assignment/fde-take-home-exercise.md)
+- [How to verify each phase](docs/phase-verification.md)
 - [Quality and testing requirements](docs/testing.md)
 - [AI interaction log](docs/ai-log/README.md)
 - [Progress and decisions still needed](docs/progress.md)

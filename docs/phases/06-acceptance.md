@@ -13,9 +13,17 @@ Finish clean-clone startup, restart/replay drills, backlog/capacity observations
 
 ## How to test
 
+See the [phase verification guide](../phase-verification.md) for this phase’s exact behavioral checkpoints and evidence requirements.
+
 Implement `make verify-phase-6`: all prior checks and end-to-end acceptance. Run default `docker compose up` with fresh application volumes, verify model bootstrap, process seeded and live edits, inspect lag, and test worker/model/broker/database failures and recovery. Record environment, timings, evaluation results, and remaining deployment limits.
 
-Commands are target interfaces until implemented. See [testing policy](../testing.md).
+Planned deterministic entry point (not implemented yet):
+
+```sh
+make verify-phase-6
+```
+
+Live source/model checks are separate from this deterministic command. Before this phase is completed, document actual prerequisites, live commands, representative output, runtime, cleanup, and troubleshooting here. See [testing policy](../testing.md).
 
 ## Acceptance
 

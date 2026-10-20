@@ -13,9 +13,17 @@ Pin Python/dependencies and container images; add `.env.example`/ignore rules; s
 
 ## How to test
 
+See the [phase verification guide](../phase-verification.md) for this phase’s exact behavioral checkpoints and evidence requirements.
+
 Implement `make verify-phase-1`: Compose validation, relevant unit/schema tests, broker readiness/topic setup via rpk, database readiness, and a real model readiness/request smoke for each backend (hosted credentials required; do not claim verification without them). Confirm hosted mode starts without downloading a local model. Re-run startup to prove initialization is idempotent.
 
-Commands are target interfaces until implemented. See [testing policy](../testing.md).
+Planned deterministic entry point (not implemented yet):
+
+```sh
+make verify-phase-1
+```
+
+Live source/model checks are separate from this deterministic command. Before this phase is completed, document actual prerequisites, live commands, representative output, runtime, cleanup, and troubleshooting here. See [testing policy](../testing.md).
 
 ## Acceptance
 

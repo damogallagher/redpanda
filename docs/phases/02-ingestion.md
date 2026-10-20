@@ -13,9 +13,17 @@ Implement SSE framing/JSON parsing; fail-closed heartbeat/malformed handling; wi
 
 ## How to test
 
+See the [phase verification guide](../phase-verification.md) for this phase’s exact behavioral checkpoints and evidence requirements.
+
 Implement `make verify-phase-2`: cumulative checks plus native Connect tests for each filter/projection/error path. Feed a fixed SSE fixture through Connect to real Redpanda; use rpk to assert exact expected records/keys and error routing. Separately demonstrate a short live-feed run.
 
-Commands are target interfaces until implemented. See [testing policy](../testing.md).
+Planned deterministic entry point (not implemented yet):
+
+```sh
+make verify-phase-2
+```
+
+Live source/model checks are separate from this deterministic command. Before this phase is completed, document actual prerequisites, live commands, representative output, runtime, cleanup, and troubleshooting here. See [testing policy](../testing.md).
 
 ## Acceptance
 

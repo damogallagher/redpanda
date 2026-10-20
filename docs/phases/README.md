@@ -1,5 +1,7 @@
 # Phase index
 
+Start with the [phase verification guide](../phase-verification.md) for the command matrix, inputs, expected results, and reviewer workflow.
+
 Every phase has its own branch and PR into `main`. Status and test evidence must reflect actual work.
 
 - [Phase 00: Planning and audit trail](00-plan.md)
