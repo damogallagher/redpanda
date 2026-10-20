@@ -50,3 +50,7 @@ These steps were recommendations at the time of review. See the subsequent [depe
 ## Phase 4 addition
 
 Added `confluent-kafka==2.16.0` for the worker's Kafka boundary, with wheel hashes in `uv.lock`. The [official release on PyPI](https://pypi.org/project/confluent-kafka/2.16.0/) was published 7 October 2026 and includes Python 3.13 macOS ARM64 and Linux wheels. The small adapter uses explicit delivery callbacks and synchronous offset commits described in the [official client API](https://docs.confluent.io/platform/current/clients/confluent-kafka-python/html/index.html). Real Redpanda tests exercise publication, offset inspection, restart/replay, and shutdown. Existing dependency and image pins remain unchanged.
+
+## Phase 6 security-driven application image update
+
+The Python runtime remains 3.13.16 and all Python dependencies remain locked. The application Dockerfile now uses the official `3.13.16-slim-trixie` multi-architecture manifest and a separate build stage; the running image excludes pip/uv/ensurepip and source/build tooling. This targeted Debian 12 → 13 base change addresses findings from an actual container scan. Postgres remains 16.15 and its data format is unchanged. See the [security review](security-review.md) for the exact digest, scanner evidence, remaining advisories and scope. Native ARM64 and Ubuntu AMD64 acceptance are checked separately; model/provider versions remain explicit.

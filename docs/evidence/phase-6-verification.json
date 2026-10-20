@@ -1,0 +1,85 @@
+{
+  "phase": 6,
+  "date": "2026-10-20",
+  "implementation_commit": "7fc26f1d47f4f815d153e4fa19f29170cd9fe380",
+  "status": "Final local gate and hardened-image live check in progress; prior cumulative gate passed.",
+  "commands": {
+    "deterministic": "make verify-phase-6 UV='uvx --from uv==0.13.3 uv'",
+    "local_model": "./scripts/test-local.sh",
+    "frontier_model": "./scripts/test-frontier.sh",
+    "success_demo": "make demo-success",
+    "intentional_failure_demo": "make demo-test-failure",
+    "fresh_start": "make accept-live-local"
+  },
+  "unit_tests": 416,
+  "integration_tests_expected": 29,
+  "native_connect_tests": 72,
+  "coverage": {
+    "covered_lines": 1082,
+    "num_statements": 1082,
+    "percent_covered": 100.0,
+    "percent_covered_display": "100.00",
+    "missing_lines": 0,
+    "excluded_lines": 0,
+    "percent_statements_covered": 100.0,
+    "percent_statements_covered_display": "100.00",
+    "num_branches": 276,
+    "num_partial_branches": 0,
+    "covered_branches": 276,
+    "missing_branches": 0,
+    "percent_branches_covered": 100.0,
+    "percent_branches_covered_display": "100.00"
+  },
+  "model_acceptance": {
+    "local": {
+      "passed": 9,
+      "total": 9,
+      "calls": 14,
+      "seconds": 135.6
+    },
+    "frontier": {
+      "passed": 9,
+      "total": 9,
+      "calls": 14,
+      "seconds": 46.662
+    },
+    "additional_hardened_frontier_smoke": {
+      "calls": 1,
+      "seconds": 2.631,
+      "passed": true
+    }
+  },
+  "intentional_failure_demo": {
+    "pytest_failures": 1,
+    "make_exit_code": 2,
+    "expected_nonzero": true,
+    "application_unchanged": true
+  },
+  "dependency_audit": {
+    "packages": 33,
+    "vulnerabilities": 0,
+    "skipped": 0
+  },
+  "container_audit": {
+    "critical": 0,
+    "high_package_advisory_pairs": 44,
+    "unique_remaining_advisories": 8,
+    "scan_exit_code": 1,
+    "passed_security_gate": false,
+    "scope": "ARM64 application image only; see security-review.md"
+  },
+  "integrity": {
+    "assignment_sha256": "89a4840092423818c59a81f4042f9007d36e90fe7da7bc8111a4d96f1662e40a",
+    "original_assignment_byte_identical": true,
+    "private_profile_hashes_and_modes_unchanged": true,
+    "supplied_key_absent_from_candidate_files": true,
+    "personal_readme_sections_unchanged": true
+  },
+  "ci": {
+    "status": "pending"
+  },
+  "remaining": [
+    "Damien writes independent personal README sections and reviews/merges PR.",
+    "Residual upstream Debian advisories and local-deployment limits documented."
+  ]
+}

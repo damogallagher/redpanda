@@ -101,7 +101,7 @@ Inspect both storage and API output: a successful HTTP status alone is insuffici
 
 ## Phase 6 — prove the submission is reproducible
 
-**Future automated command:** `make verify-phase-6`.
+**Available command:** `make verify-phase-6` (alias `make test`). See the [operator guide](operations.md) and [Phase 6 record](phases/06-acceptance.md) for success/failure demos, model tests, cleanup and evidence.
 
 Run all prior deterministic checks, including 100% application line and branch coverage, against isolated fresh test volumes. Rehearse worker/broker/database/model failure and recovery, checking results and offsets rather than just container restarts.
 

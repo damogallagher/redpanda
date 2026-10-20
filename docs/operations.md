@@ -22,6 +22,14 @@ All three are **free of model/API calls**. They use disposable Docker projects a
 
 The failure demonstration **passes because the expected failure was detected and recovery was verified**. It does not hide a broken application behind a green exit code. Model/Wikipedia responses are controlled in deterministic infrastructure tests; brokers, Connect, database, API and worker are real.
 
+## See what an actually failed test looks like
+
+```sh
+make demo-test-failure
+```
+
+This intentionally red demonstration expects an invented quotation to be accepted. The real grounding validator rejects it, so pytest prints one `FAILED` test and Make exits nonzero. That is the expected demonstration outcome, **not a passing test**. It never changes application code, data, or the normal test suite. Run `make test` afterward for the normal green gate. The deliberately wrong test is outside normal test discovery; its report is `reports/intentional-failure.xml`.
+
 ## Check a real model without starting the full application
 
 Create the profiles once; these commands preserve existing files:

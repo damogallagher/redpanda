@@ -1,0 +1,11 @@
+{
+  "fault": "crash",
+  "backlog_before": 2,
+  "offset_after_fault": -1,
+  "offset_after_recovery": 2,
+  "backlog_after": 0,
+  "kafka_results": 3,
+  "logical_rows": 2,
+  "seconds": 47.236,
+  "model": "deterministic HTTP double; not inference capacity"
+}

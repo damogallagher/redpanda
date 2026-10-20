@@ -1,0 +1,109 @@
+{
+  "commit": "a826e4ae619dc46616eee79e7e6df8cf28daea0b",
+  "project": "triage-live-1374a0d302",
+  "boot_seconds": 82.496,
+  "total_seconds": 200.27,
+  "worker_limit": 3,
+  "maximum_model_calls": 12,
+  "sampling": "all eligible edits for a bounded observation; normal default is 1%",
+  "rows": 3,
+  "results": [
+    {
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "Ikageng, North West",
+        "old_revision_id": 1379122177,
+        "revision_id": 1381216441,
+        "occurred_at": "2026-10-20T19:13:49Z"
+      },
+      "decision": "routine",
+      "attempts": 2,
+      "outcome": "assessed",
+      "steps": [
+        {
+          "stage": "extract",
+          "outcome": "valid"
+        },
+        {
+          "stage": "assess",
+          "outcome": "valid"
+        }
+      ]
+    },
+    {
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "Marquette High School (Missouri)",
+        "old_revision_id": 1381149517,
+        "revision_id": 1381216439,
+        "occurred_at": "2026-10-20T19:13:47Z"
+      },
+      "decision": "routine",
+      "attempts": 2,
+      "outcome": "assessed",
+      "steps": [
+        {
+          "stage": "extract",
+          "outcome": "valid"
+        },
+        {
+          "stage": "assess",
+          "outcome": "valid"
+        }
+      ]
+    },
+    {
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "Buckhead Village District",
+        "old_revision_id": 1380654648,
+        "revision_id": 1381216434,
+        "occurred_at": "2026-10-20T19:13:45Z"
+      },
+      "decision": "review",
+      "attempts": 2,
+      "outcome": "assessed",
+      "steps": [
+        {
+          "stage": "extract",
+          "outcome": "valid"
+        },
+        {
+          "stage": "assess",
+          "outcome": "valid"
+        }
+      ]
+    }
+  ],
+  "group": [
+    {
+      "group_name": "triage-v1",
+      "coordinator_partition": "__consumer_offsets/1",
+      "state": "Empty",
+      "balancer": "",
+      "members": 0,
+      "coordinator_node": 0,
+      "total_lag": 203,
+      "partitions": [
+        {
+          "partition": 0,
+          "current_offset": 3,
+          "log_start_offset": 0,
+          "log_end_offset": 206,
+          "lag": 203,
+          "topic": "edits",
+          "member_id": "",
+          "client_id": "",
+          "host": ""
+        }
+      ],
+      "members_details": []
+    }
+  ],
+  "ollama_models": "NAME          ID              SIZE      MODIFIED           \nqwen2.5:7b    845dbda0ea48    4.7 GB    About a minute ago    \n",
+  "seed_rows": 3,
+  "limits": "One live run; no accuracy or sustainable throughput claim."
+}

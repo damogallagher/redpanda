@@ -1,38 +1,62 @@
 # Phase 06: Operational acceptance and handover
 
-Status: not started.
-Branch: `phase/06-acceptance`. Base: `main` after the previous phase merges.
+Branch: `phase/06-acceptance`, from merged main `f9375ff` (PR #10). Status: implementation complete; final local gate, hardened-image live check and CI handover in progress. Damien reviews and merges.
 
-## Scope
+## What changed
 
-Prove the complete system is reproducible, robust within its stated limits, and easy to defend in a walkthrough.
+Added a short command menu and [operator guide](../operations.md) covering setup, local/frontier model checks, success/failure demonstrations, safe stopping, explicit data/weight deletion, recovery and troubleshooting. Existing startup scripts still copy the selected private profile over `.env`; model tests read their own profile without switching the active application.
 
-## Planned work
+Added two small Python utilities: bounded acceptance evaluation and Compose operations, with thin shell entry points. Model checks run nine frozen cases with at most 28 calls, preserve visible inputs/outputs in private reports, return nonzero on any failed case, and stop early on technical provider failure. Cleanup verifies project/volume ownership, rejects external volumes and never globally prunes Docker or touches native-host models.
 
-Finish clean-clone startup, restart/replay drills, backlog/capacity observations, held-out model evaluation, dependency/security review, secret/log-redaction checks, exact run/troubleshooting documentation, and a concise code/data-flow guide. Reconcile every assignment requirement and phase result. Damien independently writes the required personal README sections.
+Added real broker-outage and process-death drills, observing offsets, backlog, duplicates and eventual unique SQL rows. Added real selective-volume cleanup tests and a non-root runtime/build-tool exclusion check. `make test` / `make verify-phase-6` runs the cumulative deterministic gate. `make demo-success`, `make demo-failures`, and the deliberately red `make demo-test-failure` make outcomes easy to inspect.
 
-## How to test
+The security review found build-tool and Debian 12 advisories. The runtime now uses a pinned Python 3.13.16 Debian 13 base and copies only the installed application environment from a build stage; pip, uv, ensurepip and source/build tooling are absent. Postgres remains 16.15. All remaining scan findings and scope limits are disclosed in the [security review](../security-review.md).
 
-See the [phase verification guide](../phase-verification.md) for this phase’s exact behavioral checkpoints and evidence requirements.
+Added an [assignment/code-flow checklist](../handover.md), [frozen model evaluation](../evaluations/acceptance.md), and [conversation log](../ai-log/sessions/2026-10-20-phase-6.md). Original assignment and Damien's reserved personal README sections remain unchanged.
 
-Implement `make verify-phase-6`: all prior checks and end-to-end acceptance. Run default `docker compose up` with fresh application volumes, verify model bootstrap, process seeded and live edits, inspect lag, and test worker/model/broker/database failures and recovery. Record environment, timings, evaluation results, and remaining deployment limits.
+## Exact verification
 
-Planned deterministic entry point (not implemented yet):
+Prerequisites: running Docker with Compose 2.20+, Make, uv; initial downloads need internet. Run from the repository root, one operation at a time:
 
 ```sh
-make verify-phase-6
+make test
+make demo-success
+make demo-failures
+make demo-test-failure
 ```
 
-Live source/model checks are separate from this deterministic command. Before this phase is completed, document actual prerequisites, live commands, representative output, runtime, cleanup, and troubleshooting here. See [testing policy](../testing.md).
+The first three exit 0 when their assertions pass. The fourth **intentionally exits nonzero**, showing an invented quotation rejected by the real grounding validator. It is outside normal discovery, changes no production code and is not counted as a passing test. To see normal green results afterward run `make test` again. See the operator guide for the narrower commands and expected output. The pinned-tool equivalent is `make test UV='uvx --from uv==0.13.3 uv'`.
 
-## Acceptance
+| Check | Expected / observed |
+|---|---|
+| Unit gate | 416 passing tests; all 1,082 executable application lines and 276 branches covered; zero exclusions/missing coverage |
+| Integration/configuration | 29 passing checks, including real Connect, broker, Postgres, API, process death, broker outage and cleanup |
+| Native Connect | 72 passing cases (40 ingestion + 32 sink), both configurations lint clean |
+| Static/build | Ruff, formatting, strict types, shell syntax, both Compose modes and installed container CLI pass |
+| Worker crash after publication | Input remains uncommitted; restart consumes two pending edits; three Kafka outputs become two logical SQL rows |
+| Broker outage during publication | Publication fails without offset advancement; restart after broker recovery drains two edits; two SQL rows |
+| Database outage and sink restart | API returns 503, sink offset remains unchanged, restored DB receives pending work and advances offset |
+| Cleanup | Default retains all volumes; data reset retains weights; model reset retains data; other-project sentinel survives |
+| Deliberately wrong test | One pytest failure / Make nonzero; grounding validator rejects invented quote as designed |
 
-All deterministic gates pass; 100% application line/branch coverage is evidenced; the reviewer can reproduce startup and trace normal/failure cases. Submission remains incomplete until Damien supplies his independently written README sections.
+Machine evidence and exact tested commits: [verification](../evidence/phase-6-verification.json). Reports under ignored `reports/` and CI artifacts include JUnit and coverage JSON/XML. The initial new acceptance requests omitted the API's mandatory `analysis_version`; the tests failed, were corrected in `a826e4a`, and pass afterward. No application API contract was weakened to accommodate the tests.
 
-## Actual work and evidence
+## Live acceptance
 
-Not implemented. At completion record changed files/behavior, exact commands, expected versus observed output, coverage, tested commit, CI/PR links, and remaining limitations here.
+```sh
+./scripts/test-local.sh
+./scripts/test-frontier.sh
+make accept-live-local
+```
 
-## Walkthrough checkpoint
+Private profiles must exist; hosted mode requires a key and incurs charges. The first two check the frozen synthetic cases without Kafka/Wikipedia requests. First real runs passed **9/9 each**, with 14 calls each: Qwen2.5 7B in 135.600 seconds and GPT-6.1 Sol in 46.662 seconds. Prompts and expected labels were not tuned after viewing these cases. Read the [rubric and full transcripts](../evaluations/acceptance.md); this small result does not establish general accuracy or independent human review.
 
-Demonstrate the new behavior from one known input. Explain which component owns it and show one meaningful failure case. Keep the demonstration short enough that Damien can repeat it himself.
+The last command exports committed HEAD into a clean temporary checkout, uses fresh application/model volumes and random ports, bootstraps the default local model and runs real public edits through the API. It bounds the worker to three edits (maximum 12 local calls) and enables all eligible edits for a short observation; normal default sampling remains 1%. It also stores the three canned synthetic examples. It removes only its own project and fresh weights. The currently linked successful live report predates image hardening; the final-image repeat is in progress. See [live evidence](../evidence/phase-6-live.json) for exact commit, timings, revision IDs, decisions, model ID and lag. The first API-query test mistake also affected the initial live test; it is recorded as failed, not silently discarded.
+
+## Handover and limits
+
+On this 32 GiB ARM64 Mac, use the ready command menu; reviewers can select hosted inference instead of downloading weights. A first image/model download depends on bandwidth; real-model performance depends on machine and provider. Acceptance is bounded, not a throughput/load benchmark. Recovery demonstrations with fast model doubles show delivery semantics, not inference capacity.
+
+The original assignment still requires Damien's independently written Tradeoffs, Surprises/production-failure observations and customer-value README sections. Those remain his work. The single-node deployment has no HA, TLS/auth, backup/restore or production database-role separation; upstream SSE delivery is not gap-free. The security scan retains upstream base-image findings. Review [deployment limits](../handover.md) before exposing the application beyond a local machine.
+
+Final PR and CI links are recorded at closeout. No further phase is started and the PR is not merged by the agent.
