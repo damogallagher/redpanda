@@ -60,7 +60,7 @@ class AnalysisResult(Contract):
     confidence: Annotated[float, Field(ge=0, le=1)]
     explanation: Text
     evidence: Annotated[tuple[Evidence, ...], Field(max_length=20)]
-    attempts: Annotated[int, Field(ge=1, le=4)]
+    attempts: Annotated[int, Field(ge=0, le=4)]
     latency_ms: Annotated[int, Field(ge=0)]
     content_truncated: bool
 

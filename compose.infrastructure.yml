@@ -79,7 +79,10 @@ services:
     profiles: ["tools"]
     build: .
     command: ["triage", "smoke-model"]
-    environment:
+    environment: &worker-environment
+      KAFKA_BROKERS: ${KAFKA_BROKERS:-redpanda:9092}
+      KAFKA_GROUP_ID: ${KAFKA_GROUP_ID:-triage-v1}
+      WORKER_MAX_ITEMS: ${WORKER_MAX_ITEMS:-10}
       LLM_BACKEND: ${LLM_BACKEND:-ollama}
       LLM_MODEL: ${LLM_MODEL:-qwen2.5:7b}
       LLM_BASE_URL: ${LLM_BASE_URL:-http://ollama:11434}
@@ -91,6 +94,25 @@ services:
     tmpfs: ["/tmp"]
     cap_drop: ["ALL"]
     security_opt: ["no-new-privileges:true"]
+  worker:
+    build: .
+    command: ["triage", "worker"]
+    environment: *worker-environment
+    depends_on:
+      topics:
+        condition: service_completed_successfully
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    read_only: true
+    tmpfs: ["/tmp"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 512m
+    stop_grace_period: 540s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 volumes:
   redpanda-data:
   postgres-data:

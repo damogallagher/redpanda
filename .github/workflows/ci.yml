@@ -16,12 +16,12 @@ jobs:
       - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
         with:
           version: "0.13.3"
-      - name: Validate Phase 3 (no live API/feed, credentials, or model downloads)
-        run: make verify-phase-3
+      - name: Validate Phase 4 (no live API/feed, credentials, or model downloads)
+        run: make verify-phase-4
       - name: Publish test and coverage evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: phase-3-test-reports
+          name: phase-4-test-reports
           path: reports/
           if-no-files-found: warn

@@ -46,3 +46,7 @@ For the recommended PostgreSQL, Hatchling, and uv updates:
 5. Record the actual commands, tested commit, results, and image digest in the phase evidence. Open a PR for Damien to review and merge.
 
 These steps were recommendations at the time of review. See the subsequent [dependency update record](phases/01-dependency-updates.md) for completed checks; the initial Phase 1 evidence continues to apply to its recorded versions.
+
+## Phase 4 addition
+
+Added `confluent-kafka==2.16.0` for the worker's Kafka boundary, with wheel hashes in `uv.lock`. The [official release on PyPI](https://pypi.org/project/confluent-kafka/2.16.0/) was published 7 October 2026 and includes Python 3.13 macOS ARM64 and Linux wheels. The small adapter uses explicit delivery callbacks and synchronous offset commits described in the [official client API](https://docs.confluent.io/platform/current/clients/confluent-kafka-python/html/index.html). Real Redpanda tests exercise publication, offset inspection, restart/replay, and shutdown. Existing dependency and image pins remain unchanged.

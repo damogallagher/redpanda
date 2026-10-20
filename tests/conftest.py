@@ -26,7 +26,7 @@ def compose():
     env = {
         name: value
         for name, value in os.environ.items()
-        if not name.startswith(("LLM_", "INGEST_", "COMPOSE_"))
+        if not name.startswith(("LLM_", "INGEST_", "COMPOSE_", "KAFKA_", "WORKER_"))
         and name not in {"OPENAI_API_KEY", "CONNECT_PORT"}
     }
     env["POSTGRES_PASSWORD"] = "test-only"

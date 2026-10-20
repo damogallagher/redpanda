@@ -23,7 +23,7 @@ fi
 unset COMPOSE_FILE COMPOSE_PROJECT_NAME COMPOSE_PROFILES COMPOSE_ENV_FILES \
     COMPOSE_DISABLE_ENV_FILE COMPOSE_PATH_SEPARATOR \
     LLM_BACKEND LLM_MODEL LLM_BASE_URL LLM_TIMEOUT_SECONDS LLM_MAX_TOKENS OPENAI_API_KEY \
-    OLLAMA_MODEL POSTGRES_PASSWORD CONNECT_PORT \
+    OLLAMA_MODEL POSTGRES_PASSWORD CONNECT_PORT KAFKA_BROKERS KAFKA_GROUP_ID WORKER_MAX_ITEMS \
     INGEST_STREAM_URL INGEST_RECONNECT INGEST_SOURCE INGEST_SAMPLE_ALL
 
 if ! mkdir .env.switch.lock 2>/dev/null; then
@@ -52,8 +52,9 @@ if [ -f .env ]; then
 fi
 mv -f "$temporary" .env
 temporary=
-docker compose --env-file .env up -d --remove-orphans
+docker compose --env-file .env up --build -d --remove-orphans
 printf 'Started %s mode using %s -> .env.\n' "$mode" "$profile"
+echo 'Worker processes ten edits by default; model calls begin when evidence is ready.'
 echo 'Inspect services: docker compose ps -a'
 if [ "$mode" = local ]; then
     echo 'Wait for model initialization: docker compose logs -f model-init'

@@ -1,6 +1,35 @@
-include:
-  - compose.infrastructure.yml
 services:
+  redpanda:
+    extends:
+      file: compose.infrastructure.yml
+      service: redpanda
+  topics:
+    extends:
+      file: compose.infrastructure.yml
+      service: topics
+  postgres:
+    extends:
+      file: compose.infrastructure.yml
+      service: postgres
+  connect:
+    extends:
+      file: compose.infrastructure.yml
+      service: connect
+  fixture-source:
+    extends:
+      file: compose.infrastructure.yml
+      service: fixture-source
+  model-check:
+    extends:
+      file: compose.infrastructure.yml
+      service: model-check
+  worker:
+    extends:
+      file: compose.infrastructure.yml
+      service: worker
+    depends_on:
+      model-init:
+        condition: service_completed_successfully
   ollama:
     image: &ollama-image ollama/ollama:0.40.6@sha256:265409e1d931028a8f7d5a32bcbafddd7bffbc6cc629d77efe9560adf692a5e7
     volumes:
@@ -20,4 +49,6 @@ services:
       ollama:
         condition: service_healthy
 volumes:
+  redpanda-data:
+  postgres-data:
   ollama-data:

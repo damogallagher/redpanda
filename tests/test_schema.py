@@ -75,7 +75,7 @@ def test_result_requires_evidence_and_preserves_complete_payload():
         {"confidence": "0.7"},
         {"confidence": float("nan")},
         {"confidence": float("inf")},
-        {"attempts": 0},
+        {"attempts": -1},
         {"attempts": 5},
         {"latency_ms": -1},
         {"explanation": " "},
@@ -96,6 +96,7 @@ def test_abstention_and_partial_review_are_explicit():
             {
                 **RESULT,
                 "decision": "insufficient_evidence",
+                "attempts": 0,
                 "evidence": [],
                 "content_truncated": True,
             }

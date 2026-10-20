@@ -141,7 +141,7 @@
     },
     "attempts": {
       "maximum": 4,
-      "minimum": 1,
+      "minimum": 0,
       "title": "Attempts",
       "type": "integer"
     },
