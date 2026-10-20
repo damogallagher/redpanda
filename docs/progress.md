@@ -103,3 +103,10 @@ Implementation/tests `d550e78` passed the cumulative gate: 99 unit tests (13 new
 Created Damien's private profiles from his existing settings, preserving the project/database configuration and copying the existing API key into `.env.frontier` without displaying it. Ran local → frontier → local successfully: frontier ran no Ollama, Connect was ready in both modes, the database migration and downloaded model IDs survived, and local mode is running again. No paid model requests were made. The three private environment files have mode 0600 and are ignored by Git; startup logs were checked for absence of the API key.
 
 The updated PR #6 passed GitHub Linux CI on `a3a127e` ([run and artifacts](https://github.com/damogallagher/redpanda/actions/runs/39453543842)). All 99 relative documentation links resolved and the original assignment checksum remained unchanged. The final audit-only commit records CI and the visible handover; the PR stays open for Damien to merge.
+
+
+## 20 October 2026 — Phase 3 enrichment
+
+PR #6 is merged. Created `phase/03-enrichment` from main `9749745`. Added the fixed-endpoint MediaWiki client, strict diff extraction with context, typed provenance/outcomes, bounded I/O/retries/evidence, offline inspection CLI, attributed fixtures, and separate live smoke. No reasoning worker or later phase has been started.
+
+The [Phase 3 guide](phases/03-enrichment.md) documents exact success/failure commands, limits, cleanup, and troubleshooting. Cumulative verification and live evidence are being recorded before opening the PR. Prompt/response logging continues in the [Phase 3 session](ai-log/sessions/2026-10-20-phase-3.md).

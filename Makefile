@@ -1,7 +1,10 @@
-.PHONY: help sync check test-unit test-foundation test-integration test-container test-connect test-startup verify-phase-1 verify-phase-2 smoke-model smoke-ingestion
+.PHONY: help sync check test-unit test-foundation test-integration test-container test-connect test-startup verify-phase-1 verify-phase-2 verify-phase-3 inspect-enrichment test-enrichment smoke-enrichment smoke-model smoke-ingestion
 UV ?= uv
 
 help:
+	@echo "make verify-phase-3  - cumulative checks plus revision enrichment and fixture inspection"
+	@echo "make inspect-enrichment - print attributed before/after evidence, offline"
+	@echo "make smoke-enrichment - fetch one public revision pair; no model calls"
 	@echo "make verify-phase-2  - cumulative checks plus native Connect ingestion tests"
 	@echo "make verify-phase-1  - repeatable checks; Docker required, no LLM/key needed"
 	@echo "make test-unit       - offline unit tests with 100% line/branch coverage"
@@ -57,4 +60,17 @@ smoke-model:
 	docker compose run --build --rm --no-deps model-check
 
 smoke-ingestion: sync
-	$(UV) run --frozen pytest -m live -s --junitxml=reports/live.xml
+	$(UV) run --frozen pytest tests/test_live_ingestion.py -s --junitxml=reports/live.xml
+
+# Use the installed wheel so inspection also checks the packaged CLI.
+inspect-enrichment: sync
+	$(UV) run --frozen --no-editable triage enrich --event tests/fixtures/enrichment/belle-event.json --fixture-response tests/fixtures/enrichment/belle-response.json
+
+test-enrichment: sync
+	$(UV) run --frozen pytest tests/test_enrichment.py tests/test_cli.py --junitxml=reports/enrichment.xml
+
+verify-phase-3: check test-unit test-integration test-container test-connect inspect-enrichment
+	@echo "PASS: Phase 3 enrichment checks. Live Wikipedia comparison is a separate check."
+
+smoke-enrichment: sync
+	$(UV) run --frozen pytest tests/test_live_enrichment.py -s --junitxml=reports/live-enrichment.xml

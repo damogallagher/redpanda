@@ -2,8 +2,9 @@
 
 Wikipedia edit triage in Python, using Redpanda and a selectable local or hosted model.
 
-**Phase 2 adds working ingestion.** Redpanda Connect reads Wikipedia changes, filters and validates them, and publishes inspectable edit/error records. Phase 1 provides the broker, database, model adapters, and schema contracts. Revision enrichment, multi-step reasoning, result storage, and the API arrive in later phases; there is no review queue yet.
+**Phase 3 adds revision enrichment.** Redpanda Connect ingests validated Wikipedia edits; the new client and CLI fetch the actual revision diff and produce bounded before/after evidence with provenance or an explicit failure outcome. Multi-step reasoning, result storage, and the API arrive in later phases; there is no review queue yet.
 
+- [Phase 3: inspect revision evidence and test failure behavior](docs/phases/03-enrichment.md)
 - [Start or switch local/frontier mode](docs/startup.md)
 - [Original assignment, unchanged](docs/assignment/fde-take-home-exercise.md)
 - [Phase 2: ingestion, exact test commands, and live evidence](docs/phases/02-ingestion.md)
@@ -19,20 +20,34 @@ Prerequisites: Docker with Compose **2.20 or newer**, Make, and [uv](https://doc
 From the repository root:
 
 ```sh
-make verify-phase-2
+make verify-phase-3
 ```
 
-This runs formatting/lint/type checks, unit tests with **100% line and branch coverage**, configuration checks, real broker/database and HTTP ingestion tests, native Connect tests, and an application-container build/configuration check. The infrastructure tests create unique disposable projects and remove only their own volumes. Initial dependency/image downloads need internet; subsequent unit tests require no network. Test reports appear in `reports/` and as PR workflow artifacts.
+This runs formatting/lint/type checks, unit tests with **100% line and branch coverage**, configuration checks, real broker/database and HTTP ingestion tests, native Connect tests, an application-container build/configuration check, and offline inspection of an attributed Wikipedia diff. The infrastructure tests create unique disposable projects and remove only their own volumes. Initial dependency/image downloads need internet; subsequent unit tests require no network. Test reports appear in `reports/` and as PR workflow artifacts.
 
 Expected final line:
 
 ```text
-PASS: Phase 2 ingestion checks. Live source smoke is a separate check.
+PASS: Phase 3 enrichment checks. Live Wikipedia comparison is a separate check.
 ```
 
-Expected: **99 unit tests (including launcher checks), 10 integration/configuration tests, 40 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make verify-phase-2 UV='uvx --from uv==0.13.3 uv'`.
+Expected: **213 unit tests (including launcher checks), 10 integration/configuration tests, 40 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make verify-phase-3 UV='uvx --from uv==0.13.3 uv'`.
 
 To demonstrate live ingestion without a model or key, run `make smoke-ingestion` (about 40 seconds with cached images). It samples the public stream for 30 seconds in an isolated project, prints validated topic records and counts, and cleans up. See [Phase 2](docs/phases/02-ingestion.md) for exact expected fixture outputs, interactive `rpk` inspection, metrics, cleanup, and reconnect limitations.
+
+## Inspect revision evidence — no model needed
+
+```sh
+make inspect-enrichment
+```
+
+Expected: JSON with `source: "fixture"`, `status: "ready"`, provenance, and before/after text for a saved public edit. To verify the same revisions against Wikipedia now:
+
+```sh
+make smoke-enrichment
+```
+
+This separate live check makes at most two public requests and no model calls. See the [Phase 3 walkthrough](docs/phases/03-enrichment.md) for the exact revision IDs, expected evidence, unavailable/oversized demonstrations, exit codes, and limits. `make test-enrichment` runs the focused offline tests. Enrichment is currently a reusable client/CLI; the running ingestion services are connected to it in Phase 4.
 
 ## Run with a local model
 

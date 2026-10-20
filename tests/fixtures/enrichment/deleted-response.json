@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "baddiff",
+    "info": "Synthetic upstream message; do not expose to users."
+  }
+}

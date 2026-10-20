@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "nosuchrevid",
+    "info": "Synthetic upstream message; do not expose to users."
+  }
+}

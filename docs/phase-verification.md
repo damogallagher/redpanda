@@ -16,14 +16,14 @@ Commands must use isolated test resources. Every implemented phase record must i
 
 ## Commands at a glance
 
-Phases 0, 1, and 2 are available now. `make verify-phase-N` is the agreed entry point for deterministic verification; external-source/model smoke tests are separate so the repeatable checks do not depend on live services.
+Phases 0–3 are available now. `make verify-phase-N` is the agreed entry point for deterministic verification; external-source/model smoke tests are separate so the repeatable checks do not depend on live services.
 
 | Phase | Command from repository root | Evidence of intended behavior | Availability |
 |---|---|---|---|
 | [0: planning](phases/00-plan.md) | `shasum -a 256 docs/assignment/fde-take-home-exercise.md` | Hash matches the [recorded original](assignment/README.md); documentation links and phase criteria are present | Available |
 | [1: foundation](phases/01-foundation.md) | `make verify-phase-1` | Configuration and schema tests pass; broker/database become ready; setup can run twice safely | Implemented |
 | [2: ingestion](phases/02-ingestion.md) | `make verify-phase-2` | Known fixture records reach the correct topics with exact keys/fields; unwanted records are absent | Implemented |
-| [3: enrichment](phases/03-enrichment.md) | `make verify-phase-3` | Known revisions yield expected before/after evidence; unavailable content has an explicit status | Planned |
+| [3: enrichment](phases/03-enrichment.md) | `make verify-phase-3` | Known revisions yield expected before/after evidence; unavailable content has an explicit status | Implemented |
 | [4: reasoning](phases/04-reasoning.md) | `make verify-phase-4` | Valid extraction/assessment results; bounded retries and abstention; no offset commit on publish failure | Planned |
 | [5: serving](phases/05-serving.md) | `make verify-phase-5` | Seeded event reaches the API; replay leaves one logical stored result; sink recovers after outage | Planned |
 | [6: acceptance](phases/06-acceptance.md) | `make verify-phase-6` | Cumulative tests, clean-start fixture path, and recovery drills pass; coverage has no missing lines/branches | Planned |
@@ -69,7 +69,7 @@ Use a named, committed six-record SSE fixture: two accepted article edits, one b
 
 ## Phase 3 — prove actual content is fetched
 
-**Future automated command:** `make verify-phase-3`.
+**Available command:** `make verify-phase-3`. See the [Phase 3 guide](phases/03-enrichment.md) for `make inspect-enrichment`, exact outcomes, failure demonstrations, and the separate `make smoke-enrichment` check.
 
 Use committed API fixtures for a known substantive edit, a routine wording edit, a missing/deleted revision, a rate-limited response, and oversized content.
 

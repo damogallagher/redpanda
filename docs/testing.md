@@ -1,6 +1,6 @@
 # Test and acceptance policy
 
-Status: Phase 1 and Phase 2 tests and coverage gate are implemented. The remaining layers are added with their phases; see the phase verification guide for availability.
+Status: Phases 1–3 tests and the coverage gate are implemented. The remaining layers are added with their phases; see the phase verification guide for availability.
 
 For a reviewer-friendly command matrix and concrete expected behavior, use the [phase verification guide](phase-verification.md).
 
@@ -28,7 +28,7 @@ CI runs deterministic checks on every PR with least-privilege permissions and pi
 
 ## Command interface
 
-Available now: `make check`, `make test-unit`, `make test-foundation`, `make test-integration`, `make test-connect`, `make test-startup`, `make test-container`, `make verify-phase-1`, `make verify-phase-2`, `make smoke-ingestion`, and `make smoke-model`. Full end-to-end, evaluation, and later phase targets remain planned.
+Available now: `make check`, `make test-unit`, `make test-foundation`, `make test-integration`, `make test-connect`, `make test-startup`, `make test-container`, `make verify-phase-1`, `make verify-phase-2`, `make verify-phase-3`, `make test-enrichment`, `make inspect-enrichment`, `make smoke-enrichment`, `make smoke-ingestion`, and `make smoke-model`. Full end-to-end, evaluation, and later phase targets remain planned.
 
 - `make check`: formatting, lint, types, and applicable config checks (unit coverage is a separate target).
 - `make test-unit`: deterministic unit suite with 100% line/branch coverage enforcement.
@@ -36,6 +36,9 @@ Available now: `make check`, `make test-unit`, `make test-foundation`, `make tes
 - `make test-foundation`: the four Phase 1 integration checks only.
 - `make test-integration`: all ten deterministic real Redpanda/Postgres/HTTP ingestion and Compose profile checks.
 - `make test-startup`: 13 launcher behavior tests plus two actual Compose profile contracts.
+- `make test-enrichment`: exact revision evidence, provenance, bounds, retries, failure outcomes, and CLI checks.
+- `make inspect-enrichment`: print the attributed fixture result using the packaged CLI, offline.
+- `make smoke-enrichment`: opt-in comparison of one known public revision pair; excluded from CI.
 - `make smoke-ingestion`: opt-in 30-second public-source observation; excluded from CI.
 - `make test-e2e`: deterministic fixture-to-API verification.
 - `make evaluate`: versioned live-model evaluation on development or held-out data, clearly selected.
