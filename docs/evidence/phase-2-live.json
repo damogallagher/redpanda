@@ -1,0 +1,56 @@
+{
+  "started_at": "2026-10-20T15:31:13.881655+00:00",
+  "sample_seconds": 30,
+  "sampling": "all eligible edits; intentionally disabled 1% selection for this smoke",
+  "source": "https://stream.wikimedia.org/v2/stream/recentchange",
+  "metrics_snapshot": {
+    "accepted": 25,
+    "filtered": 763,
+    "heartbeat": 1,
+    "invalid": 0,
+    "sampled_out": 0
+  },
+  "final_edits": 27,
+  "final_errors": 0,
+  "examples": [
+    {
+      "key": "enwiki:1381189012",
+      "event": {
+        "occurred_at": "2026-10-20T15:31:06Z",
+        "old_revision_id": 1380845740,
+        "revision_id": 1381189012,
+        "schema_version": 1,
+        "title": "Belle (Disney character)",
+        "wiki": "enwiki"
+      }
+    },
+    {
+      "key": "enwiki:1381189020",
+      "event": {
+        "occurred_at": "2026-10-20T15:31:12Z",
+        "old_revision_id": 1381188457,
+        "revision_id": 1381189020,
+        "schema_version": 1,
+        "title": "2026\u201327 AFC Challenge League group stage",
+        "wiki": "enwiki"
+      }
+    },
+    {
+      "key": "enwiki:1381189000",
+      "event": {
+        "occurred_at": "2026-10-20T15:31:02Z",
+        "old_revision_id": 1381149079,
+        "revision_id": 1381189000,
+        "schema_version": 1,
+        "title": "The Hanging Tree (The Hunger Games song)",
+        "wiki": "enwiki"
+      }
+    }
+  ],
+  "live_model_requests": 0,
+  "limitations": "No particular live edit is required; gap-free delivery is not established.",
+  "tested_commit": "b6d789c1c7630df02d86c1b881a7cc6fe6f36d28",
+  "commit_note": "Live check ran on the byte-identical source subsequently committed as this SHA.",
+  "command": "make smoke-ingestion UV='uvx --from uv==0.13.3 uv'",
+  "exit_status": 0
+}

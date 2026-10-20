@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-20",
+  "tested_commit": "0b9e370a2f3f4bcf52466a57c01fa71fc84535da",
+  "command": "make verify-phase-2 UV='uvx --from uv==0.13.3 uv'",
+  "exit_status": 0,
+  "platform": "macOS ARM64, Python 3.13.16, Docker Desktop Linux ARM64",
+  "versions": {
+    "connect": "4.114.0",
+    "connect_manifest_digest": "sha256:481e8df48ed733f080623ae67f0dccc82d29ae509dfb3f957347a9e900e74910",
+    "connect_manifest_platforms_verified": [
+      "linux/amd64",
+      "linux/arm64"
+    ],
+    "redpanda": "26.2.5",
+    "postgres": "16.15-bookworm",
+    "uv": "0.13.3"
+  },
+  "unit": {
+    "passed": 86,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 0.243
+  },
+  "integration": {
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 46.253
+  },
+  "native_connect": {
+    "passed": 40,
+    "failed": 0,
+    "configuration_lint": "passed",
+    "numeric_coverage": "not measured; Python coverage does not apply to Connect YAML"
+  },
+  "coverage": {
+    "covered_lines": 176,
+    "missing_lines": 0,
+    "excluded_lines": 0,
+    "covered_branches": 32,
+    "missing_branches": 0,
+    "line_percent": 100,
+    "branch_percent": 100
+  },
+  "fixture_result": {
+    "runs": [
+      "phase-2.sse",
+      "phase-2.sse",
+      "phase-2-crlf.sse"
+    ],
+    "expected_and_observed_edits": 6,
+    "expected_and_observed_errors": 3,
+    "exact_keys_payloads_headers": true,
+    "invalid_frames": [
+      "incomplete.sse",
+      "garbage.sse",
+      "oversized.sse"
+    ],
+    "invalid_frames_each_add_one_error_and_no_edit": true
+  },
+  "regression_evidence": [
+    "Removing the bot filter in an isolated scratch copy fails native filters bot with an unexpected batch.",
+    "Original numeric-to-string conversion fails both new large-ID key assertions; explicit decimal formatting passes."
+  ],
+  "checks": [
+    "ruff lint and format",
+    "mypy strict",
+    "both Compose configurations",
+    "all four Phase 1 integration checks retained",
+    "four HTTP-to-broker ingestion checks",
+    "packaged application container configuration",
+    "Connect lint and 40 native processor cases",
+    "cleanup asserts no containers, volumes or networks remain for each shared-fixture test project"
+  ],
+  "live": {
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 38.441,
+    "tested_commit": "b6d789c1c7630df02d86c1b881a7cc6fe6f36d28",
+    "subsequent_change": "Test cleanup only; no pipeline or live-test behavior changed."
+  },
+  "live_model_requests": 0,
+  "limitations": [
+    "Public-source smoke is separate from deterministic CI.",
+    "Event-first LF/CRLF SSE profile only; one-event lookahead.",
+    "64 KiB supported frame limit; >128 KiB scanner failure occurs before error routing.",
+    "No durable source checkpoint, gap-free delivery, exactly-once guarantee, or throughput/load proof.",
+    "No enrichment, reasoning worker, result sink or API implemented in this phase."
+  ]
+}

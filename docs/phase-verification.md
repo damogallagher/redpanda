@@ -1,6 +1,6 @@
 # Verify each phase
 
-**Current status: Phase 1 is implemented.** Run `make verify-phase-1` for its deterministic checks; use the [README](../README.md) and [Phase 1 record](phases/01-foundation.md) for the separate real-model smoke. Phases 2–6 remain planned and their commands do not exist yet.
+**Current status: Phases 1 and 2 are implemented.** Run `make verify-phase-2` for cumulative deterministic checks. Use [Phase 2](phases/02-ingestion.md) for the separate live-feed smoke and [Phase 1](phases/01-foundation.md) for model checks. Phases 3–6 remain planned and their commands do not exist yet.
 
 [Original assignment](assignment/fde-take-home-exercise.md) · [Phase records](phases/README.md) · [Testing policy](testing.md) · [Progress](progress.md)
 
@@ -16,19 +16,19 @@ Commands must use isolated test resources. Every implemented phase record must i
 
 ## Commands at a glance
 
-Phases 0 and 1 are available now. `make verify-phase-N` is the agreed entry point for deterministic verification; external-source/model smoke tests are separate so the repeatable checks do not depend on live services.
+Phases 0, 1, and 2 are available now. `make verify-phase-N` is the agreed entry point for deterministic verification; external-source/model smoke tests are separate so the repeatable checks do not depend on live services.
 
 | Phase | Command from repository root | Evidence of intended behavior | Availability |
 |---|---|---|---|
 | [0: planning](phases/00-plan.md) | `shasum -a 256 docs/assignment/fde-take-home-exercise.md` | Hash matches the [recorded original](assignment/README.md); documentation links and phase criteria are present | Available |
 | [1: foundation](phases/01-foundation.md) | `make verify-phase-1` | Configuration and schema tests pass; broker/database become ready; setup can run twice safely | Implemented |
-| [2: ingestion](phases/02-ingestion.md) | `make verify-phase-2` | Known fixture records reach the correct topics with exact keys/fields; unwanted records are absent | Planned |
+| [2: ingestion](phases/02-ingestion.md) | `make verify-phase-2` | Known fixture records reach the correct topics with exact keys/fields; unwanted records are absent | Implemented |
 | [3: enrichment](phases/03-enrichment.md) | `make verify-phase-3` | Known revisions yield expected before/after evidence; unavailable content has an explicit status | Planned |
 | [4: reasoning](phases/04-reasoning.md) | `make verify-phase-4` | Valid extraction/assessment results; bounded retries and abstention; no offset commit on publish failure | Planned |
 | [5: serving](phases/05-serving.md) | `make verify-phase-5` | Seeded event reaches the API; replay leaves one logical stored result; sink recovers after outage | Planned |
 | [6: acceptance](phases/06-acceptance.md) | `make verify-phase-6` | Cumulative tests, clean-start fixture path, and recovery drills pass; coverage has no missing lines/branches | Planned |
 
-The table specifies assertions; actual Phase 1 observations are in its linked phase record. Live model quality and hardware feasibility require additional evidence even when deterministic checks pass.
+The table specifies assertions; actual observations are in the linked phase records. Live model quality and hardware feasibility require additional evidence even when deterministic checks pass.
 
 ## Phase 0 — inspect the plan and original
 
@@ -57,7 +57,9 @@ git diff --check origin/main...HEAD
 
 ## Phase 2 — prove filtering, projection, and routing
 
-**Future automated command:** `make verify-phase-2`.
+**Available command:** `make verify-phase-2`. See the [Phase 2 record](phases/02-ingestion.md) for prerequisites, exact expected JSON, 40 native tests, integration/replay evidence, cleanup, and limits.
+
+**Available live command:** `make smoke-ingestion`; it observes 30 seconds of Wikimedia events in a disposable project with no model calls.
 
 Use a named, committed six-record SSE fixture: two accepted article edits, one bot edit, one non-article namespace edit, one heartbeat, and one malformed candidate event. Disable sampling for this fixture run only; test sampling separately.
 

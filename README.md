@@ -2,9 +2,10 @@
 
 Wikipedia edit triage in Python, using Redpanda and a selectable local or hosted model.
 
-**Phase 1 builds the foundation.** It starts the broker/database/local model, creates topics, validates event/result contracts, and checks model connectivity. Ingestion, multi-step reasoning, storage of results, and the API arrive in later phases; there is no review queue yet.
+**Phase 2 adds working ingestion.** Redpanda Connect reads Wikipedia changes, filters and validates them, and publishes inspectable edit/error records. Phase 1 provides the broker, database, model adapters, and schema contracts. Revision enrichment, multi-step reasoning, result storage, and the API arrive in later phases; there is no review queue yet.
 
 - [Original assignment, unchanged](docs/assignment/fde-take-home-exercise.md)
+- [Phase 2: ingestion, exact test commands, and live evidence](docs/phases/02-ingestion.md)
 - [Phase 1: what changed, how to test, and evidence](docs/phases/01-foundation.md)
 - [Phase 1 dependency updates and database upgrade check](docs/phases/01-dependency-updates.md)
 - [Verify every phase](docs/phase-verification.md) · [Implementation plan](docs/implementation-plan.md)
@@ -17,18 +18,20 @@ Prerequisites: Docker with Compose **2.20 or newer**, Make, and [uv](https://doc
 From the repository root:
 
 ```sh
-make verify-phase-1
+make verify-phase-2
 ```
 
-This runs formatting/lint/type checks, unit tests with **100% line and branch coverage**, configuration checks, real broker/database tests, and an application-container build/configuration check. The infrastructure tests create unique disposable projects and remove only their own volumes. Initial dependency/image downloads need internet; subsequent unit tests require no network. Test reports appear in `reports/` and as PR workflow artifacts.
+This runs formatting/lint/type checks, unit tests with **100% line and branch coverage**, configuration checks, real broker/database and HTTP ingestion tests, native Connect tests, and an application-container build/configuration check. The infrastructure tests create unique disposable projects and remove only their own volumes. Initial dependency/image downloads need internet; subsequent unit tests require no network. Test reports appear in `reports/` and as PR workflow artifacts.
 
 Expected final line:
 
 ```text
-PASS: Phase 1 deterministic checks. Real model smoke is a separate check.
+PASS: Phase 2 ingestion checks. Live source smoke is a separate check.
 ```
 
-For narrower checks use `make test-unit` or `make test-integration`. The four integration tests now include preserving data across the Postgres 16.14 → 16.15 upgrade. See [Phase 1](docs/phases/01-foundation.md) for expected counts, failure demonstrations, cleanup, and troubleshooting.
+Expected: **86 Python unit tests, 8 integration tests, 40 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make verify-phase-2 UV='uvx --from uv==0.13.3 uv'`.
+
+To demonstrate live ingestion without a model or key, run `make smoke-ingestion` (about 40 seconds with cached images). It samples the public stream for 30 seconds in an isolated project, prints validated topic records and counts, and cleans up. See [Phase 2](docs/phases/02-ingestion.md) for exact expected fixture outputs, interactive `rpk` inspection, metrics, cleanup, and reconnect limitations.
 
 ## Run with a local model
 
@@ -41,7 +44,7 @@ test -f .env || cp .env.example .env
 docker compose up
 ```
 
-`topics` and `model-init` are one-time initialization services: **exit code 0 is success**. Wait for `model-init` to report `success`. First startup downloads model weights; later starts reuse the persistent volume. Redpanda, Postgres, and Ollama remain running. In a second terminal:
+`topics` and `model-init` are one-time initialization services: **exit code 0 is success**. Wait for `model-init` to report `success`. First startup downloads model weights; later starts reuse the persistent volume. Redpanda, Postgres, Connect, and Ollama remain running. Connect starts ingesting with deterministic 1% selection; it makes no model calls. In a second terminal:
 
 ```sh
 make smoke-model
@@ -49,7 +52,7 @@ make smoke-model
 
 Expected: a JSON object with `backend`, `model`, elapsed time, the synthetic prompt, and a nonempty response explaining the shift from uncertain association to a causal claim. This makes one model request. It tests connectivity and feasibility, not model accuracy. Real model output can vary.
 
-No services are published on host ports. Inspect the internal broker and database through Docker:
+Connect readiness and metrics use host loopback port 4195 (configurable with `CONNECT_PORT`). Broker and database ports remain internal. Inspect them through Docker:
 
 ```sh
 docker compose exec redpanda rpk topic list
@@ -117,7 +120,7 @@ docker compose down
 
 This preserves database, broker, and model volumes. Restart with `docker compose up`. Automated infrastructure tests clean up their own separate volumes. Do not use `down --volumes` on a demo stack whose data or downloaded weights you want to keep.
 
-This is the assignment's single-node development deployment: internal-only networking and a development database password. It is not an authenticated, highly available production deployment. The phase records distinguish verified behavior from later operational work.
+This is the assignment's single-node development deployment: internal broker/database networking, loopback diagnostics, and a development database password. It is not an authenticated, highly available production deployment. The phase records distinguish verified behavior from later operational work.
 
 ## Tradeoffs
 

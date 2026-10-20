@@ -12,4 +12,4 @@ Every phase has its own branch and PR into `main`. Status and test evidence must
 - [Phase 05: Persistence and readable results](05-serving.md)
 - [Phase 06: Operational acceptance and handover](06-acceptance.md)
 
-Phases are sequential because each checkpoint extends the previous working system. Phase 1 has executable checks and recorded smoke results. Commands in unstarted phases 2–6 are proposed, not verified.
+Phases are sequential because each checkpoint extends the previous working system. Phases 1 and 2 have executable checks and recorded smoke results. Commands in unstarted phases 3–6 are proposed, not verified.

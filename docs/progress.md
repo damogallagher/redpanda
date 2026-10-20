@@ -75,3 +75,15 @@ Implementation commit `68d33a3` passed `make verify-phase-1 UV='uvx --from uv==0
 The user's global uv installation, `.env`, and demo data volumes were not modified. No live model calls were made. Restored the previous review's final response to the log because its commit landed on the branch after PR #4 merged. Phase 2 remains unstarted; Damien reviews and merges this maintenance PR.
 
 Review [PR #5](https://github.com/damogallagher/redpanda/pull/5). GitHub Linux CI passed on `e853a1f` in 1 minute 7 seconds ([run](https://github.com/damogallagher/redpanda/actions/runs/39418079879)). All 83 relative documentation links resolved; the original assignment checksum and whitespace checks passed. Test-owned containers and volumes were confirmed removed. The clean user checkout was switched to `maintenance/phase-1-dependency-updates`, preserving ignored local configuration.
+
+## 20 October 2026 — Phase 2 ingestion
+
+PR #5 is merged. Created `phase/02-ingestion` from main `cf2cf4c`. Added pinned Redpanda Connect 4.114.0 with native HTTP streaming, Wikimedia-specific SSE framing, filters, deterministic 1% selection, existing event-contract projection, provenance headers, bounded error envelopes, and Prometheus counters. Both local and hosted Compose modes now include ingestion; diagnostic port 4195 is loopback only.
+
+Added synthetic LF/CRLF fixtures, 40 native processor tests, four real HTTP-to-broker tests, and a separate bounded live smoke. The cumulative gate passed on `0b9e370`: 86 unit tests, 8 integration tests, 176/176 executable Python lines and 32/32 branches covered, no failures/skips/exclusions. Native lint, formatting, types, Compose validation and the packaged CLI also passed. See [Phase 2](phases/02-ingestion.md) and its [verification evidence](evidence/phase-2-verification.json).
+
+A real live run exposed scientific notation in large revision keys; two regression cases failed before the decimal formatting fix and pass afterward. A deliberate bot-filter mutation in a scratch copy also failed as expected. The corrected 30-second live observation processed 789 segments at snapshot and left 27 valid edits / zero errors after draining, with zero model calls. [Live evidence](evidence/phase-2-live.json) contains only projected public examples and counts.
+
+The guide documents exact commands, expected fixture records, replay, error routing, metrics, cleanup, and limits: event-first LF/CRLF framing, one-event lookahead, separate frame/scanner bounds, no durable source checkpoint or gap-free guarantee. The original assignment and independent personal README sections are preserved. Next step: Damien reviews/merges this phase; Phase 3 enrichment starts only when requested.
+
+Final cleanup inspection found the optional fixture server was excluded by Compose profiles. Fixed cleanup to enable the tools profile, removed only the four verified test-owned leftovers, and added assertions that test containers/volumes/networks are gone. The cumulative gate passed again after this fix.
