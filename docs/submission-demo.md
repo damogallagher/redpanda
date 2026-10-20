@@ -30,7 +30,7 @@ make demo-success
 make demo-failures
 ```
 
-Expected: all exit 0. `make test` reports **416 unit tests, 29 integration/configuration checks, 72 native Connect cases, 100% application line and branch coverage**, and no warnings. It ends with `PASS: Phase 6 deterministic acceptance. Real model/live-source checks are separate.` The narrower demonstrations repeat subsets so you can watch them individually; they are already included in `make test`.
+Expected: all exit 0. `make test` reports **416 unit tests, 30 integration/configuration checks, 72 native Connect cases, 100% application line and branch coverage**, and no warnings. It ends with `PASS: Phase 6 deterministic acceptance. Real model/live-source checks are separate.` The narrower demonstrations repeat subsets so you can watch them individually; they are already included in `make test`.
 
 `demo-success` verifies fixture source → real Connect/broker → actual worker → sink/Postgres → API, using controlled Wikipedia/model responses. Two edits become `review` results with two reasoning stages. `demo-failures` passes only when invalid output, outages, replay and recovery behave as asserted. These commands create and remove disposable projects, make no model calls, and do not change your application volumes.
 
@@ -89,7 +89,7 @@ docker compose ps -a
 docker compose logs -f worker
 ```
 
-Expected: the launcher prints `Started local mode using .env.local -> .env.` Its generic final hint mentions ten edits by default; your authoritative check is `worker_started` with `max_items: 3`, `backend: "ollama"`, and the configured model. Wait for three `record_committed` messages and `worker_stopped` with `processed: 3`. Press Ctrl+C if log following remains open after that message; this ends log viewing, not the containers.
+Expected: the launcher prints `Started local mode using .env.local -> .env.` The selected profile controls the batch size; your authoritative check is `worker_started` with `max_items: 3`, `backend: "ollama"`, and the configured model. Wait for three `record_committed` messages and `worker_stopped` with `processed: 3`. Press Ctrl+C if log following remains open after that message; this ends log viewing, not the containers.
 
 `model-init`, `topics`, `db-migrate`, and the completed worker may show `Exited (0)`, which is successful completion. Broker/Postgres/Ollama/API should be running and healthy; Connect and the sink should remain running. Model initialization and current feed availability affect elapsed time. If the worker has not completed after roughly 15 minutes with weights already ready, inspect the troubleshooting section instead of launching another batch.
 
