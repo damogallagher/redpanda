@@ -6,12 +6,13 @@ Wikipedia edit triage in Python, using Redpanda and a selectable local or hosted
 
 - [Original assignment, unchanged](docs/assignment/fde-take-home-exercise.md)
 - [Phase 1: what changed, how to test, and evidence](docs/phases/01-foundation.md)
+- [Phase 1 dependency updates and database upgrade check](docs/phases/01-dependency-updates.md)
 - [Verify every phase](docs/phase-verification.md) · [Implementation plan](docs/implementation-plan.md)
 - [Test policy](docs/testing.md) · [Progress](docs/progress.md) · [Prompt/response log](docs/ai-log/README.md)
 
 ## Quick verification — no model or API key needed
 
-Prerequisites: Docker with Compose **2.20 or newer**, Make, and [uv](https://docs.astral.sh/uv/getting-started/installation/) (tested/pinned in CI: 0.13.1). Start Docker first. Python 3.13.16 is installed automatically by uv if needed.
+Prerequisites: Docker with Compose **2.20 or newer**, Make, and [uv](https://docs.astral.sh/uv/getting-started/installation/) (tested/pinned in CI: 0.13.3). Start Docker first. Python 3.13.16 is installed automatically by uv if needed.
 
 From the repository root:
 
@@ -27,7 +28,7 @@ Expected final line:
 PASS: Phase 1 deterministic checks. Real model smoke is a separate check.
 ```
 
-For narrower checks use `make test-unit` or `make test-integration`. See [Phase 1](docs/phases/01-foundation.md) for expected counts, failure demonstrations, cleanup, and troubleshooting.
+For narrower checks use `make test-unit` or `make test-integration`. The four integration tests now include preserving data across the Postgres 16.14 → 16.15 upgrade. See [Phase 1](docs/phases/01-foundation.md) for expected counts, failure demonstrations, cleanup, and troubleshooting.
 
 ## Run with a local model
 

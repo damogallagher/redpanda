@@ -1,19 +1,19 @@
 # Dependency version review
 
 Reviewed on 20 October 2026 against merged Phase 1 (`62f2330`).
-This records recommendations; no runtime versions were changed or retested in this review.
+This historical snapshot records the recommendations made before implementation. The subsequent [dependency update record](phases/01-dependency-updates.md) documents their implementation and verification.
 
 ## PostgreSQL
 
 Keep major version 16 for this exercise: the [original assignment](assignment/fde-take-home-exercise.md#stack-all-free-all-local-all-open-source) explicitly lists `postgres:16`. PostgreSQL 16 is supported through 9 November 2028. The upstream [versioning policy](https://www.postgresql.org/support/versioning/) recommends the current minor release within the chosen major.
 
-The Compose pin is **16.14-bookworm**. It should be updated to **16.15-bookworm**, with a verified multi-architecture digest, before submission. This corrects a missed maintenance update in the Phase 1 selection. The upstream [security list](https://www.postgresql.org/support/security/) includes fixes in 16.15. PostgreSQL 17 is also supported, but the exercise has no identified requirement for its features. The current upstream stable major is 18; 19 is still a release candidate on the review date.
+The Compose pin at review was **16.14-bookworm**. The recommendation was to update to **16.15-bookworm**, with a verified multi-architecture digest, before submission. This corrects a missed maintenance update in the Phase 1 selection. The upstream [security list](https://www.postgresql.org/support/security/) includes fixes in 16.15. PostgreSQL 17 is also supported, but the exercise has no identified requirement for its features. The current upstream stable major is 18; 19 is still a release candidate on the review date.
 
 Changing a PostgreSQL major version requires a data migration. Never just change 16 to 17 and reuse the existing data directory. Review the release notes even for maintenance upgrades.
 
 ## Direct dependencies and infrastructure
 
-| Component | Current project pin | Verified upstream information | Recommendation |
+| Component | Project pin at review | Verified upstream information | Recommendation at review |
 |---|---|---|---|
 | Python | 3.13.16 | Latest 3.13 patch; 3.13 receives security fixes until October 2029. Latest feature release is 3.15.0. | Retain the tested, supported runtime for this exercise; a newer feature release needs a separate compatibility check. |
 | HTTPX / Pydantic | 0.28.1 / 2.14.1 | Match current PyPI releases. | Keep. |
@@ -45,4 +45,4 @@ For the recommended PostgreSQL, Hatchling, and uv updates:
 4. Check the PostgreSQL version in a disposable test instance. If validating an existing-data upgrade, create a separate disposable 16.14 database with a sentinel row, stop it, start 16.15 using that test volume, and confirm the row and migration marker remain intact. Do not use the user's demo volume for this test.
 5. Record the actual commands, tested commit, results, and image digest in the phase evidence. Open a PR for Damien to review and merge.
 
-These upgrade steps are recommendations, not completed test results. The existing Phase 1 evidence applies to its recorded versions.
+These steps were recommendations at the time of review. See the subsequent [dependency update record](phases/01-dependency-updates.md) for completed checks; the initial Phase 1 evidence continues to apply to its recorded versions.

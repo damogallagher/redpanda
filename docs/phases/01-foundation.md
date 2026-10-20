@@ -19,10 +19,10 @@ No live Wikipedia ingestion, multi-step reasoning, sink, or serving API is inclu
 
 ## Versions and resources
 
-See the subsequent [dependency version review](../dependency-versions.md) for recommended maintenance updates. The versions below are the ones used for this phase's recorded verification.
+The [dependency update record](01-dependency-updates.md) documents the latest pins and verification. The initial Phase 1 evidence at the end of this page retains its original versions and results.
 
-- Python 3.13.16, uv 0.13.1; runtime/test dependencies and hashes in `uv.lock`.
-- Redpanda v26.2.5; Postgres 16.14-bookworm; Ollama 0.40.6; Python slim image. All container bases use multi-architecture manifest digests for ARM64/AMD64.
+- Python 3.13.16, uv 0.13.3, Hatchling 1.32.4; runtime/test dependencies and hashes in `uv.lock`.
+- Redpanda v26.2.5; Postgres 16.15-bookworm; Ollama 0.40.6; Python slim image. All container bases use multi-architecture manifest digests for ARM64/AMD64.
 - Selected local model: Qwen2.5 7B, Apache 2.0, approximately 4.7 GB weights. Recorded model ID: `845dbda0ea48`; [full manifest digest and size](../evidence/phase-1-local-model-metadata.json). Model tags are mutable; retain the actual digest with evaluation evidence.
 - Verified hosted model: `gpt-6.1-sol` through OpenAI Chat Completions.
 - Test machine: ARM64 Mac with 32 GiB physical RAM; Docker reported 10 CPUs and approximately 30.8 GiB RAM. Ollama container limit 8 GiB, Redpanda 2 GiB, Postgres 512 MiB.
@@ -30,7 +30,7 @@ See the subsequent [dependency version review](../dependency-versions.md) for re
 
 ## Run the automated checks
 
-Prerequisites: Docker running, Compose >=2.20, Make, uv (0.13.1 used in CI). Run from the repository root:
+Prerequisites: Docker running, Compose >=2.20, Make, uv (0.13.3 used in CI). Run from the repository root:
 
 ```sh
 make verify-phase-1
@@ -41,7 +41,7 @@ The command installs the pinned Python/dependencies if necessary, checks lint/fo
 Expected results:
 
 - All unit tests pass; zero missing source lines and zero missing branches. Coverage below 100% fails the command.
-- Three infrastructure tests pass: hosted Compose excludes local inference; topic setup runs twice and an exact JSON payload survives broker produce/consume; SQL setup runs twice and leaves one migration row after a database restart.
+- Four infrastructure tests pass: hosted Compose excludes local inference; topic setup runs twice and an exact JSON payload survives broker produce/consume; SQL setup runs twice and leaves one migration row after a database restart; upgrading a disposable 16.14 database to 16.15 preserves existing data and accepts new writes.
 - Container configuration check reports `status: valid`; the packaged CLI works as user 10001.
 - Final output: `PASS: Phase 1 deterministic checks. Real model smoke is a separate check.`
 
@@ -114,7 +114,7 @@ See the complete [local](../evidence/phase-1-local-model.json), [hosted](../evid
 - [OpenAI Chat Completions request contract](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create)
 - [GPT-6.1 Sol supported API endpoints](https://developers.openai.com/api/docs/models/gpt-6.1-sol)
 
-## Final verification and PR
+## Initial Phase 1 verification and PR
 
 Locally verified application commit: `e278b5b` using `make verify-phase-1`.
 

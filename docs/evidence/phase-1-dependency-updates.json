@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-20",
+  "ci_run": "https://github.com/damogallagher/redpanda/actions/runs/39418079879",
+  "ci_commit": "e853a1f",
+  "ci_conclusion": "success",
+  "tested_commit": "68d33a3",
+  "command": "make verify-phase-1 UV='uvx --from uv==0.13.3 uv'",
+  "platform": "macOS ARM64, Python 3.13.16, Docker Desktop Linux ARM64",
+  "versions": {
+    "postgres": "16.15-bookworm",
+    "postgres_manifest_digest": "sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4",
+    "hatchling": "1.32.4",
+    "uv": "0.13.3"
+  },
+  "unit": {
+    "passed": 86,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 0.238
+  },
+  "integration": {
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 32.462
+  },
+  "coverage": {
+    "covered_lines": 176,
+    "missing_lines": 0,
+    "excluded_lines": 0,
+    "covered_branches": 32,
+    "missing_branches": 0,
+    "line_percent": 100,
+    "branch_percent": 100
+  },
+  "checks": [
+    "ruff lint and format",
+    "mypy strict",
+    "both Compose configurations",
+    "idempotent topics and broker round trip",
+    "idempotent SQL and database restart",
+    "hosted configuration without Ollama",
+    "16.14 to 16.15 upgrade retains sentinel row and migration timestamp, accepts new writes",
+    "Hatchling wheel build through non-editable container installation",
+    "packaged CLI configuration check"
+  ],
+  "lockfile_check": "uv 0.13.3 lock --check passed; no runtime/test dependency changes",
+  "postgres_manifest_platforms_verified": [
+    "linux/amd64",
+    "linux/arm64/v8"
+  ],
+  "live_model_requests": 0,
+  "limitations": [
+    "Postgres upgrade fixture validates the foundation schema and synthetic rows, not arbitrary production extensions/data.",
+    "No subsequent implementation phase started."
+  ]
+}
