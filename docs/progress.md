@@ -36,3 +36,5 @@ Next step: after the planning PR is merged, create `phase/01-foundation` from up
 - Validation: assignment matches the supplied file byte for byte; 18 Markdown files checked with zero broken relative links; all six implementation phase records contain the expected command and not-yet-implemented warning; staged whitespace check passed.
 
 Branch: `docs/assignment-and-phase-verification`. Review/merge remains Damien's responsibility. Phase 1 should start from main after these documentation additions are merged.
+
+Documentation follow-up PR: [#2](https://github.com/damogallagher/redpanda/pull/2), opened for Damien's review. Verified content commit: `7c7a3c3`; the following audit-only commit records the PR and closing response.
