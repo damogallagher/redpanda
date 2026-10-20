@@ -52,7 +52,7 @@ docker compose logs -f model-init  # bundled local mode only; wait for success
 curl --fail http://127.0.0.1:4195/ready
 ```
 
-Use your configured `CONNECT_PORT` if different. `topics` and `model-init` exiting with code 0 is normal. Readiness confirms Connect's input/output connection state, not model readiness or gap-free delivery.
+Use your configured `CONNECT_PORT` if different. `topics`, `db-migrate`, and `model-init` exiting with code 0 is normal. Readiness confirms Connect's input/output connection state, not model readiness or gap-free delivery.
 
 Inspect the worker and its outputs:
 
@@ -63,6 +63,16 @@ docker compose exec redpanda rpk group describe triage-v1
 ```
 
 `worker` exiting 0 after ten committed edits is expected. It can wait while no edits are available. `docker compose start worker` processes the next batch using committed offsets. A nonzero exit needs inspection and restart after fixing delivery. A stop signal drains the current record; allow up to nine minutes for slow model I/O. Changing model settings alone does not reanalyse already committed events. See the [Phase 4 guide](phases/04-reasoning.md) for replay and duplicate semantics.
+
+Both modes now start `db-migrate`, the Connect `sink`, and the read-only `api`. Migration runs against existing volumes before the sink/API start. No profile edit is needed for the defaults: API loopback 8000, sink diagnostics loopback 4196, sink group `triage-store-v1`. Override `API_PORT`, `SINK_PORT`, and `SINK_GROUP_ID` in the selected profile when needed. The launchers clear inherited overrides for these settings as well. The API and sink receive database credentials only; no hosted model key is passed to them.
+
+```sh
+curl --fail http://localhost:8000/health/ready
+curl --fail 'http://localhost:8000/results?limit=10'
+curl --fail http://localhost:4196/ready
+```
+
+See the [Phase 5 walkthrough](phases/05-serving.md) for deterministic seeds, full detail requests, replay, and recovery. API readiness checks Postgres/schema; it does not promise the sink has caught up.
 
 An optional connectivity smoke is available:
 
@@ -84,7 +94,7 @@ Do not add `--volumes` if you want to retain this stack's data. Launch either sc
 
 ```sh
 make test-startup UV='uvx --from uv==0.13.3 uv'
-make verify-phase-4 UV='uvx --from uv==0.13.3 uv'
+make verify-phase-5 UV='uvx --from uv==0.13.3 uv'
 ```
 
 The focused target runs 13 launcher tests against a recording Docker boundary and two real Compose/profile contract tests. Assertions cover both modes, file copying and permissions, source-profile preservation, startup order, no volume deletion, inherited-variable isolation, missing profiles, preflight/shutdown/startup failure, concurrent execution, and working directories containing spaces. Native Compose tests establish the actual service/backend/model settings and rejection of an empty hosted key. The cumulative gate also keeps 100% Python application line and branch coverage; shell glue is verified through behavior tests rather than counted as Python coverage.

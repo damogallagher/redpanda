@@ -124,3 +124,11 @@ The first local development run passed 5/6 cases; the Belle semantic mistake cau
 Phase 4 review: [PR #8](https://github.com/damogallagher/redpanda/pull/8), unmerged. Final implementation `63de01e` passed 333 unit tests, 21 integration/configuration tests, 40 native Connect cases, and 829/829 lines plus 236/236 branches (100%, no exclusions). Deeply nested JSON is handled as invalid output. Initial Linux CI passed on `1d56d5a`; current checks are attached to the PR. The two-case reviewer demo passed in Damien's checkout with all private profiles unchanged.
 
 Final Phase 4 [Linux CI](https://github.com/damogallagher/redpanda/actions/runs/39472093773) passed on `1154c86`, including the nesting fix. The local review checkout also passed all 333 unit tests at 100% coverage. The closing commit records verification and the final visible response only; PR #8 remains open for Damien.
+
+## 20 October 2026 — Phase 5 persistence and results API
+
+PR #8 is merged. Phase 5 starts from `b80908b` on `phase/05-serving`. Redpanda Connect validates and upserts result envelopes into Postgres, preserving one logical row per analysis key and ignoring older/equal replayed offsets. An explicit migration upgrades existing volumes. A small read-only API serves filtered/paginated summaries and full evidence/step details, with health checks and sanitized errors.
+
+Both startup modes include the migration, sink, and API. `make demo-results` exercises storage, replay, invalid input, database outage plus sink restart, and the complete fixture source-to-API path. `make seed-results` publishes three synthetic examples without starting inference. The [Phase 5 guide](phases/05-serving.md) includes exact commands, expected outcomes, limits, and cleanup; the [session log](ai-log/sessions/2026-10-20-phase-5.md) retains visible prompts/responses. Final cumulative and CI evidence will follow. Phase 6 has not started.
+
+Implementation `1885c30` passed the cumulative Phase 5 gate: 371 unit tests, 25 integration/configuration tests, 72 native Connect tests; 946/946 lines and 242/242 branches covered with no exclusions. The real API pagination mutation failed as intended and was restored. Recovery and the fixture end-to-end path passed. Evidence: [verification](evidence/phase-5-verification.json), [stored result/recovery](evidence/phase-5-serving.json).

@@ -17,6 +17,9 @@ def test_hosted_stack_has_no_local_inference_service(compose):
         "fixture-source",
         "model-check",
         "worker",
+        "db-migrate",
+        "sink",
+        "api",
     }
 
 
@@ -26,7 +29,13 @@ def test_topics_initialize_twice_and_records_roundtrip(compose):
     topics = json.loads(
         compose("exec", "-T", "redpanda", "rpk", "topic", "list", "--format", "json")
     )
-    assert {t["name"] for t in topics} == {"edits", "results", "ingest-errors", "processing-errors"}
+    assert {t["name"] for t in topics} == {
+        "edits",
+        "results",
+        "ingest-errors",
+        "processing-errors",
+        "sink-errors",
+    }
     assert all(t["partitions"] == 1 and t["replicas"] == 1 for t in topics)
     compose(
         "exec",

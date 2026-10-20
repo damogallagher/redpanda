@@ -2,8 +2,9 @@
 
 Wikipedia edit triage in Python, using Redpanda and a selectable local or hosted model.
 
-**Phase 4 adds multi-step reasoning and durable delivery.** Redpanda Connect ingests Wikipedia edits; a Python worker fetches revision evidence, extracts changes, assesses them, and reviews uncertain output. It publishes validated results or explicit errors before committing the input offset. Persistence and the readable API arrive in Phase 5.
+**Phase 5 adds Postgres persistence and a read-only results API.** Redpanda Connect ingests Wikipedia edits; a Python worker enriches and reasons over revision evidence; a second Connect pipeline validates and upserts results into Postgres. The API exposes decisions, evidence, versions, and step outcomes with bounded pagination.
 
+- [Phase 5: persistence, results API, replay, and recovery](docs/phases/05-serving.md)
 - [Phase 4: reasoning, delivery, and a repeatable walkthrough](docs/phases/04-reasoning.md)
 - [Phase 3: inspect revision evidence and test failure behavior](docs/phases/03-enrichment.md)
 - [Start or switch local/frontier mode](docs/startup.md)
@@ -21,18 +22,18 @@ Prerequisites: Docker with Compose **2.20 or newer**, Make, and [uv](https://doc
 From the repository root:
 
 ```sh
-make verify-phase-4
+make verify-phase-5
 ```
 
-This runs formatting/lint/type checks, unit tests with **100% line and branch coverage**, configuration checks, real broker/database and HTTP ingestion tests, native Connect tests, an application-container build/configuration check, offline inspection of an attributed Wikipedia diff, and real-broker acknowledgement/replay/shutdown tests. The infrastructure tests create unique disposable projects and remove only their own volumes. Initial dependency/image downloads need internet; subsequent unit tests require no network. Test reports appear in `reports/` and as PR workflow artifacts.
+This runs formatting/lint/type checks, unit tests with **100% line and branch coverage**, configuration checks, real broker/database and HTTP ingestion tests, native Connect tests, an application-container build/configuration check, offline inspection of an attributed Wikipedia diff, real-broker acknowledgement/replay/shutdown tests, and a real Connect/Postgres/API fixture path including database outage recovery. The infrastructure tests create unique disposable projects and remove only their own volumes. Initial dependency/image downloads need internet; subsequent unit tests require no network. Test reports appear in `reports/` and as PR workflow artifacts.
 
 Expected final line:
 
 ```text
-PASS: Phase 4 reasoning and durable-delivery checks. Live model evaluation is separate.
+PASS: Phase 5 persistence and results API checks. Live model evaluation is separate.
 ```
 
-Expected: **333 unit tests (including launcher checks), 21 integration/configuration tests, 40 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make verify-phase-4 UV='uvx --from uv==0.13.3 uv'`.
+Expected: **371 unit tests (including launcher/seed checks), 25 integration/configuration tests, 72 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make verify-phase-5 UV='uvx --from uv==0.13.3 uv'`.
 
 To demonstrate live ingestion without a model or key, run `make smoke-ingestion` (about 40 seconds with cached images). It samples the public stream for 30 seconds in an isolated project, prints validated topic records and counts, and cleans up. See [Phase 2](docs/phases/02-ingestion.md) for exact expected fixture outputs, interactive `rpk` inspection, metrics, cleanup, and reconnect limitations.
 
@@ -74,7 +75,23 @@ docker compose exec redpanda rpk topic consume results --num 1 --format '%k\t%v\
 docker compose exec redpanda rpk group describe triage-v1
 ```
 
-`results` contains decisions, source evidence, extracted changes, and step outcomes. Technical errors go to `processing-errors`. After a successful ten-edit batch, `docker compose start worker` processes the next batch. A failed publication stops the worker and leaves the input uncommitted for restart; acknowledged output may duplicate if an offset commit fails. Phase 5 will deduplicate storage by analysis key.
+`results` contains decisions, source evidence, extracted changes, and step outcomes. Technical errors go to `processing-errors`. After a successful ten-edit batch, `docker compose start worker` processes the next batch. A failed publication stops the worker and leaves the input uncommitted for restart; acknowledged output may duplicate if an offset commit fails. The Phase 5 sink deduplicates storage by analysis key.
+
+## Inspect persisted results — no model needed
+
+```sh
+make demo-results
+```
+
+This isolated demonstration proves seed/upsert/pagination, replay, invalid-record routing, database outage plus sink restart, and the fixture source-to-API path. It removes only its own test resources. To browse synthetic results in your selected demo stack:
+
+```sh
+make seed-results
+curl --fail 'http://localhost:8000/results?analysis_version=demo-v1'
+curl --fail 'http://localhost:8000/results/enwiki/101?analysis_version=demo-v1'
+```
+
+Allow a few seconds after publication. Expect three synthetic decisions; revision 101 is `review`, with before/after evidence and model `fixture-not-a-real-model`. Repeating the seed leaves three logical rows. The script starts storage/API prerequisites without starting inference and prints URLs for your configured port. The [Phase 5 guide](docs/phases/05-serving.md) documents filters, exact responses, replay, health/metrics, cleanup, and limits. The API binds to loopback port 8000 (`API_PORT`); sink diagnostics use 4196 (`SINK_PORT`).
 
 ## Run with a local model
 
@@ -95,7 +112,7 @@ Start local mode:
 
 The script validates `.env.local`, stops the previous mode while retaining volumes, copies it over `.env`, and starts the stack in the background. Edit `.env.local` for lasting local settings. See the [startup guide](docs/startup.md) for switching, failure behavior, and focused tests.
 
-`topics` and `model-init` are one-time initialization services: **exit code 0 is success**. Wait for `model-init` to report `success`. First startup downloads model weights; later starts reuse the persistent volume. Redpanda, Postgres, Connect, and Ollama remain running. Connect starts ingesting with deterministic 1% selection. The worker waits for model initialization, then processes **ten edits** by default and exits successfully. Each ready edit normally takes two model calls, at most four. Set `WORKER_MAX_ITEMS=0` in the selected profile for continuous processing. After model initialization completes, an optional extra connectivity check is:
+`topics`, `db-migrate`, and `model-init` are one-time initialization services: **exit code 0 is success**. Wait for `model-init` to report `success`. First startup downloads model weights; later starts reuse the persistent volume. Redpanda, Postgres, both Connect pipelines, the results API, and Ollama remain running. Connect starts ingesting with deterministic 1% selection. The worker waits for model initialization, then processes **ten edits** by default and exits successfully. Each ready edit normally takes two model calls, at most four. Set `WORKER_MAX_ITEMS=0` in the selected profile for continuous processing. After model initialization completes, an optional extra connectivity check is:
 
 ```sh
 make smoke-model
@@ -110,7 +127,7 @@ docker compose exec redpanda rpk topic list
 docker compose exec postgres psql -U triage -d triage -c 'TABLE schema_migrations;'
 ```
 
-Expected: four topics (`edits`, `results`, `ingest-errors`, `processing-errors`) and exactly one schema migration row with version `1`. The database currently has no results table.
+Expected: five topics (`edits`, `results`, `ingest-errors`, `processing-errors`, `sink-errors`), migration versions `1` and `2`, and the `triage_results` table. Existing Phase 1 volumes are migrated automatically; retain their database password.
 
 ## Run with a hosted frontier model
 

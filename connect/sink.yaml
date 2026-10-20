@@ -1,0 +1,124 @@
+# Single results partition, durable acknowledgement only after SQL or quarantine succeeds.
+http:
+  address: 0.0.0.0:4196
+input:
+  redpanda:
+    seed_brokers: [redpanda:9092]
+    topics: [results]
+    consumer_group: ${SINK_GROUP_ID:triage-store-v1}
+    start_offset: earliest
+    commit_period: 1s
+    fetch_max_bytes: 1MiB
+    fetch_max_partition_bytes: 1MiB
+    auto_replay_nacks: true
+pipeline:
+  threads: 1
+  processors:
+    - split:
+        size: 1
+    - mapping: |
+        meta payload_sha256 = content().hash("sha256").encode("hex")
+        meta source_offset = @kafka_offset.string()
+        meta source_partition = @kafka_partition.string()
+        meta source_topic = @kafka_topic
+    - try:
+        - mapping: |
+            if content().length() > 262144 {
+              root = throw("result too large")
+            } else {
+              root = this
+            }
+        - json_schema:
+            schema_path: file:///schemas/reasoned-edit.v1.json
+        - mapping: |
+            let a = this.analysis
+            let e = this.enrichment
+            let parsed = ["ready", "no_text_change", "evidence_limit"].contains($e.status)
+            let source_url = "https://en.wikipedia.org/w/index.php?diff=%s&oldid=%s".format($a.event.revision_id.string(), $a.event.old_revision_id.string())
+            if @source_topic != "results" || @source_partition != "0" || @source_offset.number() < 0 {
+              root = throw("unsupported source position")
+            } else if @kafka_key != "%s:%s:%s".format($a.event.wiki, $a.event.revision_id.string(), $a.analysis_version) {
+              root = throw("result key mismatch")
+            } else if $a.event != this.enrichment.event || $a.attempts != this.steps.length() || $a.content_truncated != this.enrichment.content_truncated || $a.event.revision_id == $a.event.old_revision_id {
+              root = throw("inconsistent result")
+            } else if $a.decision != "insufficient_evidence" && ($a.evidence.length() == 0 || this.enrichment.status != "ready" || this.extraction == null) {
+              root = throw("decision without source evidence")
+            } else if $a.event.revision_id > 9007199254740991 || $a.event.old_revision_id > 9007199254740991 || $a.analysis_version.length() > 512 {
+              root = throw("unsupported identity")
+            } else if $a.content_truncated && $a.decision == "routine" {
+              root = throw("routine decision on incomplete evidence")
+            } else if $a.evidence.map_each(e -> e.before == e.after).contains(true) || $e.evidence.map_each(e -> e.before == e.after).contains(true) {
+              root = throw("unchanged evidence")
+            } else if $parsed != ($e.provenance != null) || ($e.provenance != null && $e.provenance.source_url != $source_url) {
+              root = throw("invalid provenance")
+            } else if ($e.status == "ready" && $e.evidence.length() == 0) || (!["ready", "evidence_limit"].contains($e.status) && $e.evidence.length() > 0) {
+              root = throw("invalid enrichment evidence")
+            } else if $e.content_truncated != ["evidence_limit", "response_too_large"].contains($e.status) || $e.evidence.map_each(e -> e.before.length() + e.after.length()).sum() > 16000 {
+              root = throw("invalid enrichment bounds")
+            } else if this.string().contains("\\u0000") {
+              root = throw("unsupported PostgreSQL null escape")
+            } else {
+              root = this
+              meta sink_outcome = "valid"
+            }
+    - catch:
+        - mapping: |
+            root = {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": @source_topic,
+              "source_partition": @source_partition,
+              "source_offset": @source_offset,
+              "payload_sha256": @payload_sha256
+            }
+            meta sink_outcome = "invalid"
+    - metric:
+        type: counter
+        name: triage_sink_records
+        labels:
+          outcome: ${! meta("sink_outcome") }
+output:
+  switch:
+    cases:
+      - check: 'meta("sink_outcome") == "invalid"'
+        output:
+          redpanda:
+            seed_brokers: [redpanda:9092]
+            topic: sink-errors
+            key: '${! "%s:%s:%s".format(meta("source_topic"), meta("source_partition"), meta("source_offset")) }'
+            acks: all
+            idempotent_write: true
+            allow_auto_topic_creation: false
+            max_in_flight: 1
+      - output:
+          retry:
+            backoff:
+              initial_interval: 1s
+              max_interval: 10s
+              max_elapsed_time: 0s
+            output:
+              sql_raw:
+                driver: pgx
+                # PGPASSWORD is a separate environment value; no URL interpolation of secrets.
+                dsn: postgres://triage@postgres:5432/triage?sslmode=disable&connect_timeout=3&statement_timeout=3000&lock_timeout=1000
+                max_in_flight: 1
+                conn_max_open: 1
+                conn_max_idle: 1
+                query: |
+                  INSERT INTO triage_results (wiki, revision_id, analysis_version, decision, payload, source_offset)
+                  VALUES ($1, $2, $3, $4, $5::jsonb, $6)
+                  ON CONFLICT (wiki, revision_id, analysis_version) DO UPDATE
+                  SET decision = EXCLUDED.decision, payload = EXCLUDED.payload,
+                      source_offset = EXCLUDED.source_offset, updated_at = clock_timestamp()
+                  WHERE EXCLUDED.source_offset > triage_results.source_offset
+                args_mapping: |
+                  root = [this.analysis.event.wiki, this.analysis.event.revision_id,
+                    this.analysis.analysis_version, this.analysis.decision, this.string(),
+                    meta("source_offset").number()]
+metrics:
+  prometheus: {}
+logger:
+  level: INFO
+  format: json
+shutdown_timeout: 20s

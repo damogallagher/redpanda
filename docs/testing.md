@@ -28,7 +28,7 @@ CI runs deterministic checks on every PR with least-privilege permissions and pi
 
 ## Command interface
 
-Available now: `make check`, `make test-unit`, `make test-foundation`, `make test-integration`, `make test-connect`, `make test-startup`, `make test-container`, `make verify-phase-1`, `make verify-phase-2`, `make verify-phase-3`, `make test-enrichment`, `make inspect-enrichment`, `make smoke-enrichment`, `make smoke-ingestion`, `make smoke-model`, `make verify-phase-4`, `make test-reasoning`, `make demo-reasoning`, and `make evaluate-development`. Full end-to-end and held-out evaluation remain planned.
+Available now: `make check`, `make test-unit`, `make test-foundation`, `make test-integration`, `make test-connect`, `make test-startup`, `make test-container`, `make verify-phase-1`, `make verify-phase-2`, `make verify-phase-3`, `make test-enrichment`, `make inspect-enrichment`, `make smoke-enrichment`, `make smoke-ingestion`, `make smoke-model`, `make verify-phase-4`, `make test-reasoning`, `make demo-reasoning`, and `make evaluate-development`. `make verify-phase-5`, `make test-serving`, `make test-e2e`, `make demo-results`, and `make seed-results` are also available. Fixture end-to-end includes real Connect/Postgres/API with external HTTP doubles; held-out live evaluation remains Phase 6.
 
 - `make check`: formatting, lint, types, and applicable config checks (unit coverage is a separate target).
 - `make test-unit`: deterministic unit suite with 100% line/branch coverage enforcement.

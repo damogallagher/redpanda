@@ -1,6 +1,6 @@
 # Verify each phase
 
-**Current status: Phases 1–4 are implemented.** Run `make verify-phase-4` for cumulative deterministic checks, `make demo-reasoning` for the result/replay walkthrough, and `make evaluate-development` for the separate real-model evaluation. [Local/frontier startup scripts](startup.md) select the model profile. Persistence/API and final acceptance remain Phases 5–6.
+**Current status: Phases 1–5 are implemented.** Run `make verify-phase-5` for cumulative deterministic checks, `make demo-reasoning` for the result/replay walkthrough, and `make evaluate-development` for the separate real-model evaluation. [Local/frontier startup scripts](startup.md) select the model profile. Persistence/API walkthrough: `make demo-results`. Final acceptance remains Phase 6.
 
 [Original assignment](assignment/fde-take-home-exercise.md) · [Phase records](phases/README.md) · [Testing policy](testing.md) · [Progress](progress.md)
 
@@ -16,7 +16,7 @@ Commands must use isolated test resources. Every implemented phase record must i
 
 ## Commands at a glance
 
-Phases 0–4 are available now. `make verify-phase-N` is the agreed entry point for deterministic verification; external-source/model smoke tests are separate so the repeatable checks do not depend on live services.
+Phases 0–5 are available now. `make verify-phase-N` is the agreed entry point for deterministic verification; external-source/model smoke tests are separate so the repeatable checks do not depend on live services.
 
 | Phase | Command from repository root | Evidence of intended behavior | Availability |
 |---|---|---|---|
@@ -25,7 +25,7 @@ Phases 0–4 are available now. `make verify-phase-N` is the agreed entry point 
 | [2: ingestion](phases/02-ingestion.md) | `make verify-phase-2` | Known fixture records reach the correct topics with exact keys/fields; unwanted records are absent | Implemented |
 | [3: enrichment](phases/03-enrichment.md) | `make verify-phase-3` | Known revisions yield expected before/after evidence; unavailable content has an explicit status | Implemented |
 | [4: reasoning](phases/04-reasoning.md) | `make verify-phase-4` | Valid extraction/assessment results; bounded retries and abstention; no offset commit on publish failure | Implemented |
-| [5: serving](phases/05-serving.md) | `make verify-phase-5` | Seeded event reaches the API; replay leaves one logical stored result; sink recovers after outage | Planned |
+| [5: serving](phases/05-serving.md) | `make verify-phase-5` | Seeded event reaches the API; replay leaves one logical stored result; sink recovers after outage | Implemented |
 | [6: acceptance](phases/06-acceptance.md) | `make verify-phase-6` | Cumulative tests, clean-start fixture path, and recovery drills pass; coverage has no missing lines/branches | Planned |
 
 The table specifies assertions; actual observations are in the linked phase records. Live model quality and hardware feasibility require additional evidence even when deterministic checks pass.
@@ -91,7 +91,7 @@ Run real broker tests with deterministic model responses for: valid extraction p
 
 ## Phase 5 — prove results are persisted and served
 
-**Future automated command:** `make verify-phase-5`.
+**Available command:** `make verify-phase-5`; see the [Phase 5 guide](phases/05-serving.md) for `make demo-results`, API requests, recovery evidence, and cleanup.
 
 Send one known event through the full fixture pipeline and query the documented API endpoint by its ID. The phase PR must supply an exact copy-paste request and expected JSON example.
 
