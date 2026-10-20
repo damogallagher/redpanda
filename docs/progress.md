@@ -53,3 +53,13 @@ The API key was read only from the user-supplied untracked `.env` for the author
 Final local verification passed on application commit `e278b5b`: 86 unit tests, 3 real infrastructure tests, 100% line coverage (176/176) and branch coverage (32/32), no excluded lines. Both real model smoke checks passed. Machine-readable results are in `docs/evidence/phase-1-verification.json`. Review [PR #3](https://github.com/damogallagher/redpanda/pull/3). The initial GitHub Linux CI run passed; the PR displays current checks after the final review fixes. Next step: Damien reviews the Phase 1 PR; after merge, request Phase 2 to add Connect ingestion.
 
 Local handover: the verification demo used Compose project `redpanda-phase1`. Its containers are stopped after verification, with volumes retained. To reuse those downloaded weights on this machine, set `COMPOSE_PROJECT_NAME=redpanda-phase1` in the untracked `.env` before following the README; preserve the existing API key. This is optional and unnecessary for reviewers on other machines. Disposable integration projects were removed by their test fixture.
+
+## 20 October 2026 — Dependency version review
+
+Damien merged Phase 1 PR #3; main is now `62f2330`. In response to the question about PostgreSQL 17 and latest libraries, compared the current pins with official upstream sources. The [version review](dependency-versions.md) records the findings, sources, recommendations, and how to verify an upgrade.
+
+Recommendation: retain PostgreSQL major 16 as named in the assignment, but update its maintenance release from 16.14 to 16.15. HTTPX, Pydantic, and the direct test/lint/type dependencies already match current releases. Hatchling and uv have newer stable releases worth updating with build verification. Python 3.13 remains supported; keep the tested runtime for this exercise.
+
+This follow-up changes documentation and the visible interaction log only. Runtime files, dependency pins, and previous test evidence remain unchanged. Phase 2 has not started.
+
+Documentation validation: all 22 relative file links across the four changed Markdown files resolve; `git diff --check` passed. No runtime tests were rerun for this documentation-only review.
