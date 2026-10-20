@@ -1,0 +1,287 @@
+[
+  {
+    "id": "punctuation",
+    "expected": "routine",
+    "rubric": "Punctuation does not change the two facts.",
+    "source": {
+      "schema_version": 1,
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "Synthetic acceptance punctuation",
+        "old_revision_id": 1000,
+        "revision_id": 1001,
+        "occurred_at": "2026-10-20T00:00:00Z"
+      },
+      "source": "fixture",
+      "status": "ready",
+      "attempts": 0,
+      "provenance": {
+        "endpoint": "https://en.wikipedia.org/w/api.php",
+        "page_id": 42,
+        "from_title": "Synthetic acceptance punctuation",
+        "to_title": "Synthetic acceptance punctuation",
+        "source_url": "https://en.wikipedia.org/w/index.php?diff=1001&oldid=1000"
+      },
+      "evidence": [
+        {
+          "before": "The library opened in 1980, and it closes on Sundays.",
+          "after": "The library opened in 1980; it closes on Sundays."
+        }
+      ],
+      "content_truncated": false
+    }
+  },
+  {
+    "id": "fact-order",
+    "expected": "routine",
+    "rubric": "Both facts remain unchanged; only their order changes.",
+    "source": {
+      "schema_version": 1,
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "Synthetic acceptance fact-order",
+        "old_revision_id": 1002,
+        "revision_id": 1003,
+        "occurred_at": "2026-10-20T00:00:00Z"
+      },
+      "source": "fixture",
+      "status": "ready",
+      "attempts": 0,
+      "provenance": {
+        "endpoint": "https://en.wikipedia.org/w/api.php",
+        "page_id": 42,
+        "from_title": "Synthetic acceptance fact-order",
+        "to_title": "Synthetic acceptance fact-order",
+        "source_url": "https://en.wikipedia.org/w/index.php?diff=1003&oldid=1002"
+      },
+      "evidence": [
+        {
+          "before": "The tower is 40 metres tall. It was built in 1902.",
+          "after": "The tower was built in 1902. It is 40 metres tall."
+        }
+      ],
+      "content_truncated": false
+    }
+  },
+  {
+    "id": "negation",
+    "expected": "review",
+    "rubric": "Removing the negation reverses the finding.",
+    "source": {
+      "schema_version": 1,
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "Synthetic acceptance negation",
+        "old_revision_id": 1004,
+        "revision_id": 1005,
+        "occurred_at": "2026-10-20T00:00:00Z"
+      },
+      "source": "fixture",
+      "status": "ready",
+      "attempts": 0,
+      "provenance": {
+        "endpoint": "https://en.wikipedia.org/w/api.php",
+        "page_id": 42,
+        "from_title": "Synthetic acceptance negation",
+        "to_title": "Synthetic acceptance negation",
+        "source_url": "https://en.wikipedia.org/w/index.php?diff=1005&oldid=1004"
+      },
+      "evidence": [
+        {
+          "before": "The trial did not show a reduction in hospital admissions.",
+          "after": "The trial showed a reduction in hospital admissions."
+        }
+      ],
+      "content_truncated": false
+    }
+  },
+  {
+    "id": "population",
+    "expected": "review",
+    "rubric": "A finding in mice is asserted for people without new support.",
+    "source": {
+      "schema_version": 1,
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "Synthetic acceptance population",
+        "old_revision_id": 1006,
+        "revision_id": 1007,
+        "occurred_at": "2026-10-20T00:00:00Z"
+      },
+      "source": "fixture",
+      "status": "ready",
+      "attempts": 0,
+      "provenance": {
+        "endpoint": "https://en.wikipedia.org/w/api.php",
+        "page_id": 42,
+        "from_title": "Synthetic acceptance population",
+        "to_title": "Synthetic acceptance population",
+        "source_url": "https://en.wikipedia.org/w/index.php?diff=1007&oldid=1006"
+      },
+      "evidence": [
+        {
+          "before": "In mice, the compound reduced inflammation.",
+          "after": "In people, the compound reduced inflammation."
+        }
+      ],
+      "content_truncated": false
+    }
+  },
+  {
+    "id": "attribution",
+    "expected": "review",
+    "rubric": "An attributed opinion becomes an unqualified assertion.",
+    "source": {
+      "schema_version": 1,
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "Synthetic acceptance attribution",
+        "old_revision_id": 1008,
+        "revision_id": 1009,
+        "occurred_at": "2026-10-20T00:00:00Z"
+      },
+      "source": "fixture",
+      "status": "ready",
+      "attempts": 0,
+      "provenance": {
+        "endpoint": "https://en.wikipedia.org/w/api.php",
+        "page_id": 42,
+        "from_title": "Synthetic acceptance attribution",
+        "to_title": "Synthetic acceptance attribution",
+        "source_url": "https://en.wikipedia.org/w/index.php?diff=1009&oldid=1008"
+      },
+      "evidence": [
+        {
+          "before": "Critic Jane Smith described the film as the best of the decade.",
+          "after": "The film is the best of the decade."
+        }
+      ],
+      "content_truncated": false
+    }
+  },
+  {
+    "id": "citation-replaced",
+    "expected": "review",
+    "rubric": "The supporting reference changes; do not infer that either source is true.",
+    "source": {
+      "schema_version": 1,
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "Synthetic acceptance citation-replaced",
+        "old_revision_id": 1010,
+        "revision_id": 1011,
+        "occurred_at": "2026-10-20T00:00:00Z"
+      },
+      "source": "fixture",
+      "status": "ready",
+      "attempts": 0,
+      "provenance": {
+        "endpoint": "https://en.wikipedia.org/w/api.php",
+        "page_id": 42,
+        "from_title": "Synthetic acceptance citation-replaced",
+        "to_title": "Synthetic acceptance citation-replaced",
+        "source_url": "https://en.wikipedia.org/w/index.php?diff=1011&oldid=1010"
+      },
+      "evidence": [
+        {
+          "before": "The tunnel opened in 1998.<ref>Municipal engineering report, 1999.</ref>",
+          "after": "The tunnel opened in 1998.<ref>Anonymous online forum post, 2025.</ref>"
+        }
+      ],
+      "content_truncated": false
+    }
+  },
+  {
+    "id": "two-hunks",
+    "expected": "review",
+    "rubric": "Cover both hunks: spelling is benign but a tentative finding becomes certainty.",
+    "source": {
+      "schema_version": 1,
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "Synthetic acceptance two-hunks",
+        "old_revision_id": 1012,
+        "revision_id": 1013,
+        "occurred_at": "2026-10-20T00:00:00Z"
+      },
+      "source": "fixture",
+      "status": "ready",
+      "attempts": 0,
+      "provenance": {
+        "endpoint": "https://en.wikipedia.org/w/api.php",
+        "page_id": 42,
+        "from_title": "Synthetic acceptance two-hunks",
+        "to_title": "Synthetic acceptance two-hunks",
+        "source_url": "https://en.wikipedia.org/w/index.php?diff=1013&oldid=1012"
+      },
+      "evidence": [
+        {
+          "before": "The centre opened on Monday.",
+          "after": "The center opened on Monday."
+        },
+        {
+          "before": "Preliminary observations suggest the material may resist corrosion.",
+          "after": "Observations prove the material resists corrosion."
+        }
+      ],
+      "content_truncated": false
+    }
+  },
+  {
+    "id": "unavailable",
+    "expected": "insufficient_evidence",
+    "rubric": "Unavailable revision must abstain with zero model calls.",
+    "source": {
+      "schema_version": 1,
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "Synthetic acceptance unavailable",
+        "old_revision_id": 1014,
+        "revision_id": 1015,
+        "occurred_at": "2026-10-20T00:00:00Z"
+      },
+      "source": "fixture",
+      "status": "revision_unavailable",
+      "attempts": 0,
+      "provenance": null,
+      "evidence": [],
+      "content_truncated": false
+    }
+  },
+  {
+    "id": "no-text-change",
+    "expected": "insufficient_evidence",
+    "rubric": "No extracted text changes must abstain with zero model calls.",
+    "source": {
+      "schema_version": 1,
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "Synthetic acceptance no-text-change",
+        "old_revision_id": 1016,
+        "revision_id": 1017,
+        "occurred_at": "2026-10-20T00:00:00Z"
+      },
+      "source": "fixture",
+      "status": "no_text_change",
+      "attempts": 0,
+      "provenance": {
+        "endpoint": "https://en.wikipedia.org/w/api.php",
+        "page_id": 42,
+        "from_title": "Synthetic acceptance no-text-change",
+        "to_title": "Synthetic acceptance no-text-change",
+        "source_url": "https://en.wikipedia.org/w/index.php?diff=1017&oldid=1016"
+      },
+      "evidence": [],
+      "content_truncated": false
+    }
+  }
+]

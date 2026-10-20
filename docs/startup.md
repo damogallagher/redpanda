@@ -93,8 +93,8 @@ Do not add `--volumes` if you want to retain this stack's data. Launch either sc
 ## Verify and troubleshoot
 
 ```sh
-make test-startup UV='uvx --from uv==0.13.3 uv'
-make verify-phase-5 UV='uvx --from uv==0.13.3 uv'
+make test-startup UV='uvx --from uv==0.13.4 uv'
+make verify-phase-5 UV='uvx --from uv==0.13.4 uv'
 ```
 
 The focused target runs 13 launcher tests against a recording Docker boundary and two real Compose/profile contract tests. Assertions cover both modes, file copying and permissions, source-profile preservation, startup order, no volume deletion, inherited-variable isolation, missing profiles, preflight/shutdown/startup failure, concurrent execution, and working directories containing spaces. Native Compose tests establish the actual service/backend/model settings and rejection of an empty hosted key. The cumulative gate also keeps 100% Python application line and branch coverage; shell glue is verified through behavior tests rather than counted as Python coverage.

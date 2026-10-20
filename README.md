@@ -2,8 +2,11 @@
 
 Wikipedia edit triage in Python, using Redpanda and a selectable local or hosted model.
 
-**Phase 5 adds Postgres persistence and a read-only results API.** Redpanda Connect ingests Wikipedia edits; a Python worker enriches and reasons over revision evidence; a second Connect pipeline validates and upserts results into Postgres. The API exposes decisions, evidence, versions, and step outcomes with bounded pagination.
+**Phase 6 adds operational acceptance and handover.** Redpanda Connect ingests Wikipedia edits; a Python worker enriches and reasons over revision evidence; a second Connect pipeline validates and upserts results into Postgres. The API exposes decisions, evidence, versions, and step outcomes with bounded pagination.
 
+- [Simple run/test/cleanup guide](docs/operations.md)
+- [Phase 6: acceptance evidence and handover](docs/phases/06-acceptance.md)
+- [Code/data flow and assignment checklist](docs/handover.md)
 - [Phase 5: persistence, results API, replay, and recovery](docs/phases/05-serving.md)
 - [Phase 4: reasoning, delivery, and a repeatable walkthrough](docs/phases/04-reasoning.md)
 - [Phase 3: inspect revision evidence and test failure behavior](docs/phases/03-enrichment.md)
@@ -15,14 +18,31 @@ Wikipedia edit triage in Python, using Redpanda and a selectable local or hosted
 - [Verify every phase](docs/phase-verification.md) · [Implementation plan](docs/implementation-plan.md)
 - [Test policy](docs/testing.md) · [Progress](docs/progress.md) · [Prompt/response log](docs/ai-log/README.md)
 
+## Simple command menu
+
+| I want to… | Run |
+|---|---|
+| Check everything without a model/key | `make test` |
+| Watch a successful end-to-end fixture | `make demo-success` |
+| Verify faults and recovery | `make demo-failures` |
+| See an intentionally failed test | `make demo-test-failure` (expected nonzero exit) |
+| Test the model in `.env.local` | `./scripts/test-local.sh` |
+| Test the model in `.env.frontier` | `./scripts/test-frontier.sh` (up to 28 paid calls) |
+| Stop Docker, retain data/weights | `./scripts/clean-docker.sh` |
+| Stop bundled Ollama, retain weights | `./scripts/clean-ollama.sh` |
+| Delete this project's broker/database data | `./scripts/clean-docker.sh --delete-data` |
+| Delete this project's downloaded model weights | `./scripts/clean-ollama.sh --delete-models` |
+
+The [operator guide](docs/operations.md) gives profile setup, expected pass/fail output, report locations, fresh-start acceptance, restart steps and troubleshooting. Cleanup is scoped to this project. Model tests preserve active `.env`; the startup scripts below copy the selected profile over it. Run one operation at a time. **Submission still needs Damien's independently written personal sections at the end of this README.**
+
 ## Quick verification — no model or API key needed
 
-Prerequisites: Docker with Compose **2.20 or newer**, Make, and [uv](https://docs.astral.sh/uv/getting-started/installation/) (tested/pinned in CI: 0.13.3). Start Docker first. Python 3.13.16 is installed automatically by uv if needed.
+Prerequisites: Docker with Compose **2.20 or newer**, Make, and [uv](https://docs.astral.sh/uv/getting-started/installation/) (tested/pinned in CI: 0.13.4). Start Docker first. Python 3.13.16 is installed automatically by uv if needed.
 
 From the repository root:
 
 ```sh
-make verify-phase-5
+make test
 ```
 
 This runs formatting/lint/type checks, unit tests with **100% line and branch coverage**, configuration checks, real broker/database and HTTP ingestion tests, native Connect tests, an application-container build/configuration check, offline inspection of an attributed Wikipedia diff, real-broker acknowledgement/replay/shutdown tests, and a real Connect/Postgres/API fixture path including database outage recovery. The infrastructure tests create unique disposable projects and remove only their own volumes. Initial dependency/image downloads need internet; subsequent unit tests require no network. Test reports appear in `reports/` and as PR workflow artifacts.
@@ -30,10 +50,10 @@ This runs formatting/lint/type checks, unit tests with **100% line and branch co
 Expected final line:
 
 ```text
-PASS: Phase 5 persistence and results API checks. Live model evaluation is separate.
+PASS: Phase 6 deterministic acceptance. Real model/live-source checks are separate.
 ```
 
-Expected: **371 unit tests (including launcher/seed checks), 25 integration/configuration tests, 72 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make verify-phase-5 UV='uvx --from uv==0.13.3 uv'`.
+Expected: **416 unit tests, 29 integration/configuration tests, 72 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make test UV='uvx --from uv==0.13.4 uv'`.
 
 To demonstrate live ingestion without a model or key, run `make smoke-ingestion` (about 40 seconds with cached images). It samples the public stream for 30 seconds in an isolated project, prints validated topic records and counts, and cleans up. See [Phase 2](docs/phases/02-ingestion.md) for exact expected fixture outputs, interactive `rpk` inspection, metrics, cleanup, and reconnect limitations.
 

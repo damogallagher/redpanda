@@ -1,0 +1,109 @@
+{
+  "commit": "7fc26f1d47f4f815d153e4fa19f29170cd9fe380",
+  "project": "triage-live-94ade5f8b6",
+  "boot_seconds": 89.665,
+  "total_seconds": 578.754,
+  "worker_limit": 3,
+  "maximum_model_calls": 12,
+  "sampling": "all eligible edits for a bounded observation; normal default is 1%",
+  "rows": 3,
+  "results": [
+    {
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "List of assets owned by Paramount Skydance",
+        "old_revision_id": 1381016708,
+        "revision_id": 1381216919,
+        "occurred_at": "2026-10-20T19:17:56Z"
+      },
+      "decision": "insufficient_evidence",
+      "attempts": 2,
+      "outcome": "invalid_output",
+      "steps": [
+        {
+          "stage": "extract",
+          "outcome": "invalid_output"
+        },
+        {
+          "stage": "extract",
+          "outcome": "invalid_output"
+        }
+      ]
+    },
+    {
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "Johnston Center for Integrative Studies",
+        "old_revision_id": 1381213132,
+        "revision_id": 1381216908,
+        "occurred_at": "2026-10-20T19:17:52Z"
+      },
+      "decision": "insufficient_evidence",
+      "attempts": 2,
+      "outcome": "invalid_output",
+      "steps": [
+        {
+          "stage": "extract",
+          "outcome": "invalid_output"
+        },
+        {
+          "stage": "extract",
+          "outcome": "invalid_output"
+        }
+      ]
+    },
+    {
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "Ted Nugent",
+        "old_revision_id": 1375129308,
+        "revision_id": 1381216914,
+        "occurred_at": "2026-10-20T19:17:51Z"
+      },
+      "decision": "insufficient_evidence",
+      "attempts": 2,
+      "outcome": "invalid_output",
+      "steps": [
+        {
+          "stage": "extract",
+          "outcome": "model_error"
+        },
+        {
+          "stage": "extract",
+          "outcome": "invalid_output"
+        }
+      ]
+    }
+  ],
+  "group": [
+    {
+      "group_name": "triage-v1",
+      "coordinator_partition": "__consumer_offsets/1",
+      "state": "Empty",
+      "balancer": "",
+      "members": 0,
+      "coordinator_node": 0,
+      "total_lag": 608,
+      "partitions": [
+        {
+          "partition": 0,
+          "current_offset": 3,
+          "log_start_offset": 0,
+          "log_end_offset": 611,
+          "lag": 608,
+          "topic": "edits",
+          "member_id": "",
+          "client_id": "",
+          "host": ""
+        }
+      ],
+      "members_details": []
+    }
+  ],
+  "ollama_models": "NAME          ID              SIZE      MODIFIED      \nqwen2.5:7b    845dbda0ea48    4.7 GB    8 minutes ago    \n",
+  "seed_rows": 3,
+  "limits": "One live run; no accuracy or sustainable throughput claim."
+}
