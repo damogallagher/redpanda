@@ -12,7 +12,20 @@ uvx --from pip-audit==2.9.0 pip-audit --no-deps --disable-pip \
   -r reports/requirements.txt -f json -o reports/dependency-audit.json
 ```
 
-Observed exit 0: **33 packages audited, zero known vulnerabilities, zero skipped packages**. [Machine-readable evidence](evidence/phase-6-dependencies.json). This point-in-time check queries public advisories and is separate from deterministic CI. It does not cover operating-system packages, undeclared tools, or future advisories. Python dependency pins remain unchanged; the application image base was updated as described below.
+Observed exit 0: **33 packages audited, zero known vulnerabilities, zero skipped packages**. [Machine-readable evidence](evidence/phase-6-dependencies.json). This point-in-time check queries public advisories and is separate from deterministic CI. It does not cover operating-system packages, undeclared tools, or future advisories. At that original audit commit, Python dependency pins were unchanged; the application image base was updated as described below. The later CI follow-up updates FastAPI/uv and adds a supported test transport, with its separate audit recorded next.
+
+
+### CI follow-up audit
+
+After the FastAPI/uv/HTTPX2 changes, repeated the advisory audit with the full hashed export:
+
+```sh
+uv export --frozen --no-emit-project --format requirements-txt --output-file reports/requirements.txt
+uvx --from pip-audit==2.9.0 pip-audit --disable-pip --require-hashes \
+  -r reports/requirements.txt -f json -o reports/dependency-audit.json
+```
+
+Observed exit 0: **36 installed packages, zero known vulnerabilities, zero skipped packages**, with no audit warnings. `--require-hashes` already implies no dependency resolution. [Audit result](evidence/actions-dependency-audit.json) and [verification](evidence/actions-verification.json). The larger [41-package version inventory](evidence/actions-dependency-review.json) additionally includes platform-specific lock entries and build tools. This follow-up did not repeat the OS/container scan; the remaining Debian findings below are still disclosed.
 
 ## Boundary review
 

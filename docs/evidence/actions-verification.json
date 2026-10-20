@@ -1,0 +1,99 @@
+{
+  "commit": "55fdf4e3ae0d9d3b232c38c25413f3ef512db97f",
+  "date": "2026-10-20",
+  "reported_failure": {
+    "run": "https://github.com/damogallagher/redpanda/actions/runs/39478225848",
+    "cause": "Exact float timeout assertion with wall clock; controlled-clock test fix already in 8ea8ec4"
+  },
+  "local": {
+    "command": "make test UV='uvx --from uv==0.13.4 uv'",
+    "exit_code": 0,
+    "unit": {
+      "tests": "416",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "5.581"
+    },
+    "integration": {
+      "tests": "29",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "247.936"
+    },
+    "native_connect_cases": 72,
+    "coverage": {
+      "covered_lines": 1082,
+      "num_statements": 1082,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100.00",
+      "missing_lines": 0,
+      "excluded_lines": 0,
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100.00",
+      "num_branches": 276,
+      "num_partial_branches": 0,
+      "covered_branches": 276,
+      "missing_branches": 0,
+      "percent_branches_covered": 100.0,
+      "percent_branches_covered_display": "100.00"
+    },
+    "emitted_warnings": 0
+  },
+  "dependency_audit": {
+    "tool": "pip-audit 2.9.0",
+    "mode": "fully hashed lock export; --disable-pip --require-hashes",
+    "packages": 36,
+    "vulnerabilities": 0,
+    "skipped": 0,
+    "scope": "36 packages installed on macOS/Python 3.13; platform-specific lock entries reviewed separately; not an OS/container scan"
+  },
+  "ci": {
+    "run": "https://github.com/damogallagher/redpanda/actions/runs/39485899270",
+    "status": "success",
+    "commit": "55fdf4e3ae0d9d3b232c38c25413f3ef512db97f",
+    "duration_seconds": 322,
+    "job_id": 118846101510,
+    "annotations": [],
+    "emitted_warnings": 0,
+    "unit": {
+      "tests": "416",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "4.724"
+    },
+    "integration": {
+      "tests": "29",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "293.509"
+    },
+    "coverage": {
+      "covered_lines": 1082,
+      "num_statements": 1082,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100.00",
+      "missing_lines": 0,
+      "excluded_lines": 0,
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100.00",
+      "num_branches": 276,
+      "num_partial_branches": 0,
+      "covered_branches": 276,
+      "missing_branches": 0,
+      "percent_branches_covered": 100.0,
+      "percent_branches_covered_display": "100.00"
+    },
+    "artifact_download_verified": true,
+    "artifact_name": "phase-6-test-reports"
+  },
+  "integrity": {
+    "original_assignment_sha256": "89a4840092423818c59a81f4042f9007d36e90fe7da7bc8111a4d96f1662e40a",
+    "private_profiles_unchanged": true,
+    "personal_readme_sections_unchanged": true,
+    "local_markdown_links_checked": 177
+  }
+}

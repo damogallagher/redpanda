@@ -35,4 +35,6 @@ Expect a successful job and artifact upload, zero warning annotations, and no em
 
 ## Observed results
 
-The 53 affected API/model adapter tests pass with warnings treated as errors. Full local and GitHub verification results will be recorded after completion.
+The 53 affected API/model adapter tests passed with warnings treated as errors. The full local gate passed on implementation `55fdf4e`: 416 unit tests, 29 integration/configuration checks, 72 Connect cases; 100% line and branch coverage with no exclusions and zero emitted warnings. A fully hashed lock export passed pip-audit with 36 installed packages, zero vulnerabilities and zero skips. The 41-package version review also covers platform-specific lock entries and build tools; these counts measure different scopes.
+
+GitHub [run 39485899270](https://github.com/damogallagher/redpanda/actions/runs/39485899270) passed on `55fdf4e` in 5 minutes 22 seconds. All action steps and artifact upload succeeded. The check-run annotations API returned an empty array; the full log contains zero emitted warnings/deprecations. Downloaded JUnit/coverage artifacts independently confirm the same passing counts and 100% lines/branches. Closing commits update documentation/conversation only; the tested workflow and dependency files remain identical. The [verification JSON](../evidence/actions-verification.json) records actual commands, commits and results; original assignment, private profile hashes/permissions and reserved README sections remain unchanged. No paid model calls were made for this maintenance.
