@@ -63,12 +63,29 @@
   "model_requests": 0,
   "user_stack": "Redpanda, Postgres, Connect and Ollama still running; private profiles unchanged",
   "cleanup": "No test-owned containers remain; existing integration fixtures also assert removal of their networks and volumes.",
-  "ci": "Pending PR workflow; see the phase record for the final CI link.",
+  "ci": {
+    "url": "https://github.com/damogallagher/redpanda/actions/runs/39458242006",
+    "commit": "375902a9b82dc63e122c4232520cee9c3930eb99",
+    "conclusion": "success",
+    "seconds": 103,
+    "artifact": "phase-3-test-reports"
+  },
   "limitations": [
     "CLI/library only; Kafka processing and reasoning begin in Phase 4.",
     "Evidence is diff wikitext plus API-provided context, not full articles or verified sources.",
     "Strict unsupported markup and overlarge content produce explicit abstention outcomes.",
     "20-second cooperative deadline with bounded per-I/O waits, not hard wall-clock cancellation.",
     "Public revisions can later be restricted or deleted."
-  ]
+  ],
+  "pull_request": "https://github.com/damogallagher/redpanda/pull/7",
+  "local_handover": {
+    "path": "/Users/damien/Development/sourceControl/redpanda",
+    "branch": "phase/03-enrichment",
+    "private_profiles": "All three byte-for-byte unchanged",
+    "walkthroughs": [
+      "Offline attributed comparison: ready, exit 0",
+      "Missing revision fixture: revision_unavailable, exit 1",
+      "Oversized fixture: evidence_limit, exit 1"
+    ]
+  }
 }
