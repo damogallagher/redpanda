@@ -1,67 +1,22 @@
-"""Real infrastructure tests; each run owns and cleans up its own volumes."""
+"""Real infrastructure behavior checks."""
 
 import json
-import os
-import subprocess
-import uuid
-from pathlib import Path
 
 import pytest
 
 pytestmark = pytest.mark.integration
-ROOT = Path(__file__).resolve().parents[1]
-
-
-@pytest.fixture(scope="module")
-def compose():
-    project = "triage-test-" + uuid.uuid4().hex[:10]
-    base = [
-        "docker",
-        "compose",
-        "--env-file",
-        "/dev/null",
-        "-f",
-        "compose.infrastructure.yml",
-        "-p",
-        project,
-    ]
-    env = {
-        name: value
-        for name, value in os.environ.items()
-        if not name.startswith("LLM_") and name != "OPENAI_API_KEY"
-    }
-    env["POSTGRES_PASSWORD"] = "test-only"
-
-    def run(*args, input=None, timeout=180):
-        return subprocess.run(
-            [*base, *args],
-            cwd=ROOT,
-            env=env,
-            input=input,
-            text=True,
-            capture_output=True,
-            check=True,
-            timeout=timeout,
-        ).stdout
-
-    try:
-        run("up", "-d", "--wait", "--wait-timeout", "120", "redpanda", "postgres")
-        yield run
-    finally:
-        # This unique project was created by this test; no shared/user volumes are removed.
-        subprocess.run(
-            [*base, "down", "--volumes", "--remove-orphans"],
-            cwd=ROOT,
-            env=env,
-            check=True,
-            capture_output=True,
-            timeout=120,
-        )
 
 
 def test_hosted_stack_has_no_local_inference_service(compose):
     services = set(compose("--profile", "tools", "config", "--services").splitlines())
-    assert services == {"redpanda", "postgres", "topics", "model-check"}
+    assert services == {
+        "redpanda",
+        "postgres",
+        "topics",
+        "connect",
+        "fixture-source",
+        "model-check",
+    }
 
 
 def test_topics_initialize_twice_and_records_roundtrip(compose):

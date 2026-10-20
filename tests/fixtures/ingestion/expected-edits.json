@@ -1,0 +1,18 @@
+[
+  {
+    "schema_version": 1,
+    "wiki": "enwiki",
+    "title": "Example article",
+    "old_revision_id": 100,
+    "revision_id": 101,
+    "occurred_at": "2026-10-20T10:00:00Z"
+  },
+  {
+    "schema_version": 1,
+    "wiki": "enwiki",
+    "title": "Second article",
+    "old_revision_id": 200,
+    "revision_id": 201,
+    "occurred_at": "2026-10-20T10:00:00Z"
+  }
+]

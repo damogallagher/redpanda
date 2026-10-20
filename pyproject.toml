@@ -22,7 +22,10 @@ packages = ["src/triage"]
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = "-ra --strict-markers"
-markers = ["integration: requires real Docker infrastructure"]
+markers = [
+    "integration: requires real Docker infrastructure",
+    "live: opt-in public Wikimedia smoke; excluded from deterministic checks",
+]
 
 [tool.coverage.run]
 branch = true

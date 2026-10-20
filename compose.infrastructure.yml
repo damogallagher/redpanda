@@ -40,6 +40,41 @@ services:
       timeout: 5s
       retries: 24
     mem_limit: 512m
+  connect:
+    image: docker.redpanda.com/redpandadata/connect:4.114.0@sha256:481e8df48ed733f080623ae67f0dccc82d29ae509dfb3f957347a9e900e74910
+    command: ["run", "--disable-telemetry", "/config/ingest.yaml"]
+    environment:
+      INGEST_STREAM_URL: ${INGEST_STREAM_URL:-https://stream.wikimedia.org/v2/stream/recentchange}
+      INGEST_RECONNECT: ${INGEST_RECONNECT:-true}
+      INGEST_SOURCE: ${INGEST_SOURCE:-wikimedia-recentchange}
+      INGEST_SAMPLE_ALL: ${INGEST_SAMPLE_ALL:-false}
+    volumes:
+      - ./connect:/config:ro
+    ports:
+      - "127.0.0.1:${CONNECT_PORT:-4195}:4195"
+    depends_on:
+      topics:
+        condition: service_completed_successfully
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    stop_grace_period: 25s
+  fixture-source:
+    profiles: ["tools"]
+    image: python:3.13.16-slim-bookworm@sha256:a1165e272e578941b84abc79e4ab38a0305cd12803a5c4247979ac7655f4d641
+    command: ["python", "-m", "http.server", "8080", "--directory", "/fixtures"]
+    volumes:
+      - ./tests/fixtures/ingestion:/fixtures:ro
+    user: "10001"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/phase-2.sse', timeout=2).close()"]
+      interval: 1s
+      timeout: 3s
+      retries: 20
   model-check:
     profiles: ["tools"]
     build: .

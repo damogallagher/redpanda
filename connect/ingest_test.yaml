@@ -1,0 +1,306 @@
+# Native tests for the production Connect processors.
+tests:
+  - name: "projects exact fields and UTC timestamp"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "wiki": "enwiki", "title": "Example article", "old_revision_id": 100, "revision_id": 101, "occurred_at": "2026-10-20T10:00:00Z"}
+          metadata_equals: {"event_key": "enwiki:101", "outcome": "accepted", "source": "fixture", "source_id": "fixture-1", "ingest_version": "1"}
+  - name: "handles CRLF frames"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\r\nid: fixture-1\r\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\r\n\r\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "wiki": "enwiki", "title": "Example article", "old_revision_id": 100, "revision_id": 101, "occurred_at": "2026-10-20T10:00:00Z"}
+          metadata_equals: {"event_key": "enwiki:101", "outcome": "accepted", "source": "fixture", "source_id": "fixture-1", "ingest_version": "1"}
+  - name: "joins multiline data"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\ndata: \"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "wiki": "enwiki", "title": "Example article", "old_revision_id": 100, "revision_id": 101, "occurred_at": "2026-10-20T10:00:00Z"}
+          metadata_equals: {"event_key": "enwiki:101", "outcome": "accepted", "source": "fixture", "source_id": "fixture-1", "ingest_version": "1"}
+  - name: "ignores comments within a frame"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\n: keepalive\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "wiki": "enwiki", "title": "Example article", "old_revision_id": 100, "revision_id": 101, "occurred_at": "2026-10-20T10:00:00Z"}
+          metadata_equals: {"event_key": "enwiki:101", "outcome": "accepted", "source": "fixture", "source_id": "fixture-1", "ingest_version": "1"}
+  - name: "ignores initial heartbeat"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: ":ok\n\n"
+    output_batches: []
+  - name: "ignores empty segment"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: ""
+    output_batches: []
+  - name: "ignores unknown event type"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: status\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches: []
+  - name: "filters wiki"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"dewiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches: []
+  - name: "filters bot"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":true,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches: []
+  - name: "filters namespace"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":1,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches: []
+  - name: "filters type"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"new\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches: []
+  - name: "rejects malformed JSON"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {bad json\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "f2c67da63c9610c667cf426b4aea1d4922896e0e14d6092ae02d7fe96586b158"}
+          metadata_equals: {"event_key": "ingest:f2c67da63c9610c667cf426b4aea1d4922896e0e14d6092ae02d7fe96586b158", "outcome": "invalid"}
+  - name: "rejects non-object JSON"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: []\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "bc6bc8890174f6dc1ee18df4233380805b7431d9ab74041cf6b9e1263f6f1e07"}
+          metadata_equals: {"event_key": "ingest:bc6bc8890174f6dc1ee18df4233380805b7431d9ab74041cf6b9e1263f6f1e07", "outcome": "invalid"}
+  - name: "rejects unterminated frame even with valid JSON"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "e347b310ed2a8566a9253a8b1e1ef90348a7893b1346361b16e39e73aa482c99"}
+          metadata_equals: {"event_key": "ingest:e347b310ed2a8566a9253a8b1e1ef90348a7893b1346361b16e39e73aa482c99", "outcome": "invalid"}
+  - name: "rejects ambiguous event headers"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nevent: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "85bd235f8d3b08fb2890488f4443b79d63060bb78b8136cf194291c98a665a36"}
+          metadata_equals: {"event_key": "ingest:85bd235f8d3b08fb2890488f4443b79d63060bb78b8136cf194291c98a665a36", "outcome": "invalid"}
+  - name: "rejects missing wiki"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":null,\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "4284172d837b87d247e51dc747eca548c4d271b679f4e2e7b5382c28edf68e82"}
+          metadata_equals: {"event_key": "ingest:4284172d837b87d247e51dc747eca548c4d271b679f4e2e7b5382c28edf68e82", "outcome": "invalid"}
+  - name: "rejects string namespace"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":\"0\",\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "891adb5c5034552bc1b694d60b146800f637a506ab5148114819344a49939272"}
+          metadata_equals: {"event_key": "ingest:891adb5c5034552bc1b694d60b146800f637a506ab5148114819344a49939272", "outcome": "invalid"}
+  - name: "rejects fractional namespace"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0.5,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "754c20b45164e3a1151d6a95011602155e9af4fabbaca86fc3c69beae18b1b9a"}
+          metadata_equals: {"event_key": "ingest:754c20b45164e3a1151d6a95011602155e9af4fabbaca86fc3c69beae18b1b9a", "outcome": "invalid"}
+  - name: "rejects string bot"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":\"false\",\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "f722e7a09e0784e661139c9f2efb6c20be6538e168202e73bd5f36e0509878ad"}
+          metadata_equals: {"event_key": "ingest:f722e7a09e0784e661139c9f2efb6c20be6538e168202e73bd5f36e0509878ad", "outcome": "invalid"}
+  - name: "rejects empty title"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "101c67a866863f4e3c686ad0dcf563c9a1ef662fa64db5f5a979b927381de742"}
+          metadata_equals: {"event_key": "ingest:101c67a866863f4e3c686ad0dcf563c9a1ef662fa64db5f5a979b927381de742", "outcome": "invalid"}
+  - name: "rejects whitespace title"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"  \",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "ec408bf3093b60ee7ad98a6ecaa5f0c91b079a96d261c6fd68042045d75ea3fc"}
+          metadata_equals: {"event_key": "ingest:ec408bf3093b60ee7ad98a6ecaa5f0c91b079a96d261c6fd68042045d75ea3fc", "outcome": "invalid"}
+  - name: "rejects oversized title"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "4cdd90ef33f10045782d77a3cad60b4798f7db11899cf982920de019c862abcf"}
+          metadata_equals: {"event_key": "ingest:4cdd90ef33f10045782d77a3cad60b4798f7db11899cf982920de019c862abcf", "outcome": "invalid"}
+  - name: "rejects negative timestamp"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":-1}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "104907ceacfbc4111095287fca15373c6bc2d1a367f722ce2eeba6d471e23bb2"}
+          metadata_equals: {"event_key": "ingest:104907ceacfbc4111095287fca15373c6bc2d1a367f722ce2eeba6d471e23bb2", "outcome": "invalid"}
+  - name: "rejects oversized timestamp"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":253402300800}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "229391981b7a8d140a515fb5acac3578eb867494668cf171c7e326d3f6ed3164"}
+          metadata_equals: {"event_key": "ingest:229391981b7a8d140a515fb5acac3578eb867494668cf171c7e326d3f6ed3164", "outcome": "invalid"}
+  - name: "rejects fractional timestamp"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1.5}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "9fd0f9f3b3417905add2dd1cf5e07bbcc3f06e8e2d59d87a490fdf66d6de9c31"}
+          metadata_equals: {"event_key": "ingest:9fd0f9f3b3417905add2dd1cf5e07bbcc3f06e8e2d59d87a490fdf66d6de9c31", "outcome": "invalid"}
+  - name: "rejects string timestamp"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":\"1792490400\"}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "fda65355cf403907ba02ca5c4f63c00644b68f861da3e9cda36c4c7ecc5453d0"}
+          metadata_equals: {"event_key": "ingest:fda65355cf403907ba02ca5c4f63c00644b68f861da3e9cda36c4c7ecc5453d0", "outcome": "invalid"}
+  - name: "rejects zero old revision"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":0,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "411319addee03500d4b93bca26a0f753b35ce096a2bc493ed882b6c760dfced0"}
+          metadata_equals: {"event_key": "ingest:411319addee03500d4b93bca26a0f753b35ce096a2bc493ed882b6c760dfced0", "outcome": "invalid"}
+  - name: "rejects negative revision"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":-1},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "8f5dd8f1887132f945fea8d21afd7209321e9127439a710ad7ee9aa6dcc7affb"}
+          metadata_equals: {"event_key": "ingest:8f5dd8f1887132f945fea8d21afd7209321e9127439a710ad7ee9aa6dcc7affb", "outcome": "invalid"}
+  - name: "rejects fractional revision"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":100.5},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "4348f572464a262a011b38f68b1e30aa4602a2d386829ce7040ad7bd0e2b844d"}
+          metadata_equals: {"event_key": "ingest:4348f572464a262a011b38f68b1e30aa4602a2d386829ce7040ad7bd0e2b844d", "outcome": "invalid"}
+  - name: "rejects string revision"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":\"101\"},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "dc52e0c7380cf572f14ec394718b44df7a3c56b9be3917c2fd1d038318b0e46e"}
+          metadata_equals: {"event_key": "ingest:dc52e0c7380cf572f14ec394718b44df7a3c56b9be3917c2fd1d038318b0e46e", "outcome": "invalid"}
+  - name: "rejects boolean revision"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":true},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "b4d93ab72ed20ca6db73e60c72d1e087bc2a5c1ec76706eb3636c94c3012c7cf"}
+          metadata_equals: {"event_key": "ingest:b4d93ab72ed20ca6db73e60c72d1e087bc2a5c1ec76706eb3636c94c3012c7cf", "outcome": "invalid"}
+  - name: "rejects equal revisions"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":100},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "1d073db1e3fee0cbaa21fc1e85213d4aea4a7ab18779163b9dcb05b5cf11bc5c"}
+          metadata_equals: {"event_key": "ingest:1d073db1e3fee0cbaa21fc1e85213d4aea4a7ab18779163b9dcb05b5cf11bc5c", "outcome": "invalid"}
+  - name: "rejects unsafe integer"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":9007199254740992},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "1fa3f512ecd7ac431cd5345d08bf8028bbd1e7b55d93952a846df579793f5845"}
+          metadata_equals: {"event_key": "ingest:1fa3f512ecd7ac431cd5345d08bf8028bbd1e7b55d93952a846df579793f5845", "outcome": "invalid"}
+  - name: "samples out nonmatching revision"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "false"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":101},\"timestamp\":1792490400}\n\n"
+    output_batches: []
+  - name: "retains matching revision"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "false"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":300},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "wiki": "enwiki", "title": "Example article", "old_revision_id": 100, "revision_id": 300, "occurred_at": "2026-10-20T10:00:00Z"}
+          metadata_equals: {"event_key": "enwiki:300", "outcome": "accepted", "source": "fixture", "source_id": "fixture-1", "ingest_version": "1"}
+  - name: "replay keeps sampling decision"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "false"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Example article\",\"revision\":{\"old\":100,\"new\":300},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "wiki": "enwiki", "title": "Example article", "old_revision_id": 100, "revision_id": 300, "occurred_at": "2026-10-20T10:00:00Z"}
+          metadata_equals: {"event_key": "enwiki:300", "outcome": "accepted", "source": "fixture", "source_id": "fixture-1", "ingest_version": "1"}
+  - name: "rejects unrecognized input"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {INGEST_SOURCE: fixture, INGEST_SAMPLE_ALL: "true"}
+    input_batch:
+      - content: "unrecognized input\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "", "payload_sha256": "383ac8de39a74b5794211345c4e96742427d4748d1f3a43b031ca5c1a18165e8"}
+          metadata_equals: {"outcome": "invalid", "event_key": "ingest:383ac8de39a74b5794211345c4e96742427d4748d1f3a43b031ca5c1a18165e8"}
+  - name: "rejects missing data in message event"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {INGEST_SOURCE: fixture, INGEST_SAMPLE_ALL: "true"}
+    input_batch:
+      - content: "event: message\nid: fixture-1\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "stage": "ingestion", "reason": "invalid_record", "source": "fixture", "source_id": "fixture-1", "payload_sha256": "735e383cc2320481f010bf28ca2b9d90c2d484ce93fb4ba862e45fa0570c1bf1"}
+          metadata_equals: {"outcome": "invalid", "event_key": "ingest:735e383cc2320481f010bf28ca2b9d90c2d484ce93fb4ba862e45fa0570c1bf1"}
+  - name: "formats revision 1381188467 as a decimal key"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: large-revision\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Large revision\",\"revision\":{\"old\":1381188466,\"new\":1381188467},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "wiki": "enwiki", "title": "Large revision", "old_revision_id": 1381188466, "revision_id": 1381188467, "occurred_at": "2026-10-20T10:00:00Z"}
+          metadata_equals: {"event_key": "enwiki:1381188467", "outcome": "accepted", "source": "fixture", "source_id": "large-revision", "ingest_version": "1"}
+  - name: "formats revision 9007199254740991 as a decimal key"
+    target_processors: ingest.yaml#/pipeline/processors
+    environment: {"INGEST_SOURCE": "fixture", "INGEST_SAMPLE_ALL": "true"}
+    input_batch:
+      - content: "event: message\nid: large-revision\ndata: {\"wiki\":\"enwiki\",\"type\":\"edit\",\"namespace\":0,\"bot\":false,\"title\":\"Large revision\",\"revision\":{\"old\":9007199254740990,\"new\":9007199254740991},\"timestamp\":1792490400}\n\n"
+    output_batches:
+      - - json_equals: {"schema_version": 1, "wiki": "enwiki", "title": "Large revision", "old_revision_id": 9007199254740990, "revision_id": 9007199254740991, "occurred_at": "2026-10-20T10:00:00Z"}
+          metadata_equals: {"event_key": "enwiki:9007199254740991", "outcome": "accepted", "source": "fixture", "source_id": "large-revision", "ingest_version": "1"}

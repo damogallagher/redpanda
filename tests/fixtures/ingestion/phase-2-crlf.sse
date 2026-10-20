@@ -1,0 +1,23 @@
+:ok
+
+event: message
+id: fixture-1
+data: {"wiki":"enwiki","type":"edit","namespace":0,"bot":false,"title":"Example article","revision":{"old":100,"new":101},"timestamp":1792490400}
+
+event: message
+id: fixture-bot
+data: {"wiki":"enwiki","type":"edit","namespace":0,"bot":true,"title":"Example article","revision":{"old":100,"new":101},"timestamp":1792490400}
+
+event: message
+id: fixture-talk
+data: {"wiki":"enwiki","type":"edit","namespace":1,"bot":false,"title":"Example article","revision":{"old":100,"new":101},"timestamp":1792490400}
+
+event: message
+id: fixture-2
+data: {"wiki":"enwiki","type":"edit","namespace":0,"bot":false,"title":"Second article",
+data: "revision":{"old":200,"new":201},"timestamp":1792490400}
+
+event: message
+id: fixture-invalid
+data: {"wiki":"enwiki","type":"edit","namespace":0,"bot":false,"title":"Example article","revision":{"old":100,"new":"invalid"},"timestamp":1792490400}
+
