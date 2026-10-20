@@ -1,0 +1,34 @@
+{
+  "checked_at": "2026-10-20T16:29:30.714319+00:00",
+  "elapsed_seconds": 0.287,
+  "result": {
+    "schema_version": 1,
+    "event": {
+      "schema_version": 1,
+      "wiki": "enwiki",
+      "title": "Belle (Disney character)",
+      "old_revision_id": 1380845740,
+      "revision_id": 1381189012,
+      "occurred_at": "2026-10-20T15:31:06Z"
+    },
+    "source": "wikipedia",
+    "status": "ready",
+    "attempts": 1,
+    "provenance": {
+      "endpoint": "https://en.wikipedia.org/w/api.php",
+      "page_id": 4483446,
+      "from_title": "Belle (Disney character)",
+      "to_title": "Belle (Disney character)",
+      "source_url": "https://en.wikipedia.org/w/index.php?diff=1381189012&oldid=1380845740"
+    },
+    "evidence": [
+      {
+        "before": "| creator           = [[Linda Woolverton]]\n| lbl1              = Voiced by\n| data1             = [[Paige O'Hara]]<br>(1991-present)<br>[[Susan Egan]]<br>(albums, [[Disney Store]] singing dolls)<br>[[Julie Nathanson]]<br>(2011-present)\n| lbl2              = Portrayed by\n| data2             = {{Plainlist|",
+        "after": "| creator           = [[Linda Woolverton]]\n| lbl1              = Voiced by\n| data1             = [[Paige O'Hara]]<br>(1991-present)\n| lbl2              = Portrayed by\n| data2             = {{Plainlist|"
+      }
+    ],
+    "content_truncated": false
+  },
+  "tested_commit": "29bf3c3b0a4f06a301cd73fa0c571c0bf4ded7ef",
+  "attribution": "../../tests/fixtures/enrichment/README.md"
+}

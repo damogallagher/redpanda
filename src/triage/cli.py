@@ -11,6 +11,7 @@ import httpx
 from pydantic import ValidationError
 
 from triage.config import Settings
+from triage.enrichment import MAX_RESPONSE_BYTES, EnrichmentResult, decode_comparison, enrich
 from triage.llm import ModelError, complete
 from triage.schema import AnalysisResult, Contract, EditEvent
 
@@ -25,24 +26,30 @@ SMOKE_USER = (
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Phase 1 foundation diagnostics")
+    parser = argparse.ArgumentParser(description="Wikipedia edit triage diagnostics")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("check-config", help="validate model settings without making a request")
     sub.add_parser("smoke-model", help="make one real request to the selected model")
     schema = sub.add_parser("schemas", help="export JSON boundary contracts")
     schema.add_argument("--output", type=Path, default=Path("schemas"))
+    enrichment = sub.add_parser("enrich", help="inspect revision evidence without a model")
+    enrichment.add_argument("--event", type=Path, required=True)
+    enrichment.add_argument("--fixture-response", type=Path, help="offline saved API response")
     args = parser.parse_args(argv)
+    if args.command == "enrich":
+        return inspect_enrichment(args.event, args.fixture_response)
     if args.command == "schemas":
         args.output.mkdir(parents=True, exist_ok=True)
         contracts: list[tuple[str, type[Contract]]] = [
             ("edit-event", EditEvent),
             ("analysis-result", AnalysisResult),
+            ("enrichment-result", EnrichmentResult),
         ]
         for name, contract in contracts:
             (args.output / f"{name}.v1.json").write_text(
                 json.dumps(contract.model_json_schema(), indent=2) + "\n"
             )
-        print("Exported schema v1: edit-event, analysis-result")
+        print("Exported schema v1: edit-event, analysis-result, enrichment-result")
         return 0
     try:
         settings = Settings.from_env(os.environ)
@@ -77,3 +84,25 @@ def main(argv: list[str] | None = None) -> int:
     except ModelError as exc:
         print(str(exc), file=sys.stderr)
         return 1
+
+
+def inspect_enrichment(event_path: Path, fixture_path: Path | None) -> int:
+    try:
+        with event_path.open("rb") as file:
+            payload = file.read(8193)
+            if len(payload) > 8192:
+                raise ValueError("event exceeds input limit")
+            event = EditEvent.model_validate_json(payload)
+        if fixture_path is not None:
+            with fixture_path.open("rb") as file:
+                result = decode_comparison(event, file.read(MAX_RESPONSE_BYTES + 1))
+        else:
+            with httpx.Client() as client:
+                result = enrich(event, client)
+    except (OSError, ValueError):
+        print(
+            "Cannot read enrichment input; check file paths and the event schema.", file=sys.stderr
+        )
+        return 2
+    print(result.model_dump_json(indent=2))
+    return 0 if result.status in {"ready", "no_text_change"} else 1

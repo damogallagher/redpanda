@@ -1,0 +1,13 @@
+{
+  "compare": {
+    "fromid": 42,
+    "fromrevid": 100,
+    "fromns": 0,
+    "fromtitle": "Synthetic wording example",
+    "toid": 42,
+    "torevid": 101,
+    "tons": 0,
+    "totitle": "Synthetic wording example",
+    "body": "<tr><td class=\"diff-lineno\">Line 1:</td><td class=\"diff-lineno\">Line 1:</td></tr><tr><td class=\"diff-marker\"></td><td class=\"diff-deletedline\"><div>The colour is blue.</div></td><td class=\"diff-marker\"></td><td class=\"diff-addedline\"><div>The color is blue.</div></td></tr>"
+  }
+}

@@ -60,7 +60,7 @@ def test_export_schemas_is_idempotent_and_independent_of_model_config(
     monkeypatch.setenv("LLM_BACKEND", "invalid")
     for _ in range(2):
         assert cli.main(["schemas", "--output", str(tmp_path)]) == 0
-    for name in ("edit-event", "analysis-result"):
+    for name in ("edit-event", "analysis-result", "enrichment-result"):
         assert json.loads((tmp_path / f"{name}.v1.json").read_text()) == json.loads(
             Path(f"schemas/{name}.v1.json").read_text()
         )
@@ -71,3 +71,82 @@ def test_missing_command_is_a_usage_error():
     with pytest.raises(SystemExit) as error:
         cli.main([])
     assert error.value.code == 2
+
+
+FIXTURES = Path("tests/fixtures/enrichment")
+
+
+def test_enrich_fixture_is_offline_and_independent_of_model_config(monkeypatch, capsys):
+    monkeypatch.setenv("LLM_BACKEND", "invalid")
+    monkeypatch.setattr(cli.httpx, "Client", lambda: pytest.fail("must remain offline"))
+    assert (
+        cli.main(
+            [
+                "enrich",
+                "--event",
+                str(FIXTURES / "belle-event.json"),
+                "--fixture-response",
+                str(FIXTURES / "belle-response.json"),
+            ]
+        )
+        == 0
+    )
+    result = json.loads(capsys.readouterr().out)
+    assert result["status"] == "ready" and result["source"] == "fixture"
+    assert result["attempts"] == 0
+    assert "Susan Egan" in result["evidence"][0]["before"]
+    assert "Susan Egan" not in result["evidence"][0]["after"]
+
+
+def test_enrich_live_cli_uses_real_client_code_with_mock_transport(monkeypatch, capsys):
+    client = cli.httpx.Client(
+        transport=cli.httpx.MockTransport(
+            lambda _: cli.httpx.Response(
+                200, content=(FIXTURES / "belle-response.json").read_bytes()
+            )
+        )
+    )
+    monkeypatch.setattr(cli.httpx, "Client", lambda: client)
+    assert cli.main(["enrich", "--event", str(FIXTURES / "belle-event.json")]) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["source"] == "wikipedia" and result["attempts"] == 1
+    assert client.is_closed
+
+
+def test_enrich_unavailable_exits_nonzero_with_inspectable_json(capsys):
+    assert (
+        cli.main(
+            [
+                "enrich",
+                "--event",
+                str(FIXTURES / "belle-event.json"),
+                "--fixture-response",
+                str(FIXTURES / "missing-response.json"),
+            ]
+        )
+        == 1
+    )
+    result = json.loads(capsys.readouterr().out)
+    assert result["status"] == "revision_unavailable" and not result["evidence"]
+
+
+@pytest.mark.parametrize(
+    "kind", ["missing-event", "bad-json", "oversized-event", "missing-fixture"]
+)
+def test_enrich_bad_files_are_bounded_and_sanitized(kind, tmp_path, capsys):
+    event = tmp_path / "event.json"
+    event.write_bytes((FIXTURES / "belle-event.json").read_bytes())
+    fixture = FIXTURES / "belle-response.json"
+    if kind == "missing-event":
+        event.unlink()
+    elif kind == "bad-json":
+        event.write_text("PRIVATE")
+    elif kind == "oversized-event":
+        event.write_bytes(event.read_bytes().ljust(8193))
+    else:
+        fixture = tmp_path / "PRIVATE"
+    assert cli.main(["enrich", "--event", str(event), "--fixture-response", str(fixture)]) == 2
+    output = capsys.readouterr()
+    assert not output.out
+    assert "check file paths and the event schema" in output.err
+    assert "PRIVATE" not in output.err
