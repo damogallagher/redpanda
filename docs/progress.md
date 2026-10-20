@@ -38,3 +38,16 @@ Next step: after the planning PR is merged, create `phase/01-foundation` from up
 Branch: `docs/assignment-and-phase-verification`. Review/merge remains Damien's responsibility. Phase 1 should start from main after these documentation additions are merged.
 
 Documentation follow-up PR: [#2](https://github.com/damogallagher/redpanda/pull/2), opened for Damien's review. Verified content commit: `7c7a3c3`; the following audit-only commit records the PR and closing response.
+
+
+## 20 October 2026 — Phase 1 foundation
+
+PR #2 is merged. Created `phase/01-foundation` from main at `8e0fa6e`.
+
+Built the local infrastructure, repeatable topic/database initialization, typed settings, versioned schemas, explicit Ollama/OpenAI model adapters, diagnostics CLI, non-root container, locked dependencies, Make commands, and CI workflow. README now has local/hosted/native-host setup and executable Phase 1 verification instructions. Added repository continuation instructions and this session's visible interaction log.
+
+Real smoke requests succeeded for local Qwen2.5 7B and hosted GPT-6.1 Sol. The selected local model returned a concise semantic comparison; the smaller Qwen3 4B candidate returned unwanted verbose content. Both candidate and selected evidence are retained. No claim of model accuracy is made from these individual probes.
+
+The API key was read only from the user-supplied untracked `.env` for the authorized hosted smoke, never copied to repository files or printed. Tests do not call paid inference. No subsequent phase was started.
+
+Final counts, tested commit, CI and PR link follow after final verification. Next step: Damien reviews the Phase 1 PR; after merge, request Phase 2 to add Connect ingestion.

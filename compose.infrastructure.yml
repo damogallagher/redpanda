@@ -1,0 +1,61 @@
+services:
+  redpanda:
+    image: &redpanda-image docker.redpanda.com/redpandadata/redpanda:v26.2.5@sha256:badca2d958f81da675c3055a9ecb6ebb590325582bcf16936148ffd65e96e920
+    command:
+      - redpanda
+      - start
+      - --mode=dev-container
+      - --smp=1
+      - --memory=1G
+      - --reserve-memory=0M
+      - --kafka-addr=0.0.0.0:9092
+      - --advertise-kafka-addr=redpanda:9092
+    volumes:
+      - redpanda-data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD", "rpk", "cluster", "health", "--exit-when-healthy"]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+    mem_limit: 2g
+  topics:
+    image: *redpanda-image
+    entrypoint: ["rpk"]
+    command: ["topic", "create", "edits", "results", "ingest-errors", "processing-errors", "--if-not-exists", "--partitions", "1", "--replicas", "1", "-X", "brokers=redpanda:9092"]
+    depends_on:
+      redpanda:
+        condition: service_healthy
+  postgres:
+    image: postgres:16.14-bookworm@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8
+    environment:
+      POSTGRES_DB: triage
+      POSTGRES_USER: triage
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-development-only}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./db/001-foundation.sql:/docker-entrypoint-initdb.d/001-foundation.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U triage -d triage"]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+    mem_limit: 512m
+  model-check:
+    profiles: ["tools"]
+    build: .
+    command: ["triage", "smoke-model"]
+    environment:
+      LLM_BACKEND: ${LLM_BACKEND:-ollama}
+      LLM_MODEL: ${LLM_MODEL:-qwen2.5:7b}
+      LLM_BASE_URL: ${LLM_BASE_URL:-http://ollama:11434}
+      LLM_TIMEOUT_SECONDS: ${LLM_TIMEOUT_SECONDS:-120}
+      LLM_MAX_TOKENS: ${LLM_MAX_TOKENS:-1024}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    read_only: true
+    tmpfs: ["/tmp"]
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+volumes:
+  redpanda-data:
+  postgres-data:

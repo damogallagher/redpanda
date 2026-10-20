@@ -1,0 +1,55 @@
+[project]
+name = "redpanda-edit-triage"
+version = "0.1.0"
+description = "A small, evidence-based Wikipedia edit review pipeline"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "httpx==0.28.1",
+    "pydantic==2.14.1",
+]
+
+[project.scripts]
+triage = "triage.cli:main"
+
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/triage"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra --strict-markers"
+markers = ["integration: requires real Docker infrastructure"]
+
+[tool.coverage.run]
+branch = true
+source = ["src/triage"]
+
+[tool.coverage.report]
+fail_under = 100
+precision = 2
+show_missing = true
+skip_empty = false
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+files = ["src/triage"]
+
+[dependency-groups]
+dev = [
+    "mypy==2.4.0",
+    "pytest==9.1.1",
+    "pytest-cov==7.1.0",
+    "ruff==0.17.1",
+]
