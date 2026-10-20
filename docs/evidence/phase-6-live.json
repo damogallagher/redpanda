@@ -1,8 +1,8 @@
 {
-  "commit": "a826e4ae619dc46616eee79e7e6df8cf28daea0b",
-  "project": "triage-live-1374a0d302",
-  "boot_seconds": 82.496,
-  "total_seconds": 200.27,
+  "commit": "7fc26f1d47f4f815d153e4fa19f29170cd9fe380",
+  "project": "triage-live-94ade5f8b6",
+  "boot_seconds": 89.665,
+  "total_seconds": 578.754,
   "worker_limit": 3,
   "maximum_model_calls": 12,
   "sampling": "all eligible edits for a bounded observation; normal default is 1%",
@@ -12,22 +12,22 @@
       "event": {
         "schema_version": 1,
         "wiki": "enwiki",
-        "title": "Ikageng, North West",
-        "old_revision_id": 1379122177,
-        "revision_id": 1381216441,
-        "occurred_at": "2026-10-20T19:13:49Z"
+        "title": "List of assets owned by Paramount Skydance",
+        "old_revision_id": 1381016708,
+        "revision_id": 1381216919,
+        "occurred_at": "2026-10-20T19:17:56Z"
       },
-      "decision": "routine",
+      "decision": "insufficient_evidence",
       "attempts": 2,
-      "outcome": "assessed",
+      "outcome": "invalid_output",
       "steps": [
         {
           "stage": "extract",
-          "outcome": "valid"
+          "outcome": "invalid_output"
         },
         {
-          "stage": "assess",
-          "outcome": "valid"
+          "stage": "extract",
+          "outcome": "invalid_output"
         }
       ]
     },
@@ -35,22 +35,22 @@
       "event": {
         "schema_version": 1,
         "wiki": "enwiki",
-        "title": "Marquette High School (Missouri)",
-        "old_revision_id": 1381149517,
-        "revision_id": 1381216439,
-        "occurred_at": "2026-10-20T19:13:47Z"
+        "title": "Johnston Center for Integrative Studies",
+        "old_revision_id": 1381213132,
+        "revision_id": 1381216908,
+        "occurred_at": "2026-10-20T19:17:52Z"
       },
-      "decision": "routine",
+      "decision": "insufficient_evidence",
       "attempts": 2,
-      "outcome": "assessed",
+      "outcome": "invalid_output",
       "steps": [
         {
           "stage": "extract",
-          "outcome": "valid"
+          "outcome": "invalid_output"
         },
         {
-          "stage": "assess",
-          "outcome": "valid"
+          "stage": "extract",
+          "outcome": "invalid_output"
         }
       ]
     },
@@ -58,22 +58,22 @@
       "event": {
         "schema_version": 1,
         "wiki": "enwiki",
-        "title": "Buckhead Village District",
-        "old_revision_id": 1380654648,
-        "revision_id": 1381216434,
-        "occurred_at": "2026-10-20T19:13:45Z"
+        "title": "Ted Nugent",
+        "old_revision_id": 1375129308,
+        "revision_id": 1381216914,
+        "occurred_at": "2026-10-20T19:17:51Z"
       },
-      "decision": "review",
+      "decision": "insufficient_evidence",
       "attempts": 2,
-      "outcome": "assessed",
+      "outcome": "invalid_output",
       "steps": [
         {
           "stage": "extract",
-          "outcome": "valid"
+          "outcome": "model_error"
         },
         {
-          "stage": "assess",
-          "outcome": "valid"
+          "stage": "extract",
+          "outcome": "invalid_output"
         }
       ]
     }
@@ -86,14 +86,14 @@
       "balancer": "",
       "members": 0,
       "coordinator_node": 0,
-      "total_lag": 203,
+      "total_lag": 608,
       "partitions": [
         {
           "partition": 0,
           "current_offset": 3,
           "log_start_offset": 0,
-          "log_end_offset": 206,
-          "lag": 203,
+          "log_end_offset": 611,
+          "lag": 608,
           "topic": "edits",
           "member_id": "",
           "client_id": "",
@@ -103,7 +103,7 @@
       "members_details": []
     }
   ],
-  "ollama_models": "NAME          ID              SIZE      MODIFIED           \nqwen2.5:7b    845dbda0ea48    4.7 GB    About a minute ago    \n",
+  "ollama_models": "NAME          ID              SIZE      MODIFIED      \nqwen2.5:7b    845dbda0ea48    4.7 GB    8 minutes ago    \n",
   "seed_rows": 3,
   "limits": "One live run; no accuracy or sustainable throughput claim."
 }

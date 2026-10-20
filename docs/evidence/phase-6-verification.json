@@ -2,7 +2,7 @@
   "phase": 6,
   "date": "2026-10-20",
   "implementation_commit": "7fc26f1d47f4f815d153e4fa19f29170cd9fe380",
-  "status": "Final local gate and hardened-image live check in progress; prior cumulative gate passed.",
+  "status": "Operational acceptance and handover implemented; review PR open. Deployment/model-quality limits remain explicit.",
   "commands": {
     "deterministic": "make verify-phase-6 UV='uvx --from uv==0.13.3 uv'",
     "local_model": "./scripts/test-local.sh",
@@ -12,7 +12,6 @@
     "fresh_start": "make accept-live-local"
   },
   "unit_tests": 416,
-  "integration_tests_expected": 29,
   "native_connect_tests": 72,
   "coverage": {
     "covered_lines": 1082,
@@ -76,10 +75,98 @@
     "personal_readme_sections_unchanged": true
   },
   "ci": {
-    "status": "pending"
+    "first_run": "https://github.com/damogallagher/redpanda/actions/runs/39483248574",
+    "first_result": "failed exact floating-point timeout equality; fixed the test clock in 8ea8ec4",
+    "latest_run": "https://github.com/damogallagher/redpanda/actions/runs/39483507050",
+    "status": "success",
+    "commit": "8ea8ec4593eeedf172f81f3e336353c48cfc66a8",
+    "duration_seconds": 336,
+    "unit": {
+      "tests": "416",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "3.694"
+    },
+    "integration": {
+      "tests": "29",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "307.709"
+    },
+    "coverage": {
+      "covered_lines": 1082,
+      "num_statements": 1082,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100.00",
+      "missing_lines": 0,
+      "excluded_lines": 0,
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100.00",
+      "num_branches": 276,
+      "num_partial_branches": 0,
+      "covered_branches": 276,
+      "missing_branches": 0,
+      "percent_branches_covered": 100.0,
+      "percent_branches_covered_display": "100.00"
+    }
   },
   "remaining": [
     "Damien writes independent personal README sections and reviews/merges PR.",
     "Residual upstream Debian advisories and local-deployment limits documented."
-  ]
+  ],
+  "local_gate": {
+    "commit": "7fc26f1",
+    "exit_code": 0,
+    "command": "make verify-phase-6 UV='uvx --from uv==0.13.3 uv'",
+    "unit": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "416",
+      "time": "7.487",
+      "timestamp": "2026-10-20T20:20:51.026900+01:00"
+    },
+    "integration": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "29",
+      "time": "306.994",
+      "timestamp": "2026-10-20T20:20:59.150799+01:00"
+    }
+  },
+  "integration_tests": 29,
+  "fresh_start": {
+    "commit": "7fc26f1",
+    "exit_code": 0,
+    "boot_seconds": 89.665,
+    "total_seconds": 578.754,
+    "live_rows": 3,
+    "synthetic_rows": 3,
+    "model_calls": 6,
+    "live_decisions": {
+      "insufficient_evidence": 3
+    },
+    "reason": "invalid_output in extraction; zero successful semantic assessments on these three edits",
+    "lag_at_shutdown": 608,
+    "earlier_live_run": {
+      "commit": "a826e4a",
+      "total_seconds": 200.27,
+      "decisions": {
+        "routine": 2,
+        "review": 1
+      },
+      "successful_assessments": 3
+    },
+    "scope": "Startup and safe delivery are verified; not a model-quality pass on the final public edits."
+  },
+  "documentation": {
+    "local_markdown_links_verified": 165,
+    "markdown_files": 35,
+    "final_audit_only_commit": "adds results, progress and conversation closeout; no runtime changes"
+  }
 }

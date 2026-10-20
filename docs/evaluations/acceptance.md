@@ -22,3 +22,7 @@ Codex inspected the explanations and grounded extractions against the rubrics: a
 Full synthetic prompts, visible responses, model metadata, and outcomes: [Ollama](../evidence/phase-6-model-local.json), [frontier](../evidence/phase-6-model-frontier.json). The local downloaded model digest is recorded in the fresh-start evidence. These first-run reports remain unchanged when later regression checks run. Maximum output budget was 1,024 tokens/call; cost in currency was not measured.
 
 After the runtime image was hardened (commit `7fc26f1`), one additional hosted smoke request passed in 2.631 seconds. This verifies the real provider/TLS path on the new base, not another quality evaluation. [Visible smoke prompt/response](../evidence/phase-6-frontier-hardened-smoke.json). Total Phase 6 hosted requests: 15.
+
+## Live-feed quality is separate
+
+The fresh-start observation on the final hardened image produced three `insufficient_evidence` results, all after invalid extraction output (two attempts each). It verified safe abstention/delivery but **zero successful semantic assessments** in that sample. The earlier public-feed observation produced two routine and one review result. Both are retained in the Phase 6 record; neither is a representative accuracy estimate. The small nine-case success should not be extrapolated to large, messy Wikipedia diffs. No prompt tuning or expected-label changes were made to erase this limitation.
