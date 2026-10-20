@@ -13,9 +13,17 @@ Implement Connect validation/routing and parameterized Postgres upsert; schema/m
 
 ## How to test
 
+See the [phase verification guide](../phase-verification.md) for this phase’s exact behavioral checkpoints and evidence requirements.
+
 Implement `make verify-phase-5`: cumulative checks plus real database sink/upsert tests, API unit/integration tests, and fixture end-to-end tests. Replay the same event and assert one logical stored result; interrupt the sink/database, restore it, and verify eventual delivery.
 
-Commands are target interfaces until implemented. See [testing policy](../testing.md).
+Planned deterministic entry point (not implemented yet):
+
+```sh
+make verify-phase-5
+```
+
+Live source/model checks are separate from this deterministic command. Before this phase is completed, document actual prerequisites, live commands, representative output, runtime, cleanup, and troubleshooting here. See [testing policy](../testing.md).
 
 ## Acceptance
 

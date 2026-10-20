@@ -13,6 +13,8 @@ Read the supplied assignment; inspect local and remote repository state; verify 
 
 ## How to test
 
+See the [phase verification guide](../phase-verification.md) for this phase’s exact behavioral checkpoints and evidence requirements.
+
 Review Markdown links and phase consistency; run `git diff --check`; verify no application implementation or invented test results are included.
 
 Commands are target interfaces until implemented. See [testing policy](../testing.md).

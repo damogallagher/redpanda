@@ -13,9 +13,17 @@ Implement a typed MediaWiki client and diff extraction; allowlist the endpoint; 
 
 ## How to test
 
+See the [phase verification guide](../phase-verification.md) for this phase’s exact behavioral checkpoints and evidence requirements.
+
 Implement `make verify-phase-3`: cumulative checks plus 100% unit coverage for enrichment and a fixture-based inspection command. Exercise exact evidence extraction and failure statuses; run one real comparison request separately and record its revision IDs.
 
-Commands are target interfaces until implemented. See [testing policy](../testing.md).
+Planned deterministic entry point (not implemented yet):
+
+```sh
+make verify-phase-3
+```
+
+Live source/model checks are separate from this deterministic command. Before this phase is completed, document actual prerequisites, live commands, representative output, runtime, cleanup, and troubleshooting here. See [testing policy](../testing.md).
 
 ## Acceptance
 
