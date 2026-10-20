@@ -32,13 +32,18 @@
   "live_model_calls_during_authoring": 0,
   "artifact_sha256": {
     "redpanda-study-guide.pdf": "7a932dc31253c5e796301a4b5ed92a4cbd24ec08e293c8af51c6ba62d919947a",
-    "redpanda-study-companion.html": "20ea8096aa9a0981ed78d8c102af7e9a798537b634a89a0d12446076fb3ee775",
+    "redpanda-study-companion.html": "973cf85642ed286a6b813a5fa610e9577e6e711aceb32e1b1c6be2c5d7dded3b",
     "redpanda-study-guide.md": "6200e46b041247e264c850d630e94bac322b53e89933fd23134b55695f8b61f5",
-    "START-HERE.md": "335802c6d68142b11cb0fd1bdfdddf220933ab5326f1811d5c9ad58decf9c5a2"
+    "START-HERE.md": "3a576cb3cef90a9eec1e403b1c327e5a98c578d11f887a3f969603b4119617fb"
   },
   "qa_fixes": [
     "Consolidated PDF contents into one page and retained each chapter on its own page.",
-    "Fixed mobile overflow from long source tokens and ensured headings clear sticky navigation."
+    "Fixed mobile overflow from long source tokens and ensured headings clear sticky navigation.",
+    "Kept full-screen navigation controls inside the viewport."
   ],
-  "scope": "PDF/HTML/document content and interactions; not new application runtime acceptance."
+  "scope": "PDF/HTML/document content and interactions; not new application runtime acceptance.",
+  "review_pr": "https://github.com/damogallagher/redpanda/pull/14",
+  "fullscreen_controls_fit_viewport": true,
+  "local_markdown_links_checked": 185,
+  "pdf_unique_contents_destinations": 34
 }

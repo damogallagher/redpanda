@@ -37,3 +37,23 @@ Can  you generate document and / or pdf / and or presentation / and or interacti
 ## Assistant
 
 > The checks now pass: all seven phase views, six event traces, both providers’ nine saved cases, rehearsal questions and all 14 slides work offline, including full-screen presentation. I’ve also reviewed every PDF page and checked its contents links. I’m packaging the files and adding the study materials and this conversation to a separate documentation PR.
+
+## Assistant
+
+> The study pack is saved in GitHub as PR #14. I’m doing the final download and presentation check; application code and your personal README sections remain unchanged. Start with the phase explorer, then use the detailed chapters and rehearsal questions to prepare for the walkthrough.
+
+## Assistant — final
+
+Created a detailed study pack grounded in the repository and recorded test evidence.
+
+- [Download the complete pack](/Users/damien/Documents/Codex/2026-10-20/i-have-this-take-home-test/outputs/redpanda-study-pack.zip)
+- [Open the interactive companion](/Users/damien/Documents/Codex/2026-10-20/i-have-this-take-home-test/outputs/redpanda-study-companion.html) — phase explorer, six event traces, saved model responses, rehearsal questions and **14-slide presentation mode**.
+- [Editable written guide](/Users/damien/Documents/Codex/2026-10-20/i-have-this-take-home-test/outputs/redpanda-study-guide.md)
+
+The **36-page PDF** covers each phase’s purpose, inputs, outputs, tests and dependencies, plus architecture, failure handling, actual results, code walkthroughs and prioritized improvements.
+
+:codex-file-citation{path="/Users/damien/Documents/Codex/2026-10-20/i-have-this-take-home-test/outputs/redpanda-study-guide.pdf" purpose="output"}
+
+Everything is saved in [PR #14](https://github.com/damogallagher/redpanda/pull/14), including the updated prompt log. The PDF was visually reviewed and the HTML tested offline at desktop and mobile widths.
+
+Start with **Phase explorer**, then use **Present** to rehearse. Your independent README sections remain unchanged.

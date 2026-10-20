@@ -2,6 +2,8 @@
 
 Prepared for Damien Gallagher, 20 October 2026.
 
+GitHub review: https://github.com/damogallagher/redpanda/pull/14
+
 ## Start here
 
 1. Open `redpanda-study-companion.html` in Chrome, Safari or another modern browser. It works directly from disk: no installation, server, API key or model calls.
