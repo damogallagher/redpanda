@@ -265,5 +265,129 @@
     "Live providers processed different edits; these are not paired quality comparisons.",
     "Local: one assessed review and two invalid-output abstentions. Frontier: two assessed edits and one incomplete-source abstention.",
     "Existing deployment/security limitations remain; no HA/load/security recertification."
-  ]
+  ],
+  "review_pr": "https://github.com/damogallagher/redpanda/pull/13",
+  "private_reports_in_user_checkout": "reports/submission-demo-20261020/",
+  "final_local": {
+    "implementation_commit": "ce40ca6",
+    "gate_commit": "71a06802c0016feaa34105b4faedab4fda31e249",
+    "commands": [
+      {
+        "target": "demo-success",
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "seconds": 20.756
+      },
+      {
+        "target": "demo-failures",
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "seconds": 191.475
+      },
+      {
+        "target": "demo-test-failure",
+        "exit_code": 2,
+        "expected_exit_code": 2,
+        "seconds": 0.389
+      },
+      {
+        "target": "test",
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "seconds": 248.928
+      }
+    ],
+    "unit": {
+      "tests": 416,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "integration": {
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "native_connect_cases": 72,
+    "success_demo": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "fault_demo": {
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "intentional_red_demo": {
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "coverage": {
+      "covered_lines": 1082,
+      "num_statements": 1082,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100.00",
+      "missing_lines": 0,
+      "excluded_lines": 0,
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100.00",
+      "num_branches": 276,
+      "num_partial_branches": 0,
+      "covered_branches": 276,
+      "missing_branches": 0,
+      "percent_branches_covered": 100.0,
+      "percent_branches_covered_display": "100.00"
+    },
+    "emitted_warnings": 0,
+    "expected_red_demo_excluded_from_normal_suite": true
+  },
+  "integrity": {
+    "original_assignment_unchanged": true,
+    "reserved_personal_readme_unchanged": true,
+    "relative_markdown_links_checked": 193,
+    "walkthrough_shell_blocks_checked": 16,
+    "credential_exact_match_scan": "zero matches in public docs and private reports"
+  },
+  "ci": {
+    "run": 39494682046,
+    "url": "https://github.com/damogallagher/redpanda/actions/runs/39494682046",
+    "head_commit": "71a06802c0016feaa34105b4faedab4fda31e249",
+    "result": "success",
+    "junit": {
+      "unit": {
+        "tests": 416,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "integration": {
+        "tests": 30,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "native_connect_cases": 72,
+    "covered_lines": 1082,
+    "covered_branches": 276,
+    "line_and_branch_coverage_percent": 100,
+    "missing_or_excluded": 0,
+    "annotations": 0,
+    "emitted_warnings": 0,
+    "artifact": "phase-6-test-reports",
+    "downloaded_artifacts_verified": true
+  },
+  "private_reports_saved": {
+    "files": 80,
+    "destination": "reports/submission-demo-20261020/",
+    "hashes_verified": true,
+    "git_ignored": true,
+    "private_permissions": true
+  }
 }

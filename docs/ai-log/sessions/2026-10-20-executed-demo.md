@@ -1,6 +1,6 @@
 # Executed submission demo — 20 October 2026
 
-Follow-up on open PR #12. The user explicitly authorizes real Ollama/frontier execution and issue fixes. Provider credentials are never logged.
+Started as a follow-up on PR #12, which merged during execution. The new fix/evidence review is PR #13. The user explicitly authorizes real Ollama/frontier execution and issue fixes. Provider credentials are never logged.
 
 ## User
 
@@ -49,3 +49,34 @@ Can you run the full demo for me, first with Ollama and then the frontier model,
 ## Assistant
 
 > The saved frontier results survived a full stop and a storage-only restart without extra model calls. The cleanup checks also passed: all demo resources are gone, the pre-existing volume set is unchanged, and the private profiles are preserved. The success demonstration has passed; the fault demonstrations and final test gate are underway.
+
+## Assistant
+
+> The fault demonstrations passed, and the deliberately failing test failed exactly as intended. PR #13 is open as a draft while the final local and GitHub checks finish. I’m updating the walkthrough with the observed results, including the local model’s two abstentions, and saving the full reports in your checkout.
+
+## Assistant
+
+> The final unit run still has 100% line and branch coverage, and the new Docker cleanup regression passes. The remaining checks cover delivery and recovery against real services. The original assignment and your personal README sections are unchanged.
+
+## Assistant
+
+> The complete local gate passed: 416 unit tests, 30 integration checks, 72 Connect cases, and 100% line and branch coverage, with no warnings. Both real-model demos and the cleanup checks are complete. I’m checking the GitHub run’s artifacts before marking PR #13 ready for review.
+
+## Assistant
+
+> GitHub CI passed too; its downloaded artifacts confirm the test counts and 100% coverage, with zero warnings or annotations. I’ve saved 80 private evidence files in your checkout and added sanitized results to the PR. I’m finishing the documentation and prompt log, then marking PR #13 ready for your review.
+
+## Assistant — final
+
+Completed. [PR #13 is ready for review](https://github.com/damogallagher/redpanda/pull/13).
+
+| Demo | Fixed cases | Live results saved |
+|---|---|---|
+| Ollama | 9/9 passed | 1 assessment, 2 safe abstentions |
+| Frontier | 9/9 passed | 2 assessments, 1 safe abstention |
+
+Fixed the Docker helper volume leak and clarified the startup message. Local checks and Linux CI passed: **416 unit tests, 30 integration checks, 72 Connect cases, 100% line and branch coverage**, with zero warnings. Success, failure/recovery, persistence and cleanup demonstrations behaved as expected.
+
+[Results and reproduction steps](https://github.com/damogallagher/redpanda/blob/fix/submission-demo/docs/evaluations/submission-demo.md) and the prompt log are updated. Full private reports are saved in your checkout under `reports/submission-demo-20261020/`.
+
+Used **18 hosted calls**. Your existing data, model weights and private profiles were preserved. PR remains unmerged.
