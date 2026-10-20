@@ -1,6 +1,6 @@
 # Phase 4: Multi-step reasoning and durable delivery
 
-Status: implemented; final verification and PR handover are being recorded below.
+Status: implemented and verified locally. PR and CI handover are recorded below.
 Branch: `phase/04-reasoning`, based on merged PR #7 (`efbd03a`). Damien reviews and merges.
 
 ## What changed
@@ -134,7 +134,16 @@ Test cleanup is automatic. To stop the user's application while keeping data and
 
 ## Observed verification
 
-The final tested commit, counts, timings, mutation check, model results, CI and PR links are recorded here before handover. No later phase has started.
+Tested implementation: `229c09e70a8287460472294423a631b00e81acdd`. [Verification JSON](../evidence/phase-4-verification.json), [real-broker delivery records](../evidence/phase-4-delivery.json), [mutation evidence](../evidence/phase-4-mutations.json), and [model evaluation](../evaluations/development.md).
+
+- Full `make verify-phase-4 UV='uvx --from uv==0.13.3 uv'`: **exit 0**. **331 unit**, **21 integration/configuration**, and **40 native Connect** cases passed; lint, format, strict types, shell/Compose configuration, packaged container and fixture inspection also passed.
+- Coverage: **826/826 executable lines**, **236/236 branches**, **zero exclusions**. Unit runtime 2.44 seconds; integration runtime 75.79 seconds.
+- All eleven broker scenarios passed. Failed result/error publication left offset `-1001`; restarting after topic creation committed offset `2` and delivered both edits. Failed commit after acknowledged output produced three records for two inputs, with the duplicate key preserved. SIGTERM during a call drained one edit and committed offset `1`.
+- Removing duplicate-key rejection and lowering the confidence threshold each made the targeted tests fail (exit 1). Restoring the source passed all 56 reasoning tests. A slow-stream regression stops after five simulated chunks and closes the stream rather than buffering all 100.
+- Local prompt v1 scored 5/6; v2 scored 6/6 with ten calls in 67.232 seconds. Both transcripts are retained. These are development observations, with no new hosted model call or held-out quality claim.
+- Original assignment matches the supplied file byte for byte; all 127 relative documentation links resolved at the implementation check. Private profiles remain ignored, and no credential pattern was found in tracked content.
+
+No Phase 5 code has started. The user's existing local services were not restarted during these checks; the new worker will start when the updated launcher is run.
 
 ## References
 

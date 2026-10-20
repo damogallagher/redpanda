@@ -1,0 +1,82 @@
+{
+  "implementation_commit": "229c09e70a8287460472294423a631b00e81acdd",
+  "command": "make verify-phase-4 UV='uvx --from uv==0.13.3 uv'",
+  "exit_code": 0,
+  "suites": {
+    "unit": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "331",
+      "time": "2.442",
+      "timestamp": "2026-10-20T18:59:19.584675+01:00"
+    },
+    "integration": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "21",
+      "time": "75.787",
+      "timestamp": "2026-10-20T18:59:22.222044+01:00"
+    }
+  },
+  "coverage": {
+    "covered_lines": 826,
+    "num_statements": 826,
+    "percent_covered": 100.0,
+    "percent_covered_display": "100.00",
+    "missing_lines": 0,
+    "excluded_lines": 0,
+    "percent_statements_covered": 100.0,
+    "percent_statements_covered_display": "100.00",
+    "num_branches": 236,
+    "num_partial_branches": 0,
+    "covered_branches": 236,
+    "missing_branches": 0,
+    "percent_branches_covered": 100.0,
+    "percent_branches_covered_display": "100.00"
+  },
+  "native_connect_tests": 40,
+  "integration_scenarios": 11,
+  "live_development": {
+    "backend": "ollama",
+    "model": "qwen2.5:7b",
+    "model_id_prefix": "845dbda0ea48",
+    "prompt_version": "edit-triage-v2",
+    "passed": 6,
+    "total": 6,
+    "calls": 10,
+    "seconds": 67.232,
+    "initial_run_passed": 5,
+    "initial_run_total": 6,
+    "hosted_calls": 0
+  },
+  "mutations": {
+    "mutations": [
+      {
+        "mutation": "duplicate-keys",
+        "expected_exit": 1,
+        "observed_exit": 1,
+        "test": "test_duplicate_keys_in_otherwise_valid_model_output_are_rejected"
+      },
+      {
+        "mutation": "confidence-boundary",
+        "expected_exit": 1,
+        "observed_exit": 1,
+        "test": "test_confidence_boundary"
+      }
+    ],
+    "restored_suite_exit": 0
+  },
+  "assignment_sha256": "89a4840092423818c59a81f4042f9007d36e90fe7da7bc8111a4d96f1662e40a",
+  "limitations": [
+    "Single-node local deployment; acks=all is one replica.",
+    "At least once: output and inference can duplicate after commit failure or crash.",
+    "Six-case development tuning is not held-out accuracy or human-reviewed acceptance.",
+    "Time budget is cooperative, not hard wall-clock cancellation.",
+    "Persistence/API and final operational acceptance are Phases 5 and 6."
+  ],
+  "cleanup": "No triage-test containers, networks or volumes remained; user demo resources retained."
+}

@@ -1,6 +1,6 @@
 # Phase 3: Wikipedia revision enrichment
 
-Status: implemented and verified locally and in Linux CI. [PR #7](https://github.com/damogallagher/redpanda/pull/7) is open for Damien’s review; not merged.
+Status: implemented and verified locally and in Linux CI. [PR #7](https://github.com/damogallagher/redpanda/pull/7) was merged by Damien before Phase 4.
 Branch: `phase/03-enrichment`, based on merged PR #6 (`9749745`). Damien reviews and merges.
 
 ## What this phase adds

@@ -1,0 +1,453 @@
+{
+  "scenarios": {
+    "commit-replay": {
+      "case": "commit-replay",
+      "input_topic": "phase4-ea14947a53-edits",
+      "output_topic": "phase4-ea14947a53-results",
+      "group": "phase4-ea14947a53",
+      "initial_offset": -1001,
+      "failure_offset": -1001,
+      "final_offset": 2,
+      "calls": [
+        "extract",
+        "assess",
+        "extract",
+        "assess",
+        "extract",
+        "assess"
+      ],
+      "output_count": 3
+    },
+    "dirty": {
+      "case": "dirty",
+      "input_topic": "phase4-686be23bee-edits",
+      "output_topic": "phase4-686be23bee-results",
+      "group": "phase4-686be23bee",
+      "initial_offset": -1001,
+      "failure_offset": null,
+      "final_offset": 1,
+      "calls": [
+        "extract",
+        "extract",
+        "assess"
+      ],
+      "output_count": 1
+    },
+    "error-replay": {
+      "case": "error-replay",
+      "input_topic": "phase4-09bfd37dd7-edits",
+      "output_topic": "phase4-09bfd37dd7-errors",
+      "group": "phase4-09bfd37dd7",
+      "initial_offset": -1001,
+      "failure_offset": -1001,
+      "final_offset": 2,
+      "calls": [],
+      "output_count": 2
+    },
+    "invalid": {
+      "case": "invalid",
+      "input_topic": "phase4-a4f4f00f9e-edits",
+      "output_topic": "phase4-a4f4f00f9e-results",
+      "group": "phase4-a4f4f00f9e",
+      "initial_offset": -1001,
+      "failure_offset": null,
+      "final_offset": 1,
+      "calls": [
+        "extract",
+        "extract"
+      ],
+      "output_count": 1
+    },
+    "low-confidence": {
+      "case": "low-confidence",
+      "input_topic": "phase4-af69fe5993-edits",
+      "output_topic": "phase4-af69fe5993-results",
+      "group": "phase4-af69fe5993",
+      "initial_offset": -1001,
+      "failure_offset": null,
+      "final_offset": 1,
+      "calls": [
+        "extract",
+        "assess",
+        "review"
+      ],
+      "output_count": 1
+    },
+    "malformed": {
+      "case": "malformed",
+      "input_topic": "phase4-7a69199312-edits",
+      "output_topic": "phase4-7a69199312-errors",
+      "group": "phase4-7a69199312",
+      "initial_offset": -1001,
+      "failure_offset": null,
+      "final_offset": 1,
+      "calls": [],
+      "output_count": 1
+    },
+    "result-replay": {
+      "case": "result-replay",
+      "input_topic": "phase4-5001291077-edits",
+      "output_topic": "phase4-5001291077-results",
+      "group": "phase4-5001291077",
+      "initial_offset": -1001,
+      "failure_offset": -1001,
+      "final_offset": 2,
+      "calls": [
+        "extract",
+        "assess",
+        "extract",
+        "assess",
+        "extract",
+        "assess"
+      ],
+      "output_count": 2
+    },
+    "shutdown": {
+      "case": "shutdown",
+      "input_topic": "phase4-614e516d82-edits",
+      "output_topic": "phase4-614e516d82-results",
+      "group": "phase4-614e516d82",
+      "initial_offset": -1001,
+      "failure_offset": null,
+      "final_offset": 1,
+      "calls": [
+        "extract",
+        "assess"
+      ],
+      "output_count": 1
+    },
+    "timeout": {
+      "case": "timeout",
+      "input_topic": "phase4-2735e4390b-edits",
+      "output_topic": "phase4-2735e4390b-errors",
+      "group": "phase4-2735e4390b",
+      "initial_offset": -1001,
+      "failure_offset": null,
+      "final_offset": 1,
+      "calls": [
+        "extract",
+        "extract"
+      ],
+      "output_count": 1
+    },
+    "unresolved": {
+      "case": "unresolved",
+      "input_topic": "phase4-d8b5bf051d-edits",
+      "output_topic": "phase4-d8b5bf051d-results",
+      "group": "phase4-d8b5bf051d",
+      "initial_offset": -1001,
+      "failure_offset": null,
+      "final_offset": 1,
+      "calls": [
+        "extract",
+        "assess",
+        "review"
+      ],
+      "output_count": 1
+    },
+    "valid": {
+      "case": "valid",
+      "input_topic": "phase4-998e55c3b6-edits",
+      "output_topic": "phase4-998e55c3b6-results",
+      "group": "phase4-998e55c3b6",
+      "initial_offset": -1001,
+      "failure_offset": null,
+      "final_offset": 1,
+      "calls": [
+        "extract",
+        "assess"
+      ],
+      "output_count": 1
+    }
+  },
+  "representative_result": {
+    "summary": {
+      "case": "valid",
+      "input_topic": "phase4-998e55c3b6-edits",
+      "output_topic": "phase4-998e55c3b6-results",
+      "group": "phase4-998e55c3b6",
+      "initial_offset": -1001,
+      "failure_offset": null,
+      "final_offset": 1,
+      "calls": [
+        "extract",
+        "assess"
+      ],
+      "output_count": 1
+    },
+    "records": [
+      {
+        "key": "enwiki:101:triage-v1",
+        "value": {
+          "schema_version": 1,
+          "analysis": {
+            "schema_version": 1,
+            "event": {
+              "schema_version": 1,
+              "wiki": "enwiki",
+              "title": "Synthetic delivery example",
+              "old_revision_id": 100,
+              "revision_id": 101,
+              "occurred_at": "2026-10-20T10:00:00Z"
+            },
+            "analysis_version": "triage-v1",
+            "backend": "ollama",
+            "model": "qwen2.5:7b",
+            "prompt_version": "edit-triage-v2",
+            "decision": "review",
+            "confidence": 0.95,
+            "explanation": "The causal claim is stronger without additional evidence.",
+            "evidence": [
+              {
+                "before": "The study found an association, without proving causation.",
+                "after": "The study proved that the treatment causes recovery."
+              }
+            ],
+            "attempts": 2,
+            "latency_ms": 5,
+            "content_truncated": false
+          },
+          "enrichment": {
+            "schema_version": 1,
+            "event": {
+              "schema_version": 1,
+              "wiki": "enwiki",
+              "title": "Synthetic delivery example",
+              "old_revision_id": 100,
+              "revision_id": 101,
+              "occurred_at": "2026-10-20T10:00:00Z"
+            },
+            "source": "wikipedia",
+            "status": "ready",
+            "attempts": 1,
+            "provenance": {
+              "endpoint": "https://en.wikipedia.org/w/api.php",
+              "page_id": 42,
+              "from_title": "Synthetic delivery example",
+              "to_title": "Synthetic delivery example",
+              "source_url": "https://en.wikipedia.org/w/index.php?diff=101&oldid=100"
+            },
+            "evidence": [
+              {
+                "before": "The study found an association, without proving causation.",
+                "after": "The study proved that the treatment causes recovery."
+              }
+            ],
+            "content_truncated": false
+          },
+          "extraction": {
+            "changes": [
+              {
+                "hunk": 0,
+                "kind": "meaning",
+                "summary": "Association becomes causation.",
+                "before": "The study found an association, without proving causation.",
+                "after": "The study proved that the treatment causes recovery."
+              }
+            ]
+          },
+          "steps": [
+            {
+              "stage": "extract",
+              "outcome": "valid"
+            },
+            {
+              "stage": "assess",
+              "outcome": "valid"
+            }
+          ],
+          "outcome": "assessed"
+        }
+      }
+    ]
+  },
+  "publication_replay": {
+    "summary": {
+      "case": "result-replay",
+      "input_topic": "phase4-5001291077-edits",
+      "output_topic": "phase4-5001291077-results",
+      "group": "phase4-5001291077",
+      "initial_offset": -1001,
+      "failure_offset": -1001,
+      "final_offset": 2,
+      "calls": [
+        "extract",
+        "assess",
+        "extract",
+        "assess",
+        "extract",
+        "assess"
+      ],
+      "output_count": 2
+    },
+    "records": [
+      {
+        "key": "enwiki:101:triage-v1",
+        "value": {
+          "schema_version": 1,
+          "analysis": {
+            "schema_version": 1,
+            "event": {
+              "schema_version": 1,
+              "wiki": "enwiki",
+              "title": "Synthetic delivery example",
+              "old_revision_id": 100,
+              "revision_id": 101,
+              "occurred_at": "2026-10-20T10:00:00Z"
+            },
+            "analysis_version": "triage-v1",
+            "backend": "ollama",
+            "model": "qwen2.5:7b",
+            "prompt_version": "edit-triage-v2",
+            "decision": "review",
+            "confidence": 0.95,
+            "explanation": "The causal claim is stronger without additional evidence.",
+            "evidence": [
+              {
+                "before": "The study found an association, without proving causation.",
+                "after": "The study proved that the treatment causes recovery."
+              }
+            ],
+            "attempts": 2,
+            "latency_ms": 2,
+            "content_truncated": false
+          },
+          "enrichment": {
+            "schema_version": 1,
+            "event": {
+              "schema_version": 1,
+              "wiki": "enwiki",
+              "title": "Synthetic delivery example",
+              "old_revision_id": 100,
+              "revision_id": 101,
+              "occurred_at": "2026-10-20T10:00:00Z"
+            },
+            "source": "wikipedia",
+            "status": "ready",
+            "attempts": 1,
+            "provenance": {
+              "endpoint": "https://en.wikipedia.org/w/api.php",
+              "page_id": 42,
+              "from_title": "Synthetic delivery example",
+              "to_title": "Synthetic delivery example",
+              "source_url": "https://en.wikipedia.org/w/index.php?diff=101&oldid=100"
+            },
+            "evidence": [
+              {
+                "before": "The study found an association, without proving causation.",
+                "after": "The study proved that the treatment causes recovery."
+              }
+            ],
+            "content_truncated": false
+          },
+          "extraction": {
+            "changes": [
+              {
+                "hunk": 0,
+                "kind": "meaning",
+                "summary": "Association becomes causation.",
+                "before": "The study found an association, without proving causation.",
+                "after": "The study proved that the treatment causes recovery."
+              }
+            ]
+          },
+          "steps": [
+            {
+              "stage": "extract",
+              "outcome": "valid"
+            },
+            {
+              "stage": "assess",
+              "outcome": "valid"
+            }
+          ],
+          "outcome": "assessed"
+        }
+      },
+      {
+        "key": "enwiki:102:triage-v1",
+        "value": {
+          "schema_version": 1,
+          "analysis": {
+            "schema_version": 1,
+            "event": {
+              "schema_version": 1,
+              "wiki": "enwiki",
+              "title": "Synthetic delivery example",
+              "old_revision_id": 100,
+              "revision_id": 102,
+              "occurred_at": "2026-10-20T10:00:00Z"
+            },
+            "analysis_version": "triage-v1",
+            "backend": "ollama",
+            "model": "qwen2.5:7b",
+            "prompt_version": "edit-triage-v2",
+            "decision": "review",
+            "confidence": 0.95,
+            "explanation": "The causal claim is stronger without additional evidence.",
+            "evidence": [
+              {
+                "before": "The study found an association, without proving causation.",
+                "after": "The study proved that the treatment causes recovery."
+              }
+            ],
+            "attempts": 2,
+            "latency_ms": 1,
+            "content_truncated": false
+          },
+          "enrichment": {
+            "schema_version": 1,
+            "event": {
+              "schema_version": 1,
+              "wiki": "enwiki",
+              "title": "Synthetic delivery example",
+              "old_revision_id": 100,
+              "revision_id": 102,
+              "occurred_at": "2026-10-20T10:00:00Z"
+            },
+            "source": "wikipedia",
+            "status": "ready",
+            "attempts": 1,
+            "provenance": {
+              "endpoint": "https://en.wikipedia.org/w/api.php",
+              "page_id": 42,
+              "from_title": "Synthetic delivery example",
+              "to_title": "Synthetic delivery example",
+              "source_url": "https://en.wikipedia.org/w/index.php?diff=102&oldid=100"
+            },
+            "evidence": [
+              {
+                "before": "The study found an association, without proving causation.",
+                "after": "The study proved that the treatment causes recovery."
+              }
+            ],
+            "content_truncated": false
+          },
+          "extraction": {
+            "changes": [
+              {
+                "hunk": 0,
+                "kind": "meaning",
+                "summary": "Association becomes causation.",
+                "before": "The study found an association, without proving causation.",
+                "after": "The study proved that the treatment causes recovery."
+              }
+            ]
+          },
+          "steps": [
+            {
+              "stage": "extract",
+              "outcome": "valid"
+            },
+            {
+              "stage": "assess",
+              "outcome": "valid"
+            }
+          ],
+          "outcome": "assessed"
+        }
+      }
+    ]
+  },
+  "boundary_note": "Real Redpanda; model and Wikipedia HTTP boundary doubles. Commit failure is injected after a real output acknowledgement."
+}
