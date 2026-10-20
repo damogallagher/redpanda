@@ -10,8 +10,7 @@
       "skipped": "0",
       "tests": "371",
       "time": "3.639",
-      "timestamp": "2026-10-20T19:39:19.829372+01:00",
-      "hostname": "32:e9:7e:f6:64:6e"
+      "timestamp": "2026-10-20T19:39:19.829372+01:00"
     },
     "integration": {
       "name": "pytest",
@@ -20,8 +19,7 @@
       "skipped": "0",
       "tests": "25",
       "time": "123.525",
-      "timestamp": "2026-10-20T19:39:23.697764+01:00",
-      "hostname": "32:e9:7e:f6:64:6e"
+      "timestamp": "2026-10-20T19:39:23.697764+01:00"
     }
   },
   "coverage": {
@@ -80,5 +78,26 @@
     "At-least-once delivery with unique storage key; requires retained results and durable database.",
     "Replay guard assumes stable history of single results partition.",
     "No new live-model quality evidence or Phase 6 acceptance claimed."
-  ]
+  ],
+  "pull_request": "https://github.com/damogallagher/redpanda/pull/9",
+  "handover": {
+    "checkout": "/Users/damien/Development/sourceControl/redpanda",
+    "commit": "ce97ce2760c96d8beec05a261f7ec6005bef6ccb",
+    "command": "make seed-results",
+    "exit_code": 0,
+    "api": "http://127.0.0.1:8000",
+    "ready": true,
+    "synthetic_results": 3,
+    "detail_revision": 101,
+    "detail_decision": "review",
+    "private_profiles_unchanged": true,
+    "inference_started": false
+  },
+  "linux_ci": {
+    "commit": "ce97ce2760c96d8beec05a261f7ec6005bef6ccb",
+    "url": "https://github.com/damogallagher/redpanda/actions/runs/39477227692",
+    "conclusion": "success",
+    "artifact": "phase-5-test-reports"
+  },
+  "merged_commit": "c19565dfd0c2d2984cc12f98713a01d56d164e04"
 }
