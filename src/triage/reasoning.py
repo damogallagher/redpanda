@@ -96,7 +96,10 @@ def parse_output[T: Contract](text: str, contract: type[T]) -> T:
     if fence:
         text = fence.group(1)
     # Pydantic alone accepts duplicate JSON keys. Reject them at every nesting level.
-    json.loads(text, object_pairs_hook=unique_keys)
+    try:
+        json.loads(text, object_pairs_hook=unique_keys)
+    except RecursionError:
+        raise ValueError("model JSON nesting exceeds parser limit") from None
     return contract.model_validate_json(text)
 
 

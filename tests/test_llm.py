@@ -104,6 +104,7 @@ def test_connection_errors_are_sanitized(error):
         b"not JSON",
         b"\xff",
         b"null",
+        b"[" * 15000 + b"0" + b"]" * 15000,
         b"[]",
         b"{}",
         json.dumps({**OLLAMA, "done": False}).encode(),

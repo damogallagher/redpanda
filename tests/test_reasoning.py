@@ -225,6 +225,7 @@ def test_single_json_object_or_exact_fence_parses_strings_with_braces(wrapper):
     "raw",
     [
         "not json",
+        "[" * 15000 + "0" + "]" * 15000,
         "[]",
         "{}",
         "null",

@@ -97,5 +97,5 @@ def complete(
         raise ModelError(f"model HTTP status {exc.response.status_code}") from None
     except httpx.HTTPError:
         raise ModelError("model connection or timeout failure") from None
-    except (ValueError, ValidationError):
+    except (ValueError, ValidationError, RecursionError):
         raise ModelError("model returned invalid, empty, or incomplete output") from None
