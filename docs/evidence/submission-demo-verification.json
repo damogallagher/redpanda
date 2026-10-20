@@ -1,0 +1,269 @@
+{
+  "date": "2026-10-20",
+  "manifest": {
+    "project": "triage-submission-20261020",
+    "base_commit": "92262eb4036e4fb0a62affd6133a6a6154a1ca8e",
+    "max_live_edits_per_provider": 3,
+    "maximum_frontier_calls_first_attempt": 40,
+    "frozen_cases_sha256": "cea065f4990f52d29bc440bacf25ddaa870081f38aa4849365bbdc8d66eee6c6",
+    "prompts_sha256": "c6d7fe30e7b68255cc657ec020abf0ab6fa6c29bb577e73f192b7ea1b1d523bd",
+    "host": {
+      "architecture": "arm64",
+      "memory_bytes": 34359738368,
+      "cpu": "Apple M5"
+    }
+  },
+  "runs": {
+    "local": {
+      "mode": "local",
+      "commit": "92262eb4036e4fb0a62affd6133a6a6154a1ca8e",
+      "model": "qwen2.5:7b",
+      "fixed_cases_passed": 9,
+      "fixed_cases_total": 9,
+      "evaluation_calls": 14,
+      "evaluation_seconds": 97.904,
+      "evaluation_with_bootstrap_seconds": 165.757,
+      "startup_seconds": 10.275,
+      "total_seconds": 362.216,
+      "worker_processed": 3,
+      "worker_exit_code": 0,
+      "live_calls": 6,
+      "api_rows": 3,
+      "errors": {
+        "processing-errors": 0,
+        "sink-errors": 0
+      },
+      "events": [
+        {
+          "event": {
+            "schema_version": 1,
+            "wiki": "enwiki",
+            "title": "BBC Scotland (TV channel)",
+            "old_revision_id": 1381222776,
+            "revision_id": 1381226123,
+            "occurred_at": "2026-10-20T20:32:40Z"
+          },
+          "decision": "review",
+          "attempts": 2,
+          "outcome": "assessed",
+          "steps": [
+            {
+              "stage": "extract",
+              "outcome": "valid"
+            },
+            {
+              "stage": "assess",
+              "outcome": "valid"
+            }
+          ]
+        },
+        {
+          "event": {
+            "schema_version": 1,
+            "wiki": "enwiki",
+            "title": "Teen Time Tunes",
+            "old_revision_id": 1377074718,
+            "revision_id": 1381226128,
+            "occurred_at": "2026-10-20T20:32:44Z"
+          },
+          "decision": "insufficient_evidence",
+          "attempts": 2,
+          "outcome": "invalid_output",
+          "steps": [
+            {
+              "stage": "extract",
+              "outcome": "invalid_output"
+            },
+            {
+              "stage": "extract",
+              "outcome": "invalid_output"
+            }
+          ]
+        },
+        {
+          "event": {
+            "schema_version": 1,
+            "wiki": "enwiki",
+            "title": "Beyonder",
+            "old_revision_id": 1381225515,
+            "revision_id": 1381226126,
+            "occurred_at": "2026-10-20T20:32:42Z"
+          },
+          "decision": "insufficient_evidence",
+          "attempts": 2,
+          "outcome": "invalid_output",
+          "steps": [
+            {
+              "stage": "extract",
+              "outcome": "invalid_output"
+            },
+            {
+              "stage": "extract",
+              "outcome": "invalid_output"
+            }
+          ]
+        }
+      ],
+      "groups": {
+        "triage-v1": [
+          {
+            "group_name": "triage-v1",
+            "state": "Empty",
+            "members": 0,
+            "total_lag": 207
+          }
+        ],
+        "triage-store-v1": [
+          {
+            "group_name": "triage-store-v1",
+            "state": "Stable",
+            "members": 1,
+            "total_lag": 0
+          }
+        ]
+      }
+    },
+    "frontier": {
+      "mode": "frontier",
+      "commit": "da0969eab4de761d1059b82b061117f486cd9f67",
+      "model": "gpt-6.1-sol",
+      "fixed_cases_passed": 9,
+      "fixed_cases_total": 9,
+      "evaluation_calls": 14,
+      "evaluation_seconds": 39.756,
+      "evaluation_with_bootstrap_seconds": 42.122,
+      "startup_seconds": 8.622,
+      "total_seconds": 64.24,
+      "worker_processed": 3,
+      "worker_exit_code": 0,
+      "live_calls": 4,
+      "api_rows": 3,
+      "errors": {
+        "processing-errors": 0,
+        "sink-errors": 0
+      },
+      "events": [
+        {
+          "event": {
+            "schema_version": 1,
+            "wiki": "enwiki",
+            "title": "Fred Keenor",
+            "old_revision_id": 1373392644,
+            "revision_id": 1381226940,
+            "occurred_at": "2026-10-20T20:39:42Z"
+          },
+          "decision": "insufficient_evidence",
+          "attempts": 0,
+          "outcome": "incomplete_source",
+          "steps": []
+        },
+        {
+          "event": {
+            "schema_version": 1,
+            "wiki": "enwiki",
+            "title": "2026 United States Senate election in Michigan",
+            "old_revision_id": 1381226670,
+            "revision_id": 1381226892,
+            "occurred_at": "2026-10-20T20:39:15Z"
+          },
+          "decision": "routine",
+          "attempts": 2,
+          "outcome": "assessed",
+          "steps": [
+            {
+              "stage": "extract",
+              "outcome": "valid"
+            },
+            {
+              "stage": "assess",
+              "outcome": "valid"
+            }
+          ]
+        },
+        {
+          "event": {
+            "schema_version": 1,
+            "wiki": "enwiki",
+            "title": "Bob Edwards",
+            "old_revision_id": 1380505795,
+            "revision_id": 1381226935,
+            "occurred_at": "2026-10-20T20:39:37Z"
+          },
+          "decision": "review",
+          "attempts": 2,
+          "outcome": "assessed",
+          "steps": [
+            {
+              "stage": "extract",
+              "outcome": "valid"
+            },
+            {
+              "stage": "assess",
+              "outcome": "valid"
+            }
+          ]
+        }
+      ],
+      "groups": {
+        "triage-v1": [
+          {
+            "group_name": "triage-v1",
+            "state": "Empty",
+            "members": 0,
+            "total_lag": 10
+          }
+        ],
+        "triage-store-v1": [
+          {
+            "group_name": "triage-store-v1",
+            "state": "Stable",
+            "members": 1,
+            "total_lag": 0
+          }
+        ]
+      }
+    }
+  },
+  "cleanup": {
+    "default_stop_retained_all_three_volumes": true,
+    "storage_only_restart_preserved_complete_api_page": true,
+    "persisted_rows": 3,
+    "storage_restart_started_no_worker_or_ingestion": true,
+    "delete_data_retained_weights": true,
+    "delete_models_removed_only_demo_weights": true,
+    "all_demo_containers_networks_volumes_removed": true,
+    "preexisting_volume_set_unchanged": true,
+    "user_profiles_unchanged": true,
+    "working_profiles_restored": true,
+    "extra_model_calls": 0
+  },
+  "local_reset": {
+    "named_demo_data_removed": true,
+    "demo_model_weights_retained": true,
+    "preexisting_user_volumes_preserved": true,
+    "confirmed_helper_leaks_removed": 2,
+    "scope": "Only the two anonymous volumes observed mounted on this demo\u2019s one-shot helpers were removed; no global prune."
+  },
+  "helper_regression": {
+    "before": "failed: topics creates unused persistent storage",
+    "after": "passed for topics and db-migrate",
+    "test": "tests/test_infrastructure.py::test_one_shot_helpers_complete_without_persistent_volumes"
+  },
+  "launcher_checks": {
+    "passed": 15
+  },
+  "review_branch_commit": "ce40ca6",
+  "live_frontier_patch_commit": "da0969e",
+  "patch_tree_equivalence": "da0969e and ce40ca6 have identical tracked trees; cherry-picked onto merged PR #12",
+  "paid_model_calls": 18,
+  "local_model_calls": 20,
+  "currency_cost": "not measured",
+  "model_prompts_and_frozen_cases_changed": false,
+  "private_reports": "reports/submission-demo/",
+  "limits": [
+    "Fixed-case reruns are regression checks, not unseen accuracy evaluation.",
+    "Live providers processed different edits; these are not paired quality comparisons.",
+    "Local: one assessed review and two invalid-output abstentions. Frontier: two assessed edits and one incomplete-source abstention.",
+    "Existing deployment/security limitations remain; no HA/load/security recertification."
+  ]
+}

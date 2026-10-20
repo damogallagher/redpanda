@@ -1,6 +1,6 @@
 # Executed submission demo — 20 October 2026
 
-Requested after PR #11 merged. Extends the walkthrough in PR #12. The execution uses project `triage-submission-20261020`, private copies of the selected profiles, random loopback ports, empty broker/database/model volumes, and exactly three live edits per provider. Existing user data/model volumes and private profiles are retained. The application implementation at the start is unchanged from `55fdf4e`; execution begins at documentation commit `92262eb`.
+Requested after PR #11 merged. Extends the walkthrough in PR #12, which merged during execution; the fix is on `fix/submission-demo` from main `447920f`. The execution uses project `triage-submission-20261020`, private copies of the selected profiles, random loopback ports, empty broker/database/model volumes, and exactly three live edits per provider. Existing user data/model volumes and private profiles are retained. The application implementation at the start is unchanged from `55fdf4e`; execution begins at documentation commit `92262eb`.
 
 ## Reproduction
 
@@ -21,3 +21,15 @@ The startup hint previously mentioned the default ten edits even when the select
 ## Ollama result
 
 The first clean run passed 9/9 fixed cases using 14 calls in 97.904 seconds; evaluation plus fresh weight bootstrap took 165.757 seconds. The live batch used six further local calls and stored three rows, with no processing/sink errors and zero storage-consumer lag. One edit was assessed as `review`; two became `insufficient_evidence` after invalid extraction output. Total evaluation/startup/live execution took 362.216 seconds. This run used the original helper storage configuration and exposed the volume issue above; inference prompts/application Python were unchanged by its fix. Full private details and logs are retained under `reports/submission-demo/`; curated evidence will be linked after the hosted run.
+
+## Frontier result and saved evidence
+
+Frontier passed 9/9 fixed cases using 14 calls in 39.756 seconds. Its live batch made four calls and stored three rows: one assessed `review`, one assessed `routine`, and one `insufficient_evidence` due to incomplete source evidence (zero calls for that edit). There were no processing/sink errors and storage-consumer lag was zero. Total evaluation/startup/live execution took 64.240 seconds. Total hosted requests for this turn: **18**, below the initial maximum of 40. Currency cost was not measured. No retry evaluation or extra paid smoke was needed.
+
+The frontier run used `da0969e`; its tracked tree is identical to `ce40ca6`, the same fix cherry-picked onto merged main after PR #12 closed. It also verified the corrected helpers have no persistent-volume mounts. The initial local run used the original helper configuration and exposed the issue. Application Python, model prompts, and frozen cases are unchanged across both runs.
+
+Full curated synthetic prompts/responses: [Ollama](../evidence/submission-model-local.json), [frontier](../evidence/submission-model-frontier.json). [Verification summary](../evidence/submission-demo-verification.json) includes timings, revision IDs, decisions/outcomes, offsets/lag summaries, request counts, frozen-input hashes, cleanup, and limits. Complete live API pages/details and worker/service logs remain in ignored private reports; routine live content is not automatically published. These different live inputs do not support a paired provider-quality comparison.
+
+## Shutdown, retained data and cleanup
+
+After frontier completion, the default stop preserved all three demonstration volumes. Starting only `sink api` restored the exact same three-row API page, without starting the worker, ingestion or Ollama and without additional inference. Explicit data cleanup removed only the demo broker/database volumes and retained its weights; explicit model cleanup then removed only those demo weights. All demo containers/networks/volumes were gone, and the complete pre-existing volume-name set remained identical. The two identified original helper leaks were removed by their exact recorded demo-owned names; no global prune was used. Private working profiles were restored byte-for-byte and with their original permissions; the user's profiles were never modified.

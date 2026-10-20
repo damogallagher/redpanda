@@ -37,3 +37,15 @@ Can you run the full demo for me, first with Ollama and then the frontier model,
 ## Assistant
 
 > Ollama’s end-to-end run completed: all three live edits reached Postgres and the API, with zero processing or sink errors. One edit received a review assessment; two safely abstained after invalid model output. I’m saving that distinction, resetting only the demo’s data, and moving on to the frontier model.
+
+## Assistant
+
+> The frontier model also passed all nine fixed cases with 14 calls. Its three-edit live batch is now running. PR #12 was merged during execution, so I’ll put the demo evidence and cleanup fix into a new PR based on the updated main branch.
+
+## Assistant
+
+> The frontier demo also delivered all three rows with zero errors: one review, one routine assessment, and one abstention because source evidence was incomplete. It used 18 paid calls in total, below the 40-call cap. I’m now checking that saved results survive shutdown, then running the final verification and failure demonstrations.
+
+## Assistant
+
+> The saved frontier results survived a full stop and a storage-only restart without extra model calls. The cleanup checks also passed: all demo resources are gone, the pre-existing volume set is unchanged, and the private profiles are preserved. The success demonstration has passed; the fault demonstrations and final test gate are underway.

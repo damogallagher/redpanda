@@ -2,7 +2,7 @@
 
 This walkthrough uses merged Phase 6 (`2b8b62c`, PR #11). Run commands from the repository root, in order, in one terminal. It resets this project's broker/database data between providers, retains downloaded Ollama weights, and processes at most **three live edits per provider**. It does not change application code.
 
-The commands below are for you to execute. Expected outcomes are based on the implemented contracts and recorded acceptance; they are not new live results from the documentation session. Live Wikipedia edits and model responses vary. The fixed-case evaluations previously passed 9/9 for both configured models.
+The commands below are for you to execute. Expected outcomes are based on the implemented contracts; see the [executed demo record](evaluations/submission-demo.md) for actual runs, fixes, and saved evidence. Live Wikipedia edits and model responses vary. The fixed-case evaluations previously passed 9/9 for both configured models.
 
 ## 1. Prepare and stop the existing application
 
