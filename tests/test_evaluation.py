@@ -106,3 +106,10 @@ def test_invalid_profile(monkeypatch, capsys):
     )
     assert ev.main([str(CASES)]) == 2
     assert "Invalid evaluation" in capsys.readouterr().err
+
+
+def test_manifest_cannot_increase_the_advertised_call_budget(tmp_path, capsys):
+    path = tmp_path / "cases.json"
+    path.write_text(json.dumps([json.loads(CASES.read_text())[0]] * 8))
+    assert ev.main([str(path)]) == 2
+    assert "Invalid evaluation" in capsys.readouterr().err

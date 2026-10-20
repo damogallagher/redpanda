@@ -81,6 +81,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         with args.cases.open("rb") as file:
             cases = CASES.validate_json(file.read(262145))
+        if sum(case.source.status == "ready" for case in cases) > 7:
+            raise ValueError("evaluation exceeds the 28-call budget")
         settings = Settings.from_env(os.environ)
     except (OSError, ValueError):
         print(

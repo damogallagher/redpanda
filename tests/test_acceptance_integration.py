@@ -183,3 +183,22 @@ def test_cleanup_preserves_other_projects_and_separates_weights_from_data(tmp_pa
         for name in [*names, sentinel]:
             if name in existing:
                 docker("volume", "rm", name)
+
+
+def test_runtime_image_excludes_build_tools(compose):
+    compose("build", "model-check", timeout=300)
+    output = compose(
+        "run",
+        "--rm",
+        "--no-deps",
+        "model-check",
+        "python",
+        "-c",
+        "import os, shutil; from pathlib import Path; "
+        "assert os.getuid() == 10001; "
+        "assert shutil.which('uv') is None and shutil.which('pip') is None; "
+        "assert not Path('/usr/local/lib/python3.13/ensurepip').exists(); "
+        "assert not list(Path('/usr/local/lib/python3.13/site-packages').glob('pip*')); "
+        "print('PASS: non-root runtime without pip/uv/ensurepip')",
+    )
+    assert "PASS: non-root runtime" in output

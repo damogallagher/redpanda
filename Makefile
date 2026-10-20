@@ -9,6 +9,7 @@ help:
 	@echo "make test-local      - real Ollama acceptance; up to 28 calls"
 	@echo "make test-frontier   - real hosted acceptance; up to 28 paid calls"
 	@echo "make demo-success    - successful fixture source → results API"
+	@echo "make demo-test-failure - intentionally red test; exits nonzero, changes no app code"
 	@echo "make demo-failures   - expected faults and recovery; PASS means safe handling"
 	@echo "make clean-docker    - stop this project; retain data and models"
 	@echo "make clean-ollama    - stop local project; retain model weights"
@@ -141,3 +142,8 @@ demo-failures: sync
 
 accept-live-local: sync
 	$(UV) run --frozen pytest tests/test_live_acceptance.py -s --junitxml=reports/live-acceptance.xml
+
+.PHONY: demo-test-failure
+demo-test-failure: sync
+	@echo "EXPECTED FAILURE: this deliberately wrong test expects an invented quote to be accepted."
+	$(UV) run --frozen pytest tests/fixtures/acceptance/intentional_failure.py --junitxml=reports/intentional-failure.xml
