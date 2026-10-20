@@ -1,7 +1,7 @@
 # Phase 00: Planning and audit trail
 
 Status: planning documents prepared; validation and PR evidence recorded in progress log.
-Branch: `phase/00-plan`. Base: `main` after the previous phase merges.
+Branch: `phase/00-plan`. Base: fresh `main` baseline. PR: [#1](https://github.com/damogallagher/redpanda/pull/1).
 
 ## Scope
 
@@ -23,7 +23,7 @@ A reviewer can trace each assignment requirement to a planned phase and see whic
 
 ## Actual work and evidence
 
-See the planning PR and progress log. No application tests exist yet.
+Prepared the implementation plan, six phase specifications, test policy, PR template, README scaffold, progress record, and visible interaction log. Verified relative links across all 15 Markdown files (zero broken links) and passed `git diff --cached --check`. See the planning PR and progress log. No application tests exist yet.
 
 ## Walkthrough checkpoint
 

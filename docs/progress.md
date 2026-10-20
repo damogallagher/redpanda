@@ -15,7 +15,7 @@ Pending: publish and review planning PR; all implementation and runtime tests. P
 
 No model, application, Docker stack, or unit suite has been run in this planning phase. No production-readiness or coverage result is claimed.
 
-Validation results and PR link will be added after execution.
+Planning PR: [#1](https://github.com/damogallagher/redpanda/pull/1). Awaiting Damien’s review and merge.
 
 Executed Phase 0 validation:
 
@@ -23,3 +23,5 @@ Executed Phase 0 validation:
 - `git diff --cached --check`: passed; documentation only, no runtime tests applicable.
 - Created fresh root commit `c7a42ba` and replaced GitHub main using a lease against the previously observed remote tip. Main now starts with the new empty baseline.
 - Planning branch: `phase/00-plan`. All implementation phases remain unstarted.
+
+Next step: after the planning PR is merged, create `phase/01-foundation` from updated main and perform the hardware/model feasibility checkpoint.
