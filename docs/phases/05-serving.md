@@ -1,6 +1,6 @@
 # Phase 05: Persistence and readable results
 
-Status: implemented; final cumulative verification and review PR pending.
+Status: implemented and locally verified; review PR pending.
 Branch: `phase/05-serving`, from merged PR #8 (`b80908b`). Damien reviews and merges.
 
 ## What changed
@@ -144,4 +144,12 @@ Primary references used: [Connect SQL parameters](https://docs.redpanda.com/conn
 
 ## Verification record
 
-Implementation, coverage, mutation and CI evidence will be recorded after the cumulative gate. Phase 6 remains separate. Damien's independent README sections are unchanged.
+Implementation commit [`1885c30`](https://github.com/damogallagher/redpanda/commit/1885c303ecc1de23eb725f20e7b3fb882c7bbb9c) passed the complete command above, exit 0:
+
+- **371 unit tests, 25 integration/configuration tests, 72 native Connect tests** (40 ingestion, 32 sink); no failures or skipped selected checks.
+- **946/946 executable Python lines and 242/242 branches covered**, 100%, with zero exclusions.
+- Real migration, upsert/replay, source-to-API, quarantine, and database outage/restart checks passed. The outage kept the committed position at 6 and recovery advanced it to 7.
+- Deliberately changing the pagination predicate from `<` to `<=` failed the real API test: page two incorrectly repeated revision 102. The change was restored and the cumulative gate passed.
+- Original assignment SHA-256 still matches its provenance record. Documentation links checked: 132, none broken. No live or paid model calls.
+
+The [verification JSON](../evidence/phase-5-verification.json) records counts, coverage and tested commit. The [stored-result/recovery example](../evidence/phase-5-serving.json) includes the complete synthetic detail response. CI/review links will follow. Phase 6 remains separate. Damien's independent README sections are unchanged.

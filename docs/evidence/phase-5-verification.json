@@ -1,0 +1,84 @@
+{
+  "implementation_commit": "1885c303ecc1de23eb725f20e7b3fb882c7bbb9c",
+  "command": "make verify-phase-5 UV='uvx --from uv==0.13.3 uv'",
+  "exit_code": 0,
+  "suites": {
+    "unit": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "371",
+      "time": "3.639",
+      "timestamp": "2026-10-20T19:39:19.829372+01:00",
+      "hostname": "32:e9:7e:f6:64:6e"
+    },
+    "integration": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "25",
+      "time": "123.525",
+      "timestamp": "2026-10-20T19:39:23.697764+01:00",
+      "hostname": "32:e9:7e:f6:64:6e"
+    }
+  },
+  "coverage": {
+    "covered_lines": 946,
+    "num_statements": 946,
+    "percent_covered": 100.0,
+    "percent_covered_display": "100.00",
+    "missing_lines": 0,
+    "excluded_lines": 0,
+    "percent_statements_covered": 100.0,
+    "percent_statements_covered_display": "100.00",
+    "num_branches": 242,
+    "num_partial_branches": 0,
+    "covered_branches": 242,
+    "missing_branches": 0,
+    "percent_branches_covered": 100.0,
+    "percent_branches_covered_display": "100.00"
+  },
+  "native_connect_tests": 72,
+  "sink_cases": 32,
+  "recovery": {
+    "offset_before": 6,
+    "offset_during": 6,
+    "offset_after": 7
+  },
+  "fixture_end_to_end": {
+    "real_components": [
+      "Connect ingestion",
+      "Redpanda",
+      "Python worker",
+      "Connect SQL sink",
+      "Postgres",
+      "HTTP API"
+    ],
+    "doubles": [
+      "Wikipedia HTTP",
+      "model HTTP"
+    ],
+    "source_edits": 2,
+    "persisted_reviews": 2,
+    "model_calls_per_edit": 2
+  },
+  "mutation": {
+    "mutation": "Inclusive pagination cursor repeats the boundary row",
+    "expected_exit": 1,
+    "observed_exit": 1,
+    "test": "test_seed_replay_pagination_parameterization_and_migration"
+  },
+  "restored_cumulative_gate_exit": 0,
+  "assignment_sha256": "89a4840092423818c59a81f4042f9007d36e90fe7da7bc8111a4d96f1662e40a",
+  "live_calls": 0,
+  "relative_document_links_checked": 132,
+  "cleanup": "Unique integration projects removed and verified by fixture cleanup; user volumes retained.",
+  "limits": [
+    "Single-node local deployment; API loopback only, unauthenticated.",
+    "At-least-once delivery with unique storage key; requires retained results and durable database.",
+    "Replay guard assumes stable history of single results partition.",
+    "No new live-model quality evidence or Phase 6 acceptance claimed."
+  ]
+}

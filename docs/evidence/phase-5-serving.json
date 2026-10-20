@@ -1,0 +1,94 @@
+{
+  "database_outage": {
+    "offset_before": 6,
+    "offset_during": 6,
+    "offset_after": 7
+  },
+  "logical_rows": 4,
+  "detail": {
+    "id": 9,
+    "created_at": "2026-10-20T18:40:48.161114Z",
+    "updated_at": "2026-10-20T18:40:48.161115Z",
+    "source_url": "https://en.wikipedia.org/w/index.php?diff=101&oldid=100",
+    "result": {
+      "schema_version": 1,
+      "analysis": {
+        "schema_version": 1,
+        "event": {
+          "schema_version": 1,
+          "wiki": "enwiki",
+          "title": "Synthetic storage example 1",
+          "old_revision_id": 100,
+          "revision_id": 101,
+          "occurred_at": "2026-10-20T10:00:00Z"
+        },
+        "analysis_version": "recovery-v1",
+        "backend": "ollama",
+        "model": "fixture-not-a-real-model",
+        "prompt_version": "fixture-v1",
+        "decision": "review",
+        "confidence": 0.95,
+        "explanation": "Synthetic demonstration: review",
+        "evidence": [
+          {
+            "before": "An association was found.",
+            "after": "A causal relationship was proved."
+          }
+        ],
+        "attempts": 2,
+        "latency_ms": 0,
+        "content_truncated": false
+      },
+      "enrichment": {
+        "schema_version": 1,
+        "event": {
+          "schema_version": 1,
+          "wiki": "enwiki",
+          "title": "Synthetic storage example 1",
+          "old_revision_id": 100,
+          "revision_id": 101,
+          "occurred_at": "2026-10-20T10:00:00Z"
+        },
+        "source": "fixture",
+        "status": "ready",
+        "attempts": 0,
+        "provenance": {
+          "endpoint": "https://en.wikipedia.org/w/api.php",
+          "page_id": 42,
+          "from_title": "Synthetic storage example 1",
+          "to_title": "Synthetic storage example 1",
+          "source_url": "https://en.wikipedia.org/w/index.php?diff=101&oldid=100"
+        },
+        "evidence": [
+          {
+            "before": "An association was found.",
+            "after": "A causal relationship was proved."
+          }
+        ],
+        "content_truncated": false
+      },
+      "extraction": {
+        "changes": [
+          {
+            "hunk": 0,
+            "kind": "meaning",
+            "summary": "Synthetic edit.",
+            "before": "An association was found.",
+            "after": "A causal relationship was proved."
+          }
+        ]
+      },
+      "steps": [
+        {
+          "stage": "extract",
+          "outcome": "valid"
+        },
+        {
+          "stage": "assess",
+          "outcome": "valid"
+        }
+      ],
+      "outcome": "assessed"
+    }
+  }
+}
