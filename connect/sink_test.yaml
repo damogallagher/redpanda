@@ -1,0 +1,1637 @@
+# Native tests of the production sink processors; fixtures are synthetic.
+{
+  "tests": [
+    {
+      "name": "valid review",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "analysis": {
+                "schema_version": 1,
+                "event": {
+                  "schema_version": 1,
+                  "wiki": "enwiki",
+                  "title": "Synthetic storage example 1",
+                  "old_revision_id": 100,
+                  "revision_id": 101,
+                  "occurred_at": "2026-10-20T10:00:00Z"
+                },
+                "analysis_version": "demo-v1",
+                "backend": "ollama",
+                "model": "fixture-not-a-real-model",
+                "prompt_version": "fixture-v1",
+                "decision": "review",
+                "confidence": 0.95,
+                "explanation": "Synthetic demonstration: review",
+                "evidence": [
+                  {
+                    "before": "An association was found.",
+                    "after": "A causal relationship was proved."
+                  }
+                ],
+                "attempts": 2,
+                "latency_ms": 0,
+                "content_truncated": false
+              },
+              "enrichment": {
+                "schema_version": 1,
+                "event": {
+                  "schema_version": 1,
+                  "wiki": "enwiki",
+                  "title": "Synthetic storage example 1",
+                  "old_revision_id": 100,
+                  "revision_id": 101,
+                  "occurred_at": "2026-10-20T10:00:00Z"
+                },
+                "source": "fixture",
+                "status": "ready",
+                "attempts": 0,
+                "provenance": {
+                  "endpoint": "https://en.wikipedia.org/w/api.php",
+                  "page_id": 42,
+                  "from_title": "Synthetic storage example 1",
+                  "to_title": "Synthetic storage example 1",
+                  "source_url": "https://en.wikipedia.org/w/index.php?diff=101&oldid=100"
+                },
+                "evidence": [
+                  {
+                    "before": "An association was found.",
+                    "after": "A causal relationship was proved."
+                  }
+                ],
+                "content_truncated": false
+              },
+              "extraction": {
+                "changes": [
+                  {
+                    "hunk": 0,
+                    "kind": "meaning",
+                    "summary": "Synthetic edit.",
+                    "before": "An association was found.",
+                    "after": "A causal relationship was proved."
+                  }
+                ]
+              },
+              "steps": [
+                {
+                  "stage": "extract",
+                  "outcome": "valid"
+                },
+                {
+                  "stage": "assess",
+                  "outcome": "valid"
+                }
+              ],
+              "outcome": "assessed"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "3c7689505041d9da720ce1b5b6ab907ac2d55d07879d0092d90e39f0b1489cb4",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "valid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "quotes and SQL text remain data",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"'; DROP TABLE triage_results; -- <script>example</script>\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "analysis": {
+                "schema_version": 1,
+                "event": {
+                  "schema_version": 1,
+                  "wiki": "enwiki",
+                  "title": "Synthetic storage example 1",
+                  "old_revision_id": 100,
+                  "revision_id": 101,
+                  "occurred_at": "2026-10-20T10:00:00Z"
+                },
+                "analysis_version": "demo-v1",
+                "backend": "ollama",
+                "model": "fixture-not-a-real-model",
+                "prompt_version": "fixture-v1",
+                "decision": "review",
+                "confidence": 0.95,
+                "explanation": "'; DROP TABLE triage_results; -- <script>example</script>",
+                "evidence": [
+                  {
+                    "before": "An association was found.",
+                    "after": "A causal relationship was proved."
+                  }
+                ],
+                "attempts": 2,
+                "latency_ms": 0,
+                "content_truncated": false
+              },
+              "enrichment": {
+                "schema_version": 1,
+                "event": {
+                  "schema_version": 1,
+                  "wiki": "enwiki",
+                  "title": "Synthetic storage example 1",
+                  "old_revision_id": 100,
+                  "revision_id": 101,
+                  "occurred_at": "2026-10-20T10:00:00Z"
+                },
+                "source": "fixture",
+                "status": "ready",
+                "attempts": 0,
+                "provenance": {
+                  "endpoint": "https://en.wikipedia.org/w/api.php",
+                  "page_id": 42,
+                  "from_title": "Synthetic storage example 1",
+                  "to_title": "Synthetic storage example 1",
+                  "source_url": "https://en.wikipedia.org/w/index.php?diff=101&oldid=100"
+                },
+                "evidence": [
+                  {
+                    "before": "An association was found.",
+                    "after": "A causal relationship was proved."
+                  }
+                ],
+                "content_truncated": false
+              },
+              "extraction": {
+                "changes": [
+                  {
+                    "hunk": 0,
+                    "kind": "meaning",
+                    "summary": "Synthetic edit.",
+                    "before": "An association was found.",
+                    "after": "A causal relationship was proved."
+                  }
+                ]
+              },
+              "steps": [
+                {
+                  "stage": "extract",
+                  "outcome": "valid"
+                },
+                {
+                  "stage": "assess",
+                  "outcome": "valid"
+                }
+              ],
+              "outcome": "assessed"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "9c9ec68db62c880c05c6e55678c306dfa68d7b4da06f444ac790bc13bf393767",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "valid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "bad JSON",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{not json",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "92072df399cb74703f8e86f450d552bc0bb01eeeb98a90985a1b7772c8fd0016"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "92072df399cb74703f8e86f450d552bc0bb01eeeb98a90985a1b7772c8fd0016",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "unknown field",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\",\"unexpected\":true}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "9e13fa3a6786feaf46d8c35dc116c321f07c50601e8ce033d85e5b2eeada825f"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "9e13fa3a6786feaf46d8c35dc116c321f07c50601e8ce033d85e5b2eeada825f",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "wrong decision",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"approve\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "223b87b0a35dcbfba807e9831a1b349ca2331490732dc4aa99da96d7a44002c2"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "223b87b0a35dcbfba807e9831a1b349ca2331490732dc4aa99da96d7a44002c2",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "missing evidence",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "1860e4bc7f5e0bc157391b86f08a661ccb4ae35e1f2eed7c704e2eddad1c1c15"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "1860e4bc7f5e0bc157391b86f08a661ccb4ae35e1f2eed7c704e2eddad1c1c15",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "key mismatch",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "other",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "3c7689505041d9da720ce1b5b6ab907ac2d55d07879d0092d90e39f0b1489cb4"
+            },
+            "metadata_equals": {
+              "kafka_key": "other",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "3c7689505041d9da720ce1b5b6ab907ac2d55d07879d0092d90e39f0b1489cb4",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "wrong topic",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "other",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "other",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "3c7689505041d9da720ce1b5b6ab907ac2d55d07879d0092d90e39f0b1489cb4"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "other",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "3c7689505041d9da720ce1b5b6ab907ac2d55d07879d0092d90e39f0b1489cb4",
+              "source_topic": "other",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "unsupported partition",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "1",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "1",
+              "source_offset": "5",
+              "payload_sha256": "3c7689505041d9da720ce1b5b6ab907ac2d55d07879d0092d90e39f0b1489cb4"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "1",
+              "kafka_offset": "5",
+              "payload_sha256": "3c7689505041d9da720ce1b5b6ab907ac2d55d07879d0092d90e39f0b1489cb4",
+              "source_topic": "results",
+              "source_partition": "1",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "negative offset",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "-1"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "-1",
+              "payload_sha256": "3c7689505041d9da720ce1b5b6ab907ac2d55d07879d0092d90e39f0b1489cb4"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "-1",
+              "payload_sha256": "3c7689505041d9da720ce1b5b6ab907ac2d55d07879d0092d90e39f0b1489cb4",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "-1",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "inconsistent event",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"different\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "440f453059f126dd8ec7927497c9ab9db4d36c0ce32d530bc79aad2cb43e2422"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "440f453059f126dd8ec7927497c9ab9db4d36c0ce32d530bc79aad2cb43e2422",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "wrong attempts",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":1,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "16e16ae696b7e582d01afb96a4e09c4c575699c87894c2e52adaee2858ae697d"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "16e16ae696b7e582d01afb96a4e09c4c575699c87894c2e52adaee2858ae697d",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "truncation mismatch",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":true},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "e675deefc7f4c006a26ab25d8eb68325a8096d39bd21df618b06554fffaa9dbc"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "e675deefc7f4c006a26ab25d8eb68325a8096d39bd21df618b06554fffaa9dbc",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "missing extraction",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":null,\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "917a8dcac21bcee374ca22cc392e374dec2f174dd1b9a4e91fe20c05c0036a3a"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "917a8dcac21bcee374ca22cc392e374dec2f174dd1b9a4e91fe20c05c0036a3a",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "missing provenance",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":null,\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "a0d8bc9d384437dc77d4bace1b28b306a104f69cb27ba91383ea89c4c8ad1ad1"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "a0d8bc9d384437dc77d4bace1b28b306a104f69cb27ba91383ea89c4c8ad1ad1",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "wrong source URL",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://example.com/\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "f314f9c1312320a707b3a28a6993f27fe1768d546cfc042959a5497af6355946"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "f314f9c1312320a707b3a28a6993f27fe1768d546cfc042959a5497af6355946",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "empty source evidence",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "5c918276fd5789ecc98041d8a889e8d28bec29c343d08b215e67fdc604feb57e"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "5c918276fd5789ecc98041d8a889e8d28bec29c343d08b215e67fdc604feb57e",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "unchanged evidence",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"same\",\"after\":\"same\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "4f17a2d68403211cc33ee70e4ec7f7e546deae82c85362538398a88438655076"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "4f17a2d68403211cc33ee70e4ec7f7e546deae82c85362538398a88438655076",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "unchanged source evidence",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"same\",\"after\":\"same\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "8743e10ee14284238a57aab7161481e8882b934cee5e937198a13b29e39c0d78"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "8743e10ee14284238a57aab7161481e8882b934cee5e937198a13b29e39c0d78",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "NUL cannot enter JSONB",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"nul\\u0000byte\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "c3572f7a765c632b525f911330a437133ac5fccd49069e13a1c7620e51e36c34"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "c3572f7a765c632b525f911330a437133ac5fccd49069e13a1c7620e51e36c34",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "long version",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "b9baf12776e3acf705fd431319415fbe6eaa1d4099dcd172e2ad3106d0e9cae8"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "b9baf12776e3acf705fd431319415fbe6eaa1d4099dcd172e2ad3106d0e9cae8",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "oversized revision",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":9007199254740992,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "6eac5dcfdf80537a0417b6d890dbca2cd2bcc4380f00fa72707a332aa4181ec0"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "6eac5dcfdf80537a0417b6d890dbca2cd2bcc4380f00fa72707a332aa4181ec0",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "unsupported schema",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":2,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "c5830c14256bb4cd573b0b4a9e8fa6126b4aa456a4ae40679365bcbe3388dffd"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "c5830c14256bb4cd573b0b4a9e8fa6126b4aa456a4ae40679365bcbe3388dffd",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "valid routine",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 2\",\"old_revision_id\":101,\"revision_id\":102,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"routine\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: routine\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"An association was observed.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 2\",\"old_revision_id\":101,\"revision_id\":102,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 2\",\"to_title\":\"Synthetic storage example 2\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=102&oldid=101\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"An association was observed.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"wording\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"An association was observed.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:102:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "analysis": {
+                "schema_version": 1,
+                "event": {
+                  "schema_version": 1,
+                  "wiki": "enwiki",
+                  "title": "Synthetic storage example 2",
+                  "old_revision_id": 101,
+                  "revision_id": 102,
+                  "occurred_at": "2026-10-20T10:00:00Z"
+                },
+                "analysis_version": "demo-v1",
+                "backend": "ollama",
+                "model": "fixture-not-a-real-model",
+                "prompt_version": "fixture-v1",
+                "decision": "routine",
+                "confidence": 0.95,
+                "explanation": "Synthetic demonstration: routine",
+                "evidence": [
+                  {
+                    "before": "An association was found.",
+                    "after": "An association was observed."
+                  }
+                ],
+                "attempts": 2,
+                "latency_ms": 0,
+                "content_truncated": false
+              },
+              "enrichment": {
+                "schema_version": 1,
+                "event": {
+                  "schema_version": 1,
+                  "wiki": "enwiki",
+                  "title": "Synthetic storage example 2",
+                  "old_revision_id": 101,
+                  "revision_id": 102,
+                  "occurred_at": "2026-10-20T10:00:00Z"
+                },
+                "source": "fixture",
+                "status": "ready",
+                "attempts": 0,
+                "provenance": {
+                  "endpoint": "https://en.wikipedia.org/w/api.php",
+                  "page_id": 42,
+                  "from_title": "Synthetic storage example 2",
+                  "to_title": "Synthetic storage example 2",
+                  "source_url": "https://en.wikipedia.org/w/index.php?diff=102&oldid=101"
+                },
+                "evidence": [
+                  {
+                    "before": "An association was found.",
+                    "after": "An association was observed."
+                  }
+                ],
+                "content_truncated": false
+              },
+              "extraction": {
+                "changes": [
+                  {
+                    "hunk": 0,
+                    "kind": "wording",
+                    "summary": "Synthetic edit.",
+                    "before": "An association was found.",
+                    "after": "An association was observed."
+                  }
+                ]
+              },
+              "steps": [
+                {
+                  "stage": "extract",
+                  "outcome": "valid"
+                },
+                {
+                  "stage": "assess",
+                  "outcome": "valid"
+                }
+              ],
+              "outcome": "assessed"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:102:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "ec53324d305e05eea0ff48f59c12d0699f52834ea271ebe89a93b97d1097842c",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "valid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "valid insufficient_evidence",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 3\",\"old_revision_id\":102,\"revision_id\":103,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"insufficient_evidence\",\"confidence\":0.0,\"explanation\":\"Synthetic demonstration: insufficient_evidence\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 3\",\"old_revision_id\":102,\"revision_id\":103,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 3\",\"to_title\":\"Synthetic storage example 3\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=103&oldid=102\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:103:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "metadata_equals": {
+              "kafka_key": "enwiki:103:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "91f96552e7a95ebe77e340edc55e6e81cce9fb6f1f574e58922f5cc7da089f44",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "valid"
+            },
+            "json_contains": {
+              "schema_version": 1,
+              "analysis": {
+                "schema_version": 1,
+                "event": {
+                  "schema_version": 1,
+                  "wiki": "enwiki",
+                  "title": "Synthetic storage example 3",
+                  "old_revision_id": 102,
+                  "revision_id": 103,
+                  "occurred_at": "2026-10-20T10:00:00Z"
+                },
+                "analysis_version": "demo-v1",
+                "backend": "ollama",
+                "model": "fixture-not-a-real-model",
+                "prompt_version": "fixture-v1",
+                "decision": "insufficient_evidence",
+                "explanation": "Synthetic demonstration: insufficient_evidence",
+                "evidence": [
+                  {
+                    "before": "An association was found.",
+                    "after": "A causal relationship was proved."
+                  }
+                ],
+                "attempts": 2,
+                "latency_ms": 0,
+                "content_truncated": false
+              },
+              "enrichment": {
+                "schema_version": 1,
+                "event": {
+                  "schema_version": 1,
+                  "wiki": "enwiki",
+                  "title": "Synthetic storage example 3",
+                  "old_revision_id": 102,
+                  "revision_id": 103,
+                  "occurred_at": "2026-10-20T10:00:00Z"
+                },
+                "source": "fixture",
+                "status": "ready",
+                "attempts": 0,
+                "provenance": {
+                  "endpoint": "https://en.wikipedia.org/w/api.php",
+                  "page_id": 42,
+                  "from_title": "Synthetic storage example 3",
+                  "to_title": "Synthetic storage example 3",
+                  "source_url": "https://en.wikipedia.org/w/index.php?diff=103&oldid=102"
+                },
+                "evidence": [
+                  {
+                    "before": "An association was found.",
+                    "after": "A causal relationship was proved."
+                  }
+                ],
+                "content_truncated": false
+              },
+              "extraction": {
+                "changes": [
+                  {
+                    "hunk": 0,
+                    "kind": "meaning",
+                    "summary": "Synthetic edit.",
+                    "before": "An association was found.",
+                    "after": "A causal relationship was proved."
+                  }
+                ]
+              },
+              "steps": [
+                {
+                  "stage": "extract",
+                  "outcome": "valid"
+                },
+                {
+                  "stage": "assess",
+                  "outcome": "valid"
+                }
+              ],
+              "outcome": "assessed"
+            },
+            "bloblang": "this.analysis.confidence == 0"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "valid unavailable revision abstention",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"insufficient_evidence\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[],\"attempts\":0,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"revision_unavailable\",\"attempts\":0,\"provenance\":null,\"evidence\":[],\"content_truncated\":false},\"extraction\":null,\"steps\":[],\"outcome\":\"incomplete_source\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "analysis": {
+                "schema_version": 1,
+                "event": {
+                  "schema_version": 1,
+                  "wiki": "enwiki",
+                  "title": "Synthetic storage example 1",
+                  "old_revision_id": 100,
+                  "revision_id": 101,
+                  "occurred_at": "2026-10-20T10:00:00Z"
+                },
+                "analysis_version": "demo-v1",
+                "backend": "ollama",
+                "model": "fixture-not-a-real-model",
+                "prompt_version": "fixture-v1",
+                "decision": "insufficient_evidence",
+                "confidence": 0.95,
+                "explanation": "Synthetic demonstration: review",
+                "evidence": [],
+                "attempts": 0,
+                "latency_ms": 0,
+                "content_truncated": false
+              },
+              "enrichment": {
+                "schema_version": 1,
+                "event": {
+                  "schema_version": 1,
+                  "wiki": "enwiki",
+                  "title": "Synthetic storage example 1",
+                  "old_revision_id": 100,
+                  "revision_id": 101,
+                  "occurred_at": "2026-10-20T10:00:00Z"
+                },
+                "source": "fixture",
+                "status": "revision_unavailable",
+                "attempts": 0,
+                "provenance": null,
+                "evidence": [],
+                "content_truncated": false
+              },
+              "extraction": null,
+              "steps": [],
+              "outcome": "incomplete_source"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "39b797794f267bb73c8a4cdca9944b92ba564cf97e884911249abbdf5c929946",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "valid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "routine on truncated evidence",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"routine\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":true},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"evidence_limit\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":true},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "93740e2ad48c656228b548ffce9302f316a4ca957372f6d3220ae84c093cd741"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "93740e2ad48c656228b548ffce9302f316a4ca957372f6d3220ae84c093cd741",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "unexpected evidence for no change",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"no_text_change\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "02343cedd60ce4b1111046a3cb15572d9d4ccdef0d4b653b5291d248f8a0dbdd"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "02343cedd60ce4b1111046a3cb15572d9d4ccdef0d4b653b5291d248f8a0dbdd",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "inconsistent truncation status",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"response_too_large\",\"attempts\":0,\"provenance\":null,\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "e161ba70ece55aa156872e7f18af40f2de9c221b530751d473abb643e5e1fe25"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "e161ba70ece55aa156872e7f18af40f2de9c221b530751d473abb643e5e1fe25",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "total source character budget",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"after\":\"yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\"},{\"before\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"after\":\"yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\"},{\"before\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"after\":\"yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=100\"},\"evidence\":[{\"before\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"after\":\"yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\"},{\"before\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"after\":\"yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\"},{\"before\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"after\":\"yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "1b0b6569aca12c157dce0671e56e694f953f79e9befc95f1a97f6aadddca99b3"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "1b0b6569aca12c157dce0671e56e694f953f79e9befc95f1a97f6aadddca99b3",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "unsafe numeric revision_id",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":9007199254740992,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":100,\"revision_id\":9007199254740992,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=9007199254740992&oldid=100\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:9007199254740992:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "ebf291159205a9b69525535bfaf446a6b9eeb79812625adf20a254b5f7c79aa4"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:9007199254740992:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "ebf291159205a9b69525535bfaf446a6b9eeb79812625adf20a254b5f7c79aa4",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "unsafe numeric old_revision_id",
+      "target_processors": "sink.yaml#/pipeline/processors",
+      "input_batch": [
+        {
+          "content": "{\"schema_version\":1,\"analysis\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":9007199254740992,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"analysis_version\":\"demo-v1\",\"backend\":\"ollama\",\"model\":\"fixture-not-a-real-model\",\"prompt_version\":\"fixture-v1\",\"decision\":\"review\",\"confidence\":0.95,\"explanation\":\"Synthetic demonstration: review\",\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"attempts\":2,\"latency_ms\":0,\"content_truncated\":false},\"enrichment\":{\"schema_version\":1,\"event\":{\"schema_version\":1,\"wiki\":\"enwiki\",\"title\":\"Synthetic storage example 1\",\"old_revision_id\":9007199254740992,\"revision_id\":101,\"occurred_at\":\"2026-10-20T10:00:00Z\"},\"source\":\"fixture\",\"status\":\"ready\",\"attempts\":0,\"provenance\":{\"endpoint\":\"https://en.wikipedia.org/w/api.php\",\"page_id\":42,\"from_title\":\"Synthetic storage example 1\",\"to_title\":\"Synthetic storage example 1\",\"source_url\":\"https://en.wikipedia.org/w/index.php?diff=101&oldid=9007199254740992\"},\"evidence\":[{\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}],\"content_truncated\":false},\"extraction\":{\"changes\":[{\"hunk\":0,\"kind\":\"meaning\",\"summary\":\"Synthetic edit.\",\"before\":\"An association was found.\",\"after\":\"A causal relationship was proved.\"}]},\"steps\":[{\"stage\":\"extract\",\"outcome\":\"valid\"},{\"stage\":\"assess\",\"outcome\":\"valid\"}],\"outcome\":\"assessed\"}",
+          "metadata": {
+            "kafka_key": "enwiki:101:demo-v1",
+            "kafka_topic": "results",
+            "kafka_partition": "0",
+            "kafka_offset": "5"
+          }
+        }
+      ],
+      "output_batches": [
+        [
+          {
+            "json_equals": {
+              "schema_version": 1,
+              "stage": "persistence",
+              "reason": "invalid_result",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "payload_sha256": "2c4451cc6da44caf07a5e389137a40298b4a765920b08492ada98bed15438a38"
+            },
+            "metadata_equals": {
+              "kafka_key": "enwiki:101:demo-v1",
+              "kafka_topic": "results",
+              "kafka_partition": "0",
+              "kafka_offset": "5",
+              "payload_sha256": "2c4451cc6da44caf07a5e389137a40298b4a765920b08492ada98bed15438a38",
+              "source_topic": "results",
+              "source_partition": "0",
+              "source_offset": "5",
+              "sink_outcome": "invalid"
+            }
+          }
+        ]
+      ]
+    }
+  ]
+}

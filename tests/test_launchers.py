@@ -35,7 +35,8 @@ entry = {
     'inherited_overrides': [k for k in os.environ if k in {
         'LLM_BACKEND', 'OPENAI_API_KEY', 'COMPOSE_FILE', 'COMPOSE_PROJECT_NAME',
         'COMPOSE_PROFILES', 'POSTGRES_PASSWORD', 'INGEST_SAMPLE_ALL', 'OLLAMA_MODEL',
-        'KAFKA_BROKERS', 'KAFKA_GROUP_ID', 'WORKER_MAX_ITEMS'}],
+        'KAFKA_BROKERS', 'KAFKA_GROUP_ID', 'WORKER_MAX_ITEMS',
+        'API_PORT', 'SINK_PORT', 'SINK_GROUP_ID', 'PGHOST', 'PGPORT', 'PGPASSWORD'}],
     'docker_host': os.environ.get('DOCKER_HOST'),
 }
 with open(os.environ['DOCKER_TEST_LOG'], 'a') as log:
@@ -62,6 +63,12 @@ if os.environ.get('DOCKER_TEST_FAIL') == stage:
         "KAFKA_BROKERS": "wrong-broker:9092",
         "KAFKA_GROUP_ID": "wrong-group",
         "WORKER_MAX_ITEMS": "0",
+        "API_PORT": "9999",
+        "SINK_PORT": "9998",
+        "SINK_GROUP_ID": "wrong-group",
+        "PGHOST": "wrong-db",
+        "PGPORT": "9997",
+        "PGPASSWORD": "wrong-password",
     }
 
     def run(mode="local", *, failure="", args=()):

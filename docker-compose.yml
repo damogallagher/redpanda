@@ -30,6 +30,18 @@ services:
     depends_on:
       model-init:
         condition: service_completed_successfully
+  db-migrate:
+    extends:
+      file: compose.infrastructure.yml
+      service: db-migrate
+  sink:
+    extends:
+      file: compose.infrastructure.yml
+      service: sink
+  api:
+    extends:
+      file: compose.infrastructure.yml
+      service: api
   ollama:
     image: &ollama-image ollama/ollama:0.40.6@sha256:265409e1d931028a8f7d5a32bcbafddd7bffbc6cc629d77efe9560adf692a5e7
     volumes:

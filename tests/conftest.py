@@ -26,11 +26,13 @@ def compose():
     env = {
         name: value
         for name, value in os.environ.items()
-        if not name.startswith(("LLM_", "INGEST_", "COMPOSE_", "KAFKA_", "WORKER_"))
-        and name not in {"OPENAI_API_KEY", "CONNECT_PORT"}
+        if not name.startswith(("LLM_", "INGEST_", "COMPOSE_", "KAFKA_", "WORKER_", "SINK_", "PG"))
+        and name not in {"OPENAI_API_KEY", "CONNECT_PORT", "API_PORT"}
     }
-    env["POSTGRES_PASSWORD"] = "test-only"
+    env["POSTGRES_PASSWORD"] = "test-only:p@ss/word"
     env["CONNECT_PORT"] = "0"
+    env["API_PORT"] = "0"
+    env["SINK_PORT"] = "0"
 
     def run(*args, input=None, timeout=180, env_overrides=None):
         return subprocess.run(

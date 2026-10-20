@@ -21,12 +21,12 @@ services:
   topics:
     image: *redpanda-image
     entrypoint: ["rpk"]
-    command: ["topic", "create", "edits", "results", "ingest-errors", "processing-errors", "--if-not-exists", "--partitions", "1", "--replicas", "1", "-X", "brokers=redpanda:9092"]
+    command: ["topic", "create", "edits", "results", "ingest-errors", "processing-errors", "sink-errors", "--if-not-exists", "--partitions", "1", "--replicas", "1", "-X", "brokers=redpanda:9092"]
     depends_on:
       redpanda:
         condition: service_healthy
   postgres:
-    image: postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4
+    image: &postgres-image postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4
     environment:
       POSTGRES_DB: triage
       POSTGRES_USER: triage
@@ -35,13 +35,13 @@ services:
       - postgres-data:/var/lib/postgresql/data
       - ./db/001-foundation.sql:/docker-entrypoint-initdb.d/001-foundation.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U triage -d triage"]
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U triage -d triage"]
       interval: 5s
       timeout: 5s
       retries: 24
     mem_limit: 512m
   connect:
-    image: docker.redpanda.com/redpandadata/connect:4.114.0@sha256:481e8df48ed733f080623ae67f0dccc82d29ae509dfb3f957347a9e900e74910
+    image: &connect-image docker.redpanda.com/redpandadata/connect:4.114.0@sha256:481e8df48ed733f080623ae67f0dccc82d29ae509dfb3f957347a9e900e74910
     command: ["run", "--disable-telemetry", "/config/ingest.yaml"]
     environment:
       INGEST_STREAM_URL: ${INGEST_STREAM_URL:-https://stream.wikimedia.org/v2/stream/recentchange}
@@ -60,6 +60,75 @@ services:
     security_opt: [no-new-privileges:true]
     mem_limit: 256m
     stop_grace_period: 25s
+  db-migrate:
+    image: *postgres-image
+    entrypoint: ["psql"]
+    command: ["-h", "postgres", "-U", "triage", "-d", "triage", "-v", "ON_ERROR_STOP=1", "-f", "/migrations/002-results.sql"]
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD:-local-development-only}
+      PGCONNECT_TIMEOUT: "5"
+    volumes:
+      - ./db:/migrations:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    user: "10001"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+  sink:
+    image: *connect-image
+    command: ["run", "--disable-telemetry", "/config/sink.yaml"]
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD:-local-development-only}
+      SINK_GROUP_ID: ${SINK_GROUP_ID:-triage-store-v1}
+    volumes:
+      - ./connect:/config:ro
+      - ./schemas:/schemas:ro
+    ports:
+      - "127.0.0.1:${SINK_PORT:-4196}:4196"
+    depends_on:
+      topics:
+        condition: service_completed_successfully
+      db-migrate:
+        condition: service_completed_successfully
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    stop_grace_period: 25s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+  api:
+    build: .
+    command: ["uvicorn", "triage.api:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000", "--no-access-log", "--limit-concurrency", "32", "--timeout-graceful-shutdown", "10"]
+    environment:
+      PGHOST: postgres
+      PGPASSWORD: ${POSTGRES_PASSWORD:-local-development-only}
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=5).close()"]
+      interval: 5s
+      timeout: 6s
+      retries: 24
+    read_only: true
+    tmpfs: ["/tmp"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    stop_grace_period: 15s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
   fixture-source:
     profiles: ["tools"]
     image: python:3.13.16-slim-bookworm@sha256:a1165e272e578941b84abc79e4ab38a0305cd12803a5c4247979ac7655f4d641

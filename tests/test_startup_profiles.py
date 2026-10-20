@@ -19,8 +19,9 @@ def test_startup_profile_contract(mode):
     env = {
         key: value
         for key, value in os.environ.items()
-        if not key.startswith(("COMPOSE_", "LLM_", "INGEST_", "KAFKA_", "WORKER_"))
-        and key not in {"OPENAI_API_KEY", "OLLAMA_MODEL", "POSTGRES_PASSWORD", "CONNECT_PORT"}
+        if not key.startswith(("COMPOSE_", "LLM_", "INGEST_", "KAFKA_", "WORKER_", "SINK_", "PG"))
+        and key
+        not in {"OPENAI_API_KEY", "OLLAMA_MODEL", "POSTGRES_PASSWORD", "CONNECT_PORT", "API_PORT"}
     }
     config = json.loads(
         subprocess.run(
@@ -44,6 +45,13 @@ def test_startup_profile_contract(mode):
         ).stdout
     )
     services = config["services"]
+    assert set(services["api"]["environment"]) == {"PGHOST", "PGPASSWORD"}
+    for service in ["api", "sink"]:
+        assert services[service]["ports"][0]["host_ip"] == "127.0.0.1"
+        assert (
+            services[service]["depends_on"]["db-migrate"]["condition"]
+            == "service_completed_successfully"
+        )
     assert config["name"] == "redpanda"
     settings = services["model-check"]["environment"]
     assert {"redpanda", "postgres", "connect", "topics"} <= services.keys()

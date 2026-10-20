@@ -1,8 +1,12 @@
 .PHONY: help sync check test-unit test-foundation test-integration test-container test-connect test-startup verify-phase-1 verify-phase-2 verify-phase-3 inspect-enrichment test-enrichment smoke-enrichment smoke-model smoke-ingestion
 .PHONY: verify-phase-4 test-reasoning demo-reasoning evaluate-development
+.PHONY: verify-phase-5 test-serving test-e2e demo-results seed-results
 UV ?= uv
 
 help:
+	@echo "make verify-phase-5  - cumulative persistence and results API checks"
+	@echo "make demo-results    - isolated storage/replay/recovery and fixture end-to-end demo"
+	@echo "make seed-results    - publish three synthetic results to your selected demo stack"
 	@echo "make verify-phase-4  - cumulative reasoning and durable-delivery checks"
 	@echo "make demo-reasoning  - inspect real broker results and failed-publication replay"
 	@echo "make evaluate-development - six cases against the selected real model"
@@ -56,6 +60,8 @@ verify-phase-1: check test-unit test-foundation test-container
 test-connect:
 	docker compose --env-file /dev/null -f compose.infrastructure.yml run --rm --no-deps connect lint /config/ingest.yaml
 	docker compose --env-file /dev/null -f compose.infrastructure.yml run --rm --no-deps connect test /config/ingest_test.yaml
+	docker compose --env-file /dev/null -f compose.infrastructure.yml run --rm --no-deps sink lint /config/sink.yaml
+	docker compose --env-file /dev/null -f compose.infrastructure.yml run --rm --no-deps sink test /config/sink_test.yaml
 
 verify-phase-2: check test-unit test-integration test-container test-connect
 	@echo "PASS: Phase 2 ingestion checks. Live source smoke is a separate check."
@@ -95,3 +101,16 @@ evaluate-development:
 	docker compose build model-check
 	docker compose run --rm --no-deps -v "$(CURDIR)/tests/fixtures:/fixtures:ro" model-check python /fixtures/development/evaluate.py > reports/development.json
 	@echo "PASS: six development cases; prompts, responses and outcomes in reports/development.json"
+
+verify-phase-5: check test-unit test-integration test-container test-connect inspect-enrichment
+	@echo "PASS: Phase 5 persistence and results API checks. Live model evaluation is separate."
+
+test-serving: sync
+	$(UV) run --frozen pytest tests/test_storage.py tests/test_api.py tests/test_serving_integration.py --junitxml=reports/serving.xml
+
+# The scenario includes seeded storage, replay, outage/restart, and SSE → worker → API.
+test-e2e demo-results: sync
+	$(UV) run --frozen pytest tests/test_serving_integration.py -s --junitxml=reports/serving-demo.xml
+
+seed-results:
+	./scripts/seed-results.sh
