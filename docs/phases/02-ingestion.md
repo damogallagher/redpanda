@@ -1,6 +1,6 @@
 # Phase 02: Connect ingestion and routing
 
-Status: implemented; awaiting Damien's PR review and merge.
+Status: implemented; awaiting Damien's review and merge in [PR #6](https://github.com/damogallagher/redpanda/pull/6).
 Branch: `phase/02-ingestion`, from merged PR #5 at `cf2cf4c`.
 Implementation and cleanup tested: `0b9e370`. Later commits add documentation/evidence only.
 
@@ -139,6 +139,8 @@ The [verification record](../evidence/phase-2-verification.json) records the exa
 - The deployment remains single-node development infrastructure. No model reasoning, production authentication/HA, downstream deduplication, or accuracy claim is introduced here.
 
 Upstream references: [HTTP streaming input](https://docs.redpanda.com/connect/components/inputs/http_client/), [regex scanner](https://docs.redpanda.com/connect/components/scanners/re_match/), [native tests](https://docs.redpanda.com/connect/configuration/unit_testing/), [Redpanda output](https://docs.redpanda.com/connect/components/outputs/redpanda/), [Bloblang formatting](https://docs.redpanda.com/connect/guides/bloblang/methods/#format), [Wikimedia EventStreams](https://wikitech.wikimedia.org/wiki/EventStreams).
+
+GitHub Ubuntu 24.04 CI passed on `621802f` in 1 minute 42 seconds: [workflow and test artifacts](https://github.com/damogallagher/redpanda/actions/runs/39450490259). The PR shows current checks after the closing audit-only commit.
 
 ## Handover
 

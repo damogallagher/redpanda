@@ -87,3 +87,7 @@ A real live run exposed scientific notation in large revision keys; two regressi
 The guide documents exact commands, expected fixture records, replay, error routing, metrics, cleanup, and limits: event-first LF/CRLF framing, one-event lookahead, separate frame/scanner bounds, no durable source checkpoint or gap-free guarantee. The original assignment and independent personal README sections are preserved. Next step: Damien reviews/merges this phase; Phase 3 enrichment starts only when requested.
 
 Final cleanup inspection found the optional fixture server was excluded by Compose profiles. Fixed cleanup to enable the tools profile, removed only the four verified test-owned leftovers, and added assertions that test containers/volumes/networks are gone. The cumulative gate passed again after this fix.
+
+Review [PR #6](https://github.com/damogallagher/redpanda/pull/6). The clean user checkout is on `phase/02-ingestion`; ignored `.env` and existing demo data were preserved. All 91 relative documentation links resolve, the original assignment checksum matches, and the final external cleanup inspection found no disposable Phase 2 fixture containers or volumes.
+
+GitHub Ubuntu 24.04 CI passed on `621802f` in 1 minute 42 seconds ([run and artifacts](https://github.com/damogallagher/redpanda/actions/runs/39450490259)). The closing commit records this result and the final visible response only. PR #6 is left open for Damien; no Phase 3 work started.

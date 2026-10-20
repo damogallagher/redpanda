@@ -87,5 +87,10 @@
     "64 KiB supported frame limit; >128 KiB scanner failure occurs before error routing.",
     "No durable source checkpoint, gap-free delivery, exactly-once guarantee, or throughput/load proof.",
     "No enrichment, reasoning worker, result sink or API implemented in this phase."
-  ]
+  ],
+  "ci_run": "https://github.com/damogallagher/redpanda/actions/runs/39450490259",
+  "ci_commit": "621802f1924d7597c6379f2bb4409b853ecd7452",
+  "ci_conclusion": "success",
+  "ci_job_seconds": 102,
+  "pr": "https://github.com/damogallagher/redpanda/pull/6"
 }
