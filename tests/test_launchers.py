@@ -4,7 +4,6 @@ import json
 import os
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -26,8 +25,8 @@ def launcher(tmp_path):
     binary.mkdir()
     docker = binary / "docker"
     docker.write_text(
-        f"#!{sys.executable}\n"
-        + """import json, os, pathlib, sys
+        """#!/usr/bin/env python3
+import json, os, pathlib, sys
 args = sys.argv[1:]
 stage = next(s for s in ('config', 'run', 'down', 'up') if s in args)
 profile = pathlib.Path(args[args.index('--env-file') + 1])
