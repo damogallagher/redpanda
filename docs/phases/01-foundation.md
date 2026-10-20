@@ -1,6 +1,6 @@
 # Phase 01: Foundation and feasibility
 
-Status: implemented; final verification/PR evidence is recorded below before review. Damien reviews and merges.
+Status: implemented and locally verified; awaiting PR review. Damien reviews and merges.
 Branch: `phase/01-foundation`. Base: merged Phase 0/documentation work (`8e0fa6e`).
 
 ## What was built
@@ -114,4 +114,12 @@ See the complete [local](../evidence/phase-1-local-model.json), [hosted](../evid
 
 ## Final verification and PR
 
-Exact tested commit, final counts, CI result, and PR link are appended after verification. The independent README write-up remains Damien's responsibility.
+Locally verified application commit: `4a17a02` using `make verify-phase-1`.
+
+- **85 unit tests passed**, zero failures/skips; 176/176 source lines and 32/32 branches covered; no excluded lines.
+- **3 real infrastructure tests passed**, zero failures/skips, in 14.014 seconds including setup/cleanup.
+- Formatting, lint, strict type checking, both Compose configurations, and packaged-container configuration check passed.
+- Default model bootstrap reran successfully with the same persistent volume; initialization services exited 0. Container user ID was verified as 10001. No Ollama OOM events were recorded.
+- Documentation links, original assignment integrity, and staged secret checks passed.
+
+Machine-readable [local verification record](../evidence/phase-1-verification.json). PR and CI links follow once published. Documentation-only evidence updates do not change the tested application source. The independent README write-up remains Damien's responsibility.

@@ -50,4 +50,4 @@ Real smoke requests succeeded for local Qwen2.5 7B and hosted GPT-6.1 Sol. The s
 
 The API key was read only from the user-supplied untracked `.env` for the authorized hosted smoke, never copied to repository files or printed. Tests do not call paid inference. No subsequent phase was started.
 
-Final counts, tested commit, CI and PR link follow after final verification. Next step: Damien reviews the Phase 1 PR; after merge, request Phase 2 to add Connect ingestion.
+Local verification passed on application commit `4a17a02`: 85 unit tests, 3 real infrastructure tests, 100% line coverage (176/176) and branch coverage (32/32), no excluded lines. Both real model smoke checks passed. Machine-readable results are in `docs/evidence/phase-1-verification.json`. PR and CI links follow once published. Next step: Damien reviews the Phase 1 PR; after merge, request Phase 2 to add Connect ingestion.

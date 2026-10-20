@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-20",
+  "tested_commit": "4a17a02",
+  "command": "make verify-phase-1",
+  "platform": "macOS ARM64, Python 3.13.16, Docker Desktop; 32 GiB physical RAM",
+  "unit": {
+    "passed": 85,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 0.236
+  },
+  "integration": {
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 14.014
+  },
+  "coverage": {
+    "covered_lines": 176,
+    "missing_lines": 0,
+    "excluded_lines": 0,
+    "covered_branches": 32,
+    "missing_branches": 0,
+    "line_percent": 100,
+    "branch_percent": 100
+  },
+  "checks": [
+    "ruff lint",
+    "ruff format",
+    "mypy strict",
+    "both Compose configurations",
+    "idempotent topics and broker round trip",
+    "idempotent SQL and database restart",
+    "hosted configuration without Ollama",
+    "packaged non-root CLI"
+  ],
+  "live_smokes": {
+    "ollama": "phase-1-local-model.json",
+    "openai": "phase-1-hosted-model.json"
+  },
+  "limitations": [
+    "Single synthetic model probe, not an accuracy evaluation",
+    "Native-host inference path documented, not used for live inference in this phase",
+    "No Wikipedia ingestion, reasoning loop, results sink, or API yet",
+    "HTTP timeouts are per operation; total item deadlines belong to the later worker"
+  ]
+}
