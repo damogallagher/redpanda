@@ -37,3 +37,23 @@ The container scans found published vulnerabilities in upstream images, includin
 ## Assistant — progress
 
 The vendor check found fresh Python and PostgreSQL image rebuilds and Ollama 0.40.8. I’ve updated those pins and kept PostgreSQL on 16.15. The full test suite is running now, including data preservation, replay, count limits, database permissions and end-to-end delivery. Redpanda and Connect still point to the same published manifests.
+
+## Assistant — progress
+
+All 453 unit tests pass with 100% line and branch coverage. The Docker tests are still running. I also checked that the stricter quality gate rejects a deliberately unsafe shell call and an unexplained numeric comparison.
+
+The refreshed vendor images still have reported vulnerabilities. The documentation will make clear that passing the code and functional checks does not approve this local deployment for public production use.
+
+## Assistant — progress
+
+PR #15 has been merged, so the hardening work now targets main directly in [PR #16](https://github.com/damogallagher/redpanda/pull/16). The updated Ollama daemon passed its startup and API checks without downloading models or making inference calls. I’m finishing the full test run, Linux CI verification and the audit report.
+
+## Assistant — progress
+
+The complete local gate passed: 453 unit tests, 31 integration checks and 72 Connect cases, with 100% application coverage and no emitted warnings. The focused security command passed all 62 checks.
+
+Linux CI has passed the new lint and dependency-audit steps and is finishing the integration tests. The audit report lists the unresolved vendor findings by image, including four critical package/advisory matches in PostgreSQL’s current image.
+
+## Continuation
+
+The user then requested conflict resolution for PR #13 and PR #14 and normal computer shutdown after final scan evidence and the documentation PR. Those exact prompts and subsequent replies are retained in [the continuation session](2026-10-22-conflict-resolution.md). PR #16 was merged during verification; final evidence is recorded in the documentation follow-up rather than modifying a closed PR.
