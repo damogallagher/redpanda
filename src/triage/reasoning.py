@@ -13,7 +13,7 @@ from triage.config import Settings
 from triage.enrichment import EnrichmentResult
 from triage.llm import ModelError, complete
 from triage.prompts import ANALYSIS_VERSION, ASSESS, EXTRACT, PROMPT_VERSION, REVIEW
-from triage.schema import AnalysisResult, Contract, Evidence
+from triage.schema import MAX_REASONING_HUNKS, AnalysisResult, Contract, Evidence
 
 CONFIDENCE_THRESHOLD = 0.8
 MAX_CALLS = 4
@@ -38,7 +38,7 @@ class Change(Contract):
 
 
 class Extraction(Contract):
-    changes: Annotated[tuple[Change, ...], Field(min_length=1, max_length=8)]
+    changes: Annotated[tuple[Change, ...], Field(min_length=1, max_length=MAX_REASONING_HUNKS)]
 
 
 class Assessment(Contract):
@@ -128,6 +128,17 @@ def reason(
     deadline = start + 240 if deadline is None else deadline
     steps: list[Step] = []
     extraction: Extraction | None = None
+    # Old v1 inputs can contain 20 hunks. Preserve read compatibility, but never
+    # spend model calls on an impossible extraction or classify a partial edit.
+    if len(source.evidence) > MAX_REASONING_HUNKS:
+        source = EnrichmentResult.model_validate(
+            {
+                **source.model_dump(),
+                "evidence": source.evidence[:MAX_REASONING_HUNKS],
+                "status": "evidence_limit",
+                "content_truncated": True,
+            }
+        )
     input_data = {
         "title": source.event.title,
         "hunks": [item.model_dump() for item in source.evidence],

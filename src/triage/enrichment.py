@@ -49,6 +49,7 @@ class EnrichmentResult(Contract):
     status: Status
     attempts: Annotated[int, Field(ge=0, le=2)]
     provenance: Provenance | None = None
+    # Preserve v1 read compatibility; new parsing uses MAX_REASONING_HUNKS in diff.py.
     evidence: Annotated[tuple[Evidence, ...], Field(max_length=20)] = ()
     content_truncated: bool = False
 

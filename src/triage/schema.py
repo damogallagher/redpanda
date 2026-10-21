@@ -7,6 +7,10 @@ from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, model_validato
 Text = Annotated[str, Field(min_length=1, max_length=4096, pattern=r"\S")]
 Revision = Annotated[int, Field(gt=0, strict=True)]
 
+# Processing capacity; v1 wire contracts retain their historical 20-hunk bound.
+# Keep enrichment and model extraction within the same bounded call/token budget.
+MAX_REASONING_HUNKS = 8
+
 
 class Contract(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True, frozen=True, allow_inf_nan=False)

@@ -158,3 +158,9 @@ Damien reported the failed main-branch run `39478225848` and requested current a
 PR #11 is merged as `2b8b62c`. Added a [submission walkthrough](submission-demo.md) for a clean, three-edit Ollama run followed by a separate frontier run, fixed-case evaluations, exact API/detail inspection, report retention, bounded cost, troubleshooting and cleanup. The guide distinguishes expected results from new execution evidence and processing-error delivery from successful persisted analysis. Application/tests/workflows remain unchanged; existing 100% coverage evidence applies to the unchanged code. No profiles, model calls or application data were changed during this documentation session. The user checkout remains on merged main.
 
 Documentation checks: 16 shell blocks pass `sh -n`, embedded Python parses, and 181 relative Markdown links resolve. Read-only inspection verified rpk diagnostic flags against the installed CLI. Live reset/model commands were not executed; no new model results are claimed.
+
+## 21 October 2026 — Evidence-count correctness follow-up
+
+Created `fix/evidence-count-limits` from merged main `447920f`. New parsing and extraction share an eight-hunk capacity; oversized inputs produce explicit insufficient-evidence results without model calls. A defensive reasoning check handles historical inputs, and v1 schemas remain compatible with existing 20-hunk records. No prompt, dependency, migration or provider change is included.
+
+The new regression file failed before the fix (8 failures / 14 passes). After the fix, the 23-case focused command passed, including real broker/worker/Connect/Postgres/API delivery and historical-result compatibility. The [follow-up guide](phases/06-evidence-limits.md) documents behavior and exact test commands; the [session](ai-log/sessions/2026-10-21-evidence-limits.md) retains visible prompts/responses. Full cumulative verification and PR review remain in progress.

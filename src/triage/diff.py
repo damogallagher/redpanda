@@ -2,7 +2,7 @@
 
 from html.parser import HTMLParser
 
-from triage.schema import Evidence
+from triage.schema import MAX_REASONING_HUNKS, Evidence
 
 ROLES = {
     "diff-lineno",
@@ -108,7 +108,12 @@ def extract_evidence(body: str, total_limit: int) -> tuple[tuple[Evidence, ...],
         if old == new:
             raise ValueError("nonempty diff without an extractable change")
         size = len(old) + len(new)
-        if len(old) > 4096 or len(new) > 4096 or total + size > total_limit or len(evidence) >= 20:
+        if (
+            len(old) > 4096
+            or len(new) > 4096
+            or total + size > total_limit
+            or len(evidence) >= MAX_REASONING_HUNKS
+        ):
             truncated = True
         else:
             evidence.append(Evidence(before=old, after=new))

@@ -6,6 +6,7 @@ export UV
 
 help:
 	@echo "make test            - all deterministic checks; no model/key needed"
+	@echo "make test-evidence-limits - count boundaries, legacy records and real storage/API"
 	@echo "make test-local      - real Ollama acceptance; up to 28 calls"
 	@echo "make test-frontier   - real hosted acceptance; up to 28 paid calls"
 	@echo "make demo-success    - successful fixture source → results API"
@@ -97,6 +98,10 @@ smoke-enrichment: sync
 # Real broker, controlled HTTP/model boundaries; no model or API key required.
 test-reasoning: sync
 	$(UV) run --frozen pytest tests/test_reasoning.py tests/test_broker.py tests/test_worker.py tests/test_worker_integration.py --junitxml=reports/reasoning.xml
+
+.PHONY: test-evidence-limits
+test-evidence-limits: sync
+	$(UV) run --frozen pytest tests/test_evidence_limits.py tests/test_evidence_limits_integration.py -s --junitxml=reports/evidence-limits.xml
 
 demo-reasoning: sync
 	$(UV) run --frozen pytest tests/test_worker_integration.py -k '[valid] or result-replay' -s --junitxml=reports/reasoning-demo.xml

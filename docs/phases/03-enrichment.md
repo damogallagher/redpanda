@@ -118,12 +118,14 @@ Omitting `--fixture-response` selects the real API. The event must follow [edit-
 | Request identity | Fixed HTTPS English Wikipedia endpoint; positive, distinct revision IDs; explicit from/to direction; redirects disabled; descriptive User-Agent; `maxlag=5` |
 | Response identity | Both returned revision IDs must match the request, both namespaces must be article namespace `0`, and both page IDs must match. Renames are retained as canonical from/to titles |
 | Response bytes | Maximum 256 KiB, streamed as network chunks arrive, with deadline checks before buffering each chunk. Request identity encoding and reject unrequested compression before decoding. Stop/close on overflow; `response_too_large` marks content truncated |
-| Evidence | Whole hunks, at most 4,096 characters per side, 20 hunks, and 16,000 characters total. Oversized/excess hunks are omitted and `evidence_limit` is explicit, even if some hunks remain |
+| Evidence | Whole hunks, at most 4,096 characters per side, eight hunks, and 16,000 characters total. Oversized/excess hunks are omitted and `evidence_limit` is explicit, even if some hunks remain. No inference runs on this incomplete source |
 | Markup | Decode entities once; preserve wikitext, spaces, citations, and before/after direction. Accept only supported table structure and inline formatting; nesting capped at 16. Unsupported/malformed markup becomes `unsupported_diff` |
 | Missing/deleted | `nosuchrevid`, `baddiff`, and missing-content API errors become `revision_unavailable`; do not pretend to distinguish deletion from permission restrictions |
 | Retry | At most two serial requests for HTTP 429/5xx and API rate-limit/upstream errors. Default wait 5 seconds; honor a valid Retry-After integer/date. If it exceeds 10 seconds or the remaining budget, return the explicit failure without retrying early |
 | Time | Each connect/read/write/pool wait is at most 5 seconds, reduced to the remaining 20-second budget. Check the budget between streamed chunks, after responses, and before requests/retries. This is a cooperative deadline: an in-flight I/O operation can overshoot it by one bounded wait; it is not a hard wall-clock cancellation guarantee |
 | Other failures | Distinct `http_error`, `timeout`, `network_error`, `invalid_response`, `provenance_mismatch`, and `deadline_exceeded` statuses; no raw upstream error text in output |
+
+The [evidence-count follow-up](06-evidence-limits.md) tightened new processing from 20 to eight hunks to match the existing extraction capacity. Historical v1 data remains readable up to 20; the original Phase 3 observations below describe their tested commit.
 
 Only a valid empty diff yields `no_text_change`. A nonempty diff without a reliable extractable change is `unsupported_diff`. `ready` means the supported diff fits the limits; it does not mean the full article or cited sources were fetched. The API's bounded surrounding context is retained; reference URLs and templates are never fetched or executed. Complex/changed upstream diff layouts may abstain and need a separately tested parser extension.
 
