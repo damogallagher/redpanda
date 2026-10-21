@@ -2,6 +2,8 @@
 
 This walkthrough builds on merged Phase 6 and includes the helper-cleanup fix in [PR #13](https://github.com/damogallagher/redpanda/pull/13). Run commands from the repository root, in order, in one terminal. It resets this project's broker/database data between providers, retains downloaded Ollama weights, and processes at most **three live edits per provider**. It does not change application code.
 
+For the current evidence-count correction, see the [follow-up record](phases/06-evidence-limits.md). Its added tests increase the baseline counts below; the current [README](../README.md) gives this branch's expected totals. Oversized edits now abstain before inference, so new model-call counts can differ from the earlier recorded demos.
+
 The commands below are for you to execute. Expected outcomes are based on the implemented contracts; see the [executed demo record](evaluations/submission-demo.md) for actual runs, fixes, and saved evidence. Live Wikipedia edits and model responses vary. The fixed-case evaluations previously passed 9/9 for both configured models.
 
 ## 1. Prepare and stop the existing application

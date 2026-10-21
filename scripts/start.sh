@@ -11,7 +11,7 @@ case "$1" in
     local|frontier) mode=$1 ;;
     *) echo "Unknown mode: choose local or frontier." >&2; exit 2 ;;
 esac
-cd "$(CDPATH= cd "$(dirname "$0")/.." && pwd)"
+cd "$(CDPATH='' cd "$(dirname "$0")/.." && pwd)"
 profile=".env.$mode"
 if [ ! -f "$profile" ]; then
     echo "Missing $profile. Copy $profile.example to $profile and edit its settings." >&2
@@ -25,7 +25,8 @@ unset COMPOSE_FILE COMPOSE_PROJECT_NAME COMPOSE_PROFILES COMPOSE_ENV_FILES \
     LLM_BACKEND LLM_MODEL LLM_BASE_URL LLM_TIMEOUT_SECONDS LLM_MAX_TOKENS OPENAI_API_KEY \
     OLLAMA_MODEL POSTGRES_PASSWORD CONNECT_PORT KAFKA_BROKERS KAFKA_GROUP_ID WORKER_MAX_ITEMS \
     INGEST_STREAM_URL INGEST_RECONNECT INGEST_SOURCE INGEST_SAMPLE_ALL \
-    API_PORT SINK_PORT SINK_GROUP_ID PGHOST PGPORT PGPASSWORD
+    API_PORT SINK_PORT SINK_GROUP_ID PGHOST PGPORT PGPASSWORD \
+    TRIAGE_READER_PASSWORD TRIAGE_WRITER_PASSWORD
 
 if ! mkdir .env.switch.lock 2>/dev/null; then
     echo "Another startup holds .env.switch.lock. Wait for it to finish." >&2

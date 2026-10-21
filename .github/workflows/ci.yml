@@ -21,6 +21,29 @@ jobs:
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
         with:
           version: "0.13.4"
+      - name: Install pinned shell, workflow and Dockerfile linters
+        shell: bash
+        run: |
+          set -euo pipefail
+          audit_tools="$RUNNER_TEMP/audit-tools"
+          mkdir -p "$audit_tools"
+          cd "$audit_tools"
+          curl --fail --silent --show-error --location --max-time 60 -o shellcheck.tar.gz https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.gz
+          curl --fail --silent --show-error --location --max-time 60 -o actionlint.tar.gz https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz
+          curl --fail --silent --show-error --location --max-time 60 -o hadolint https://github.com/hadolint/hadolint/releases/download/v2.15.1/hadolint-linux-x86_64
+          sha256sum --check <<'CHECKSUMS'
+          b7af85e41cc99489dcc21d66c6d5f3685138f06d34651e6d34b42ec6d54fe6f6  shellcheck.tar.gz
+          8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  actionlint.tar.gz
+          c7187db94eeeeca956519a6af171adc31453941a1e777961f6e680f697c8c507  hadolint
+          CHECKSUMS
+          tar -xzf shellcheck.tar.gz --strip-components=1 shellcheck-v0.11.0/shellcheck
+          tar -xzf actionlint.tar.gz actionlint
+          chmod +x hadolint
+          echo "$audit_tools" >> "$GITHUB_PATH"
+      - name: Check shell scripts, workflow and Dockerfile
+        run: make audit-tools
+      - name: Audit locked Python dependencies against current advisories
+        run: make audit-dependencies
       - name: Validate Phase 6 (no live API/feed, credentials, or model downloads)
         run: make verify-phase-6
       - name: Publish test and coverage evidence

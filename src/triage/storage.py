@@ -8,6 +8,7 @@ import psycopg
 from psycopg.rows import dict_row
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, SecretStr
 
+from triage.limits import MAX_TCP_PORT
 from triage.reasoning import ReasonedEdit
 from triage.schema import Contract
 
@@ -19,8 +20,8 @@ class DatabaseSettings(BaseModel):
     host: str = Field(
         default="postgres", min_length=1, max_length=253, pattern=r"^[A-Za-z0-9_.-]+$"
     )
-    port: int = Field(default=5432, ge=1, le=65535)
-    password: SecretStr = Field(default=SecretStr("local-development-only"), repr=False)
+    port: int = Field(default=5432, ge=1, le=MAX_TCP_PORT)
+    password: SecretStr = Field(default=SecretStr("local-reader-only"), repr=False)
 
     @classmethod
     def from_env(cls, env: Mapping[str, str]) -> Self:
@@ -28,7 +29,7 @@ class DatabaseSettings(BaseModel):
             {
                 "host": env.get("PGHOST", "postgres"),
                 "port": env.get("PGPORT", "5432"),
-                "password": env.get("PGPASSWORD", "local-development-only"),
+                "password": env.get("PGPASSWORD", "local-reader-only"),
             }
         )
 
@@ -83,7 +84,7 @@ class Store:
                 host=self.settings.host,
                 port=self.settings.port,
                 dbname="triage",
-                user="triage",
+                user="triage_reader",
                 password=self.settings.password.get_secret_value(),
                 sslmode="disable",
                 connect_timeout=3,

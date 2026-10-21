@@ -23,6 +23,8 @@ Connect discards bots and non-article/non-English edits, projects only necessary
 
 Output acknowledgement precedes input offset commit. A crash between them can repeat inference and publish duplicate results. Connect persists only valid envelopes; a unique `(wiki, revision_id, analysis_version)` key and monotonic source offset preserve one logical SQL row. This assumes a single results partition and stable topic history; do not delete/recreate the topic while retaining its database and assume offsets remain comparable. Reset broker and database together with the documented data-cleanup command when discarding the demo.
 
+New inference is limited to eight complete source hunks, sharing the extraction count limit. Larger edits are recorded as `insufficient_evidence` with `evidence_limit`, `content_truncated: true`, zero attempts and no model calls. Historical v1 records with 20 source hunks remain readable; passing such an input to reasoning applies the same safe limit before inference. [Boundary behavior and regression proof](phases/06-evidence-limits.md).
+
 ## Code map
 
 | Question | Read |

@@ -10,4 +10,10 @@ This repository is public. Never commit access tokens, passwords, private custom
 
 Runtime model prompts are a separate artifact: version the actual prompt templates in source, and retain model input/output plus provenance for curated, sanitized evaluation runs. The Phase 4 worker retains metadata logs only (Docker rotation: 10 MiB × 3 files), not complete routine prompts/responses. Explicit curated evaluation runs save transcripts to ignored reports for review before publication; do not automatically publish every live record to GitHub.
 
-Latest: [Executed submission demo](sessions/2026-10-20-executed-demo.md). Earlier: [walkthrough](sessions/2026-10-20-submission-demo.md), [Actions maintenance](sessions/2026-10-20-actions-maintenance.md), [Phase 6](sessions/2026-10-20-phase-6.md).
+Latest demo: [Executed submission demo](sessions/2026-10-20-executed-demo.md). Earlier: [walkthrough](sessions/2026-10-20-submission-demo.md), [Actions maintenance](sessions/2026-10-20-actions-maintenance.md), [Phase 6](sessions/2026-10-20-phase-6.md).
+
+Latest correctness fix: [Evidence-count boundaries](sessions/2026-10-21-evidence-limits.md).
+
+Latest hardening: [Security and code quality](sessions/2026-10-21-security-quality.md).
+
+Conflict resolution: [PR #13 and PR #14](sessions/2026-10-22-conflict-resolution.md).

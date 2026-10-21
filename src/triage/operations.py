@@ -3,11 +3,18 @@
 import argparse
 import json
 import os
-import subprocess
+
+# Docker operator CLI only; see docs/security-review.md.
+import subprocess  # nosec B404
 import sys
 from pathlib import Path
+from typing import Any
 
 from triage.config import Settings
+from triage.files import write_private_json
+from triage.limits import MAX_EVALUATION_CALLS
+
+DOCKER_TIMEOUT_SECONDS = 2_400  # Includes first-time model download/build.
 
 
 class OperationError(Exception):
@@ -18,7 +25,9 @@ def environment() -> dict[str, str]:
     return {
         key: value
         for key, value in os.environ.items()
-        if not key.startswith(("COMPOSE_", "LLM_", "OLLAMA_", "INGEST_", "KAFKA_", "WORKER_", "PG"))
+        if not key.startswith(
+            ("COMPOSE_", "LLM_", "OLLAMA_", "INGEST_", "KAFKA_", "WORKER_", "PG", "TRIAGE_")
+        )
         and key
         not in {
             "OPENAI_API_KEY",
@@ -34,8 +43,18 @@ def environment() -> dict[str, str]:
 def run(
     args: list[str], *, capture: bool = False, allow_failure: bool = False
 ) -> subprocess.CompletedProcess[str]:
-    result = subprocess.run(
-        args, env=environment(), text=True, capture_output=capture, timeout=2400, check=False
+    if not args or args[0] != "docker":
+        raise OperationError("Only Docker commands are supported.")
+    # Arguments come from fixed operations and the operator-owned Compose profile.
+    # PATH/Docker access is a local operator privilege, never an HTTP/model capability.
+    result = subprocess.run(  # noqa: S603  # nosec B603
+        args,
+        env=environment(),
+        text=True,
+        capture_output=capture,
+        timeout=DOCKER_TIMEOUT_SECONDS,
+        check=False,
+        shell=False,
     )
     if result.returncode and not allow_failure:
         # Captured config/provider output can contain secrets. Never echo it on errors.
@@ -60,57 +79,57 @@ def manage(command: str, delete: bool) -> int:
         run([*compose, "--profile", "tools", "config", "--format", "json"], capture=True).stdout
     )
     if command.startswith("test-"):
-        mode = command.removeprefix("test-")
-        settings = Settings.from_env(config["services"]["model-check"]["environment"])
-        if settings.backend != ("ollama" if mode == "local" else "openai"):
-            raise OperationError(f"Wrong backend in {profile}; no model request was made.")
-        bundled = settings.base_url.rstrip("/") == "http://ollama:11434"
-        if bundled and (
-            "model-init" not in config["services"]
-            or config["services"]["model-init"]["command"][-1] != settings.model
-        ):
-            raise OperationError(
-                "Set OLLAMA_MODEL and LLM_MODEL to the same tag in the local profile."
-            )
-        print(
-            f"Testing {mode}: {settings.model}. At most 28 model calls; "
-            "frontier calls incur charges.",
-            flush=True,
-        )
-        run([*compose, "build", "model-check"])
-        if bundled:
-            run([*compose, "up", "-d", "--wait", "ollama"])
-            run([*compose, "run", "--rm", "model-init"])
-        result = run(
-            [
-                *compose,
-                "run",
-                "--rm",
-                "--no-deps",
-                "-v",
-                f"{Path('tests/fixtures/acceptance').resolve()}:/acceptance:ro",
-                "model-check",
-                "triage-evaluate",
-                "/acceptance/cases.json",
-            ],
-            capture=True,
-            allow_failure=True,
-        )
-        if result.returncode not in {0, 1} or not result.stdout.strip():
-            raise OperationError(
-                "Model check could not run. Check the profile and model availability."
-            )
-        report = json.loads(result.stdout)
-        Path("reports").mkdir(exist_ok=True)
-        path = Path(f"reports/model-{mode}.json")
-        with os.fdopen(os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600), "w") as file:
-            os.fchmod(file.fileno(), 0o600)
-            file.write(json.dumps(report, indent=2) + "\n")
-        print(
-            f"{'PASS' if result.returncode == 0 else 'FAIL'}: "
-            f"{report['passed']}/{report['total']} cases. Details: {path}"
-        )
-        return result.returncode
+        return test_model(command.removeprefix("test-"), profile, compose, config)
+    return cleanup_project(command, delete, compose, config)
+
+
+def test_model(mode: str, profile: str, compose: list[str], config: dict[str, Any]) -> int:
+    settings = Settings.from_env(config["services"]["model-check"]["environment"])
+    if settings.backend != ("ollama" if mode == "local" else "openai"):
+        raise OperationError(f"Wrong backend in {profile}; no model request was made.")
+    bundled = settings.base_url.rstrip("/") == "http://ollama:11434"
+    if bundled and (
+        "model-init" not in config["services"]
+        or config["services"]["model-init"]["command"][-1] != settings.model
+    ):
+        raise OperationError("Set OLLAMA_MODEL and LLM_MODEL to the same tag in the local profile.")
+    print(
+        f"Testing {mode}: {settings.model}. At most {MAX_EVALUATION_CALLS} model calls; "
+        "frontier calls incur charges.",
+        flush=True,
+    )
+    run([*compose, "build", "model-check"])
+    if bundled:
+        run([*compose, "up", "-d", "--wait", "ollama"])
+        run([*compose, "run", "--rm", "model-init"])
+    result = run(
+        [
+            *compose,
+            "run",
+            "--rm",
+            "--no-deps",
+            "-v",
+            f"{Path('tests/fixtures/acceptance').resolve()}:/acceptance:ro",
+            "model-check",
+            "triage-evaluate",
+            "/acceptance/cases.json",
+        ],
+        capture=True,
+        allow_failure=True,
+    )
+    if result.returncode not in {0, 1} or not result.stdout.strip():
+        raise OperationError("Model check could not run. Check the profile and model availability.")
+    report = json.loads(result.stdout)
+    path = Path(f"reports/model-{mode}.json")
+    write_private_json(path, report)
+    print(
+        f"{'PASS' if result.returncode == 0 else 'FAIL'}: "
+        f"{report['passed']}/{report['total']} cases. Details: {path}"
+    )
+    return result.returncode
+
+
+def cleanup_project(command: str, delete: bool, compose: list[str], config: dict[str, Any]) -> int:
     logical = ["ollama-data"] if command == "clean-ollama" else ["redpanda-data", "postgres-data"]
     volumes = []
     if command == "clean-ollama" and "ollama" not in config["services"]:

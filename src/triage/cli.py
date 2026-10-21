@@ -12,6 +12,8 @@ from pydantic import ValidationError
 
 from triage.config import Settings
 from triage.enrichment import MAX_RESPONSE_BYTES, EnrichmentResult, decode_comparison, enrich
+from triage.files import write_private_json
+from triage.limits import MAX_EVENT_BYTES
 from triage.llm import ModelError, complete
 from triage.reasoning import CallRecord, ReasonedEdit, ReasoningFailure, reason
 from triage.schema import AnalysisResult, Contract, EditEvent
@@ -109,8 +111,8 @@ def main(argv: list[str] | None = None) -> int:
 
 def read_enrichment(event_path: Path, fixture_path: Path | None) -> EnrichmentResult:
     with event_path.open("rb") as file:
-        payload = file.read(8193)
-        if len(payload) > 8192:
+        payload = file.read(MAX_EVENT_BYTES + 1)
+        if len(payload) > MAX_EVENT_BYTES:
             raise ValueError("event exceeds input limit")
         event = EditEvent.model_validate_json(payload)
     if fixture_path is not None:
@@ -155,18 +157,14 @@ def inspect_reasoning(
         return 2
     if transcript is not None:
         try:
-            transcript.parent.mkdir(parents=True, exist_ok=True)
-            transcript.write_text(
-                json.dumps(
-                    {
-                        "backend": settings.backend,
-                        "model": settings.model,
-                        "calls": [call.model_dump() for call in calls],
-                        "output": output,
-                    },
-                    indent=2,
-                )
-                + "\n"
+            write_private_json(
+                transcript,
+                {
+                    "backend": settings.backend,
+                    "model": settings.model,
+                    "calls": [call.model_dump() for call in calls],
+                    "output": output,
+                },
             )
         except OSError:
             print("Cannot write the requested reasoning transcript.", file=sys.stderr)

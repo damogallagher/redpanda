@@ -68,6 +68,8 @@ def test_environment_keeps_docker_connection_not_profile_overrides(monkeypatch):
             "POSTGRES_PASSWORD": "secret",
             "OLLAMA_MODEL": "bad",
             "PGPASSWORD": "bad",
+            "TRIAGE_READER_PASSWORD": "secret",
+            "TRIAGE_WRITER_PASSWORD": "secret",
         },
     )
     assert op.environment() == {"DOCKER_HOST": "socket", "PATH": "path"}
@@ -79,7 +81,7 @@ def test_environment_keeps_docker_connection_not_profile_overrides(monkeypatch):
 def test_subprocess_contract(monkeypatch, code, allow, raises):
     def fake(args, **kw):
         assert kw["timeout"] == 2400 and kw["capture_output"] and not kw["check"]
-        assert "shell" not in kw
+        assert kw["shell"] is False
         return subprocess.CompletedProcess(args, code, "secret", "secret")
 
     monkeypatch.setattr(subprocess, "run", fake)
