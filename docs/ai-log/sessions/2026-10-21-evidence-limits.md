@@ -29,3 +29,45 @@ The fix preserves the existing schema and inference budgets. I’m running the f
 ## Assistant — progress
 
 All 438 unit tests passed with 100% line and branch coverage, with no exclusions. The full suite is now working through the broker and database recovery checks. The docs include a single command, `make test-evidence-limits`, to verify the count handling and compatibility behavior.
+
+## Assistant — progress
+
+[PR #15](https://github.com/damogallagher/redpanda/pull/15) is open for review. The local suite has passed the recovery checks and the new compatibility scenario so far; GitHub CI is also running. I’ll record the final results in the PR before handing it over.
+
+## Assistant — progress
+
+The full local acceptance suite passed: 438 unit tests, 30 integration checks and 72 Connect tests, with 100% line and branch coverage. Test resources were cleaned up, and the pre-existing Docker volume list is unchanged.
+
+I’m waiting for GitHub CI to finish so I can include its result in the handover.
+
+## Assistant — progress
+
+The code, regression tests and local verification are complete. GitHub’s acceptance run is the only remaining check before I finish the PR evidence and handover.
+
+## Assistant — progress
+
+The local results are recorded in the follow-up guide. GitHub is still running the acceptance job; I’ll leave the PR unmerged for your review once that result is confirmed.
+
+## Assistant — progress
+
+GitHub CI passed too. I’m checking its downloaded reports against the local results, then saving the final verification record and prompt log to PR #15.
+
+## Assistant — final
+
+Implemented in [PR #15](https://github.com/damogallagher/redpanda/pull/15), ready for your review.
+
+- Enrichment and reasoning now share an **eight-section limit**. Larger edits return explicit insufficient evidence with **zero model calls**; partial edits are never classified.
+- Missing, duplicate or excess model-output sections must be repaired within the existing retry budget, or the system abstains.
+- Historical 20-section records remain readable through Connect, Postgres and the API.
+
+**Verified:** 438 unit tests, 30 integration checks, 72 Connect cases, and **100% line and branch coverage**, without exclusions. [GitHub CI passed](https://github.com/damogallagher/redpanda/actions/runs/39686956340), with no emitted warnings.
+
+Docs, test evidence and the prompt log are included. To verify:
+
+```sh
+gh pr checkout 15
+make test-evidence-limits
+make test
+```
+
+The focused check should report **23 passed**. No real model calls or API key are needed. PR remains unmerged.
