@@ -13,3 +13,5 @@ Runtime model prompts are a separate artifact: version the actual prompt templat
 Latest: [Submission demo walkthrough](sessions/2026-10-20-submission-demo.md). Previous: [Actions maintenance](sessions/2026-10-20-actions-maintenance.md), [Phase 6](sessions/2026-10-20-phase-6.md).
 
 Latest correctness fix: [Evidence-count boundaries](sessions/2026-10-21-evidence-limits.md).
+
+Latest hardening: [Security and code quality](sessions/2026-10-21-security-quality.md).

@@ -15,6 +15,7 @@ from pydantic import Field
 from triage.broker import Broker, DeliveryError, Record, WorkerSettings
 from triage.config import Settings
 from triage.enrichment import enrich
+from triage.limits import MAX_EVENT_BYTES
 from triage.prompts import ANALYSIS_VERSION
 from triage.reasoning import ReasonedEdit, ReasoningFailure, Step, reason
 from triage.schema import Contract, EditEvent
@@ -70,7 +71,7 @@ def process(
         )
 
     try:
-        if record.value is None or len(record.value) > 8192:
+        if record.value is None or len(record.value) > MAX_EVENT_BYTES:
             raise ValueError("missing or oversized event")
         event = EditEvent.model_validate_json(record.value)
         if record.key != event.event_id.encode():

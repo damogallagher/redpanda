@@ -46,6 +46,7 @@ def test_query_uses_bound_parameters_read_only_transaction_and_timeouts(monkeypa
     connection.execute.assert_called_once_with("SELECT %s", ("'; DROP TABLE triage_results; --",))
     config = connect.call_args.kwargs
     assert config["password"] == "test:p@ss/word"
+    assert config["user"] == "triage_reader"
     assert config["connect_timeout"] == 3
     assert config["autocommit"] is True
     assert config["options"] == (
@@ -60,7 +61,7 @@ def test_database_errors_are_sanitized(monkeypatch, stage):
     failing = connect if stage == "connect" else connect.return_value.__enter__.return_value.execute
     failing.side_effect = psycopg.OperationalError("secret database address/password")
     monkeypatch.setattr("triage.storage.psycopg.connect", connect)
-    with pytest.raises(StorageUnavailable, match="^storage unavailable$"):
+    with pytest.raises(StorageUnavailable, match=r"^storage unavailable$"):
         Store(DatabaseSettings()).query("SELECT 1")
 
 
