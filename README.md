@@ -4,6 +4,7 @@ Wikipedia edit triage in Python, using Redpanda and a selectable local or hosted
 
 **Phase 6 adds operational acceptance and handover.** Redpanda Connect ingests Wikipedia edits; a Python worker enriches and reasons over revision evidence; a second Connect pipeline validates and upserts results into Postgres. The API exposes decisions, evidence, versions, and step outcomes with bounded pagination.
 
+- [Presentation study pack: PDF, interactive walkthrough and rehearsal](docs/study-guide/README.md)
 - [Simple run/test/cleanup guide](docs/operations.md)
 - [Security and code-quality audit: fixes, checks and remaining risks](docs/phases/06-security-quality.md)
 - [Evidence-count fix: boundaries, compatibility and tests](docs/phases/06-evidence-limits.md)
