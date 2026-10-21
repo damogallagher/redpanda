@@ -40,6 +40,19 @@ class OpenAIResponse(BaseModel):
     choices: Annotated[list[Choice], Field(min_length=1, max_length=1)]
 
 
+def read_response(response: httpx.Response, deadline: float, clock: Callable[[], float]) -> bytes:
+    if response.headers.get("Content-Encoding", "identity") != "identity":
+        raise ModelError("model returned unexpected compression")
+    data = bytearray()
+    for chunk in response.iter_bytes():
+        if clock() >= deadline:
+            raise ModelError("model deadline exceeded")
+        if len(data) + len(chunk) > MAX_RESPONSE_BYTES:
+            raise ModelError("model response exceeds byte limit")
+        data.extend(chunk)
+    return bytes(data)
+
+
 def complete(
     settings: Settings,
     system: str,
@@ -78,15 +91,7 @@ def complete(
             timeout=httpx.Timeout(timeout, connect=min(5.0, timeout)),
         ) as response:
             response.raise_for_status()
-            if response.headers.get("Content-Encoding", "identity") != "identity":
-                raise ModelError("model returned unexpected compression")
-            data = bytearray()
-            for chunk in response.iter_bytes():
-                if clock() >= deadline:
-                    raise ModelError("model deadline exceeded")
-                if len(data) + len(chunk) > MAX_RESPONSE_BYTES:
-                    raise ModelError("model response exceeds byte limit")
-                data.extend(chunk)
+            data = read_response(response, deadline, clock)
         if clock() >= deadline:
             raise ModelError("model deadline exceeded")
         payload = json.loads(data)

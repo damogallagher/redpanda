@@ -131,3 +131,11 @@ curl --fail http://localhost:4196/metrics
 Lag is unconsumed work, not necessarily data loss. The single sequential worker has no autoscaling or sustainable-throughput guarantee. Model latency dominates; the acceptance report records measured call times, while recovery tests prove backlog drains with controlled fast responses. Do not publish raw Compose configuration, `.env`, container inspection environments, or private logs: these can contain credentials.
 
 If your uv version differs: `make test UV='uvx --from uv==0.13.4 uv'`, or `UV='uvx --from uv==0.13.4 uv' ./scripts/test-local.sh`. Run scripts from any directory; they resolve their own repository root.
+
+## Security and code-quality checks
+
+Run `make test-security` for file/host/operator regressions and real database permission tests, `make audit-code` for strict source/security lint, and `make audit-dependencies` for the full hashed Python dependency advisory check. CI also runs pinned ShellCheck/actionlint/Hadolint through `make audit-tools`. See the [hardening guide](phases/06-security-quality.md) for tool installation, findings and exact scope. `make test` continues to enforce 100% application line and branch coverage.
+
+API and sink now have separate restricted PostgreSQL roles. Both `.env.local` and `.env.frontier` support `TRIAGE_READER_PASSWORD` and `TRIAGE_WRITER_PASSWORD`; existing profiles use local-only defaults when absent. Keep these values consistent across profiles sharing data. The normal launcher reconciles roles/passwords before restarting the services; no data reset is needed. API/sink receive their own password, while only the migration receives the administrator password. Exported shell values cannot override the selected profile. Use distinct random values for shared hosts; default credentials are only for this isolated local demo.
+
+The API accepts loopback Host names (`localhost`/`127.0.0.1`). A custom hostname now returns HTTP 400 before database access. Do not disable this restriction to expose the demo publicly: external deployment needs an authenticated TLS/ACL design and resolution of the upstream image findings in the [security review](security-review.md).

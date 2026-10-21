@@ -26,7 +26,7 @@ services:
       redpanda:
         condition: service_healthy
   postgres:
-    image: &postgres-image postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4
+    image: &postgres-image postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0
     environment:
       POSTGRES_DB: triage
       POSTGRES_USER: triage
@@ -63,10 +63,12 @@ services:
   db-migrate:
     image: *postgres-image
     entrypoint: ["psql"]
-    command: ["-h", "postgres", "-U", "triage", "-d", "triage", "-v", "ON_ERROR_STOP=1", "-f", "/migrations/002-results.sql"]
+    command: ["-h", "postgres", "-U", "triage", "-d", "triage", "-v", "ON_ERROR_STOP=1", "-f", "/migrations/002-results.sql", "-f", "/migrations/003-service-roles.sql"]
     environment:
       PGPASSWORD: ${POSTGRES_PASSWORD:-local-development-only}
       PGCONNECT_TIMEOUT: "5"
+      TRIAGE_READER_PASSWORD: ${TRIAGE_READER_PASSWORD:-local-reader-only}
+      TRIAGE_WRITER_PASSWORD: ${TRIAGE_WRITER_PASSWORD:-local-writer-only}
     volumes:
       - ./db:/migrations:ro
     depends_on:
@@ -80,7 +82,7 @@ services:
     image: *connect-image
     command: ["run", "--disable-telemetry", "/config/sink.yaml"]
     environment:
-      PGPASSWORD: ${POSTGRES_PASSWORD:-local-development-only}
+      PGPASSWORD: ${TRIAGE_WRITER_PASSWORD:-local-writer-only}
       SINK_GROUP_ID: ${SINK_GROUP_ID:-triage-store-v1}
     volumes:
       - ./connect:/config:ro
@@ -107,7 +109,7 @@ services:
     command: ["uvicorn", "triage.api:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000", "--no-access-log", "--limit-concurrency", "32", "--timeout-graceful-shutdown", "10"]
     environment:
       PGHOST: postgres
-      PGPASSWORD: ${POSTGRES_PASSWORD:-local-development-only}
+      PGPASSWORD: ${TRIAGE_READER_PASSWORD:-local-reader-only}
     ports:
       - "127.0.0.1:${API_PORT:-8000}:8000"
     depends_on:
@@ -131,7 +133,7 @@ services:
         max-file: "3"
   fixture-source:
     profiles: ["tools"]
-    image: python:3.13.16-slim-bookworm@sha256:a1165e272e578941b84abc79e4ab38a0305cd12803a5c4247979ac7655f4d641
+    image: python:3.13.16-slim-trixie@sha256:cf50a4f6ac4f026458b08d5222023d700ac806410dff5e9ca8728fa44f2b850f
     command: ["python", "-m", "http.server", "8080", "--directory", "/fixtures"]
     volumes:
       - ./tests/fixtures/ingestion:/fixtures:ro

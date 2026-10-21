@@ -5,6 +5,10 @@ UV ?= uv
 export UV
 
 help:
+	@echo "make audit-code      - Python security, quality, formatting and strict types"
+	@echo "make audit-tools     - ShellCheck, actionlint and Hadolint (install pinned tools)"
+	@echo "make audit-dependencies - current advisories for the full hashed Python lock"
+	@echo "make test-security   - security regressions and real database privilege checks"
 	@echo "make test            - all deterministic checks; no model/key needed"
 	@echo "make test-evidence-limits - count boundaries, legacy records and real storage/API"
 	@echo "make test-local      - real Ollama acceptance; up to 28 calls"
@@ -35,10 +39,7 @@ help:
 sync:
 	$(UV) sync --frozen
 
-check: sync
-	$(UV) run --frozen ruff check src tests
-	$(UV) run --frozen ruff format --check src tests
-	$(UV) run --frozen mypy src
+check: audit-code
 	@for script in scripts/*.sh; do sh -n "$$script" || exit; done
 	docker compose -f docker-compose.yml config --quiet
 	docker compose -f compose.infrastructure.yml config --quiet
@@ -152,3 +153,27 @@ accept-live-local: sync
 demo-test-failure: sync
 	@echo "EXPECTED FAILURE: this deliberately wrong test expects an invented quote to be accepted."
 	$(UV) run --frozen pytest tests/fixtures/acceptance/intentional_failure.py --junitxml=reports/intentional-failure.xml
+
+.PHONY: audit-code audit-tools audit-dependencies test-security
+# These deterministic source checks also run as part of make test.
+audit-code: sync
+	@mkdir -p reports
+	$(UV) run --frozen ruff check src tests
+	$(UV) run --frozen ruff format --check src tests
+	$(UV) run --frozen mypy src
+	$(UV) run --frozen bandit -r src -f json -o reports/bandit.json
+
+# CLI binaries are pinned in CI; local installation instructions are in the audit guide.
+audit-tools:
+	shellcheck scripts/*.sh
+	actionlint
+	hadolint Dockerfile
+
+# Deliberately online: an advisory outage or a known vulnerability fails the command.
+audit-dependencies: sync
+	@mkdir -p reports
+	$(UV) export --frozen --no-emit-project --format requirements-txt --output-file reports/audit-requirements.txt > /dev/null
+	$(UV) run --frozen pip-audit --disable-pip --require-hashes -r reports/audit-requirements.txt --format json --output reports/dependency-audit.json
+
+test-security: sync
+	$(UV) run --frozen pytest tests/test_security.py tests/test_database_security.py tests/test_operations.py tests/test_launchers.py -q --junitxml=reports/security.xml

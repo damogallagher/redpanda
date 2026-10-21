@@ -19,7 +19,9 @@ def test_startup_profile_contract(mode):
     env = {
         key: value
         for key, value in os.environ.items()
-        if not key.startswith(("COMPOSE_", "LLM_", "INGEST_", "KAFKA_", "WORKER_", "SINK_", "PG"))
+        if not key.startswith(
+            ("COMPOSE_", "LLM_", "INGEST_", "KAFKA_", "WORKER_", "SINK_", "PG", "TRIAGE_")
+        )
         and key
         not in {"OPENAI_API_KEY", "OLLAMA_MODEL", "POSTGRES_PASSWORD", "CONNECT_PORT", "API_PORT"}
     }
@@ -52,6 +54,11 @@ def test_startup_profile_contract(mode):
             services[service]["depends_on"]["db-migrate"]["condition"]
             == "service_completed_successfully"
         )
+    assert services["api"]["environment"]["PGPASSWORD"] == "local-reader-only"
+    assert services["sink"]["environment"]["PGPASSWORD"] == "local-writer-only"
+    assert services["db-migrate"]["environment"]["PGPASSWORD"] == "local-development-only"
+    assert services["db-migrate"]["environment"]["TRIAGE_READER_PASSWORD"] == "local-reader-only"
+    assert services["db-migrate"]["environment"]["TRIAGE_WRITER_PASSWORD"] == "local-writer-only"
     assert config["name"] == "redpanda"
     settings = services["model-check"]["environment"]
     assert {"redpanda", "postgres", "connect", "topics"} <= services.keys()

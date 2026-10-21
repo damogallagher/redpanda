@@ -14,6 +14,13 @@ from pydantic import Field, TypeAdapter
 
 from triage.config import Settings
 from triage.enrichment import EnrichmentResult
+from triage.limits import (
+    MAX_EVALUATION_BYTES,
+    MAX_EVALUATION_CASES,
+    MAX_EVALUATION_READY_CASES,
+    MAX_MODEL_CALLS,
+    MIN_ASSESSMENT_CALLS,
+)
 from triage.reasoning import CallRecord, ReasoningFailure, reason
 from triage.schema import Contract
 
@@ -25,7 +32,7 @@ class Case(Contract):
     source: EnrichmentResult
 
 
-CASES = TypeAdapter(Annotated[list[Case], Field(min_length=1, max_length=9)])
+CASES = TypeAdapter(Annotated[list[Case], Field(min_length=1, max_length=MAX_EVALUATION_CASES)])
 
 
 def evaluate(cases: list[Case], settings: Settings, client: httpx.Client) -> dict[str, object]:
@@ -38,7 +45,11 @@ def evaluate(cases: list[Case], settings: Settings, client: httpx.Client) -> dic
         try:
             result = reason(case.source, settings, client, record=calls.append)
             output = result.model_dump(mode="json")
-            count_ok = 2 <= len(calls) <= 4 if case.source.status == "ready" else not calls
+            count_ok = (
+                MIN_ASSESSMENT_CALLS <= len(calls) <= MAX_MODEL_CALLS
+                if result.enrichment.status == "ready"
+                else not calls
+            )
             passed = (
                 result.analysis.decision == case.expected
                 and result.analysis.attempts == len(calls)
@@ -80,8 +91,11 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         with args.cases.open("rb") as file:
-            cases = CASES.validate_json(file.read(262145))
-        if sum(case.source.status == "ready" for case in cases) > 7:
+            payload = file.read(MAX_EVALUATION_BYTES + 1)
+            if len(payload) > MAX_EVALUATION_BYTES:
+                raise ValueError("evaluation exceeds input byte limit")
+            cases = CASES.validate_json(payload)
+        if sum(case.source.status == "ready" for case in cases) > MAX_EVALUATION_READY_CASES:
             raise ValueError("evaluation exceeds the 28-call budget")
         settings = Settings.from_env(os.environ)
     except (OSError, ValueError):

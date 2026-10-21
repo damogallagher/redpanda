@@ -5,6 +5,7 @@ Wikipedia edit triage in Python, using Redpanda and a selectable local or hosted
 **Phase 6 adds operational acceptance and handover.** Redpanda Connect ingests Wikipedia edits; a Python worker enriches and reasons over revision evidence; a second Connect pipeline validates and upserts results into Postgres. The API exposes decisions, evidence, versions, and step outcomes with bounded pagination.
 
 - [Simple run/test/cleanup guide](docs/operations.md)
+- [Security and code-quality audit: fixes, checks and remaining risks](docs/phases/06-security-quality.md)
 - [Evidence-count fix: boundaries, compatibility and tests](docs/phases/06-evidence-limits.md)
 - [Phase 6: acceptance evidence and handover](docs/phases/06-acceptance.md)
 - [Code/data flow and assignment checklist](docs/handover.md)
@@ -57,7 +58,7 @@ Expected final line:
 PASS: Phase 6 deterministic acceptance. Real model/live-source checks are separate.
 ```
 
-Expected on this branch: **438 unit tests, 30 integration/configuration tests, 72 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make test UV='uvx --from uv==0.13.4 uv'`.
+Expected on this branch: **453 unit tests, 31 integration/configuration tests, 72 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make test UV='uvx --from uv==0.13.4 uv'`.
 
 To demonstrate live ingestion without a model or key, run `make smoke-ingestion` (about 40 seconds with cached images). It samples the public stream for 30 seconds in an isolated project, prints validated topic records and counts, and cleans up. See [Phase 2](docs/phases/02-ingestion.md) for exact expected fixture outputs, interactive `rpk` inspection, metrics, cleanup, and reconnect limitations.
 
@@ -153,7 +154,7 @@ docker compose exec redpanda rpk topic list
 docker compose exec postgres psql -U triage -d triage -c 'TABLE schema_migrations;'
 ```
 
-Expected: five topics (`edits`, `results`, `ingest-errors`, `processing-errors`, `sink-errors`), migration versions `1` and `2`, and the `triage_results` table. Existing Phase 1 volumes are migrated automatically; retain their database password.
+Expected: five topics (`edits`, `results`, `ingest-errors`, `processing-errors`, `sink-errors`), migration versions `1` and `2`, and the `triage_results` table. Existing Phase 1 volumes are migrated automatically; retain their administrator database password. Startup also reconciles restricted `triage_reader` and `triage_writer` roles. See the [security follow-up](docs/phases/06-security-quality.md#applying-the-database-permissions) for service passwords and rotation.
 
 ## Run with a hosted frontier model
 

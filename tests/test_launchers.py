@@ -36,7 +36,8 @@ entry = {
         'LLM_BACKEND', 'OPENAI_API_KEY', 'COMPOSE_FILE', 'COMPOSE_PROJECT_NAME',
         'COMPOSE_PROFILES', 'POSTGRES_PASSWORD', 'INGEST_SAMPLE_ALL', 'OLLAMA_MODEL',
         'KAFKA_BROKERS', 'KAFKA_GROUP_ID', 'WORKER_MAX_ITEMS',
-        'API_PORT', 'SINK_PORT', 'SINK_GROUP_ID', 'PGHOST', 'PGPORT', 'PGPASSWORD'}],
+        'API_PORT', 'SINK_PORT', 'SINK_GROUP_ID', 'PGHOST', 'PGPORT', 'PGPASSWORD',
+        'TRIAGE_READER_PASSWORD', 'TRIAGE_WRITER_PASSWORD'}],
     'docker_host': os.environ.get('DOCKER_HOST'),
 }
 with open(os.environ['DOCKER_TEST_LOG'], 'a') as log:
@@ -69,6 +70,8 @@ if os.environ.get('DOCKER_TEST_FAIL') == stage:
         "PGHOST": "wrong-db",
         "PGPORT": "9997",
         "PGPASSWORD": "wrong-password",
+        "TRIAGE_READER_PASSWORD": "wrong-reader",
+        "TRIAGE_WRITER_PASSWORD": "wrong-writer",
     }
 
     def run(mode="local", *, failure="", args=()):

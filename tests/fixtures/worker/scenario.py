@@ -111,13 +111,10 @@ def response(request):
     if case == "timeout":
         raise httpx.ReadTimeout("synthetic model unavailable")
     value = extraction if stage == "extract" else assessment
-    if case == "dirty" and len(calls) == 1 or case == "invalid":
+    if (case == "dirty" and len(calls) == 1) or case == "invalid":
         value = "invalid JSON"
-    elif (
-        case in {"low-confidence", "unresolved"}
-        and stage == "assess"
-        or case == "unresolved"
-        and stage == "review"
+    elif (case in {"low-confidence", "unresolved"} and stage == "assess") or (
+        case == "unresolved" and stage == "review"
     ):
         value = {**assessment, "confidence": 0.4}
     return httpx.Response(
