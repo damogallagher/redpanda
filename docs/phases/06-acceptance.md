@@ -66,3 +66,7 @@ The original assignment still requires Damien's independently written Tradeoffs,
 ## Actions and dependency follow-up
 
 The [CI maintenance record](06-ci-maintenance.md) documents the reported main-branch failure, current action/dependency pins, strict warning policy, and follow-up verification. Earlier phase results above remain tied to their recorded commits.
+
+## Executed submission follow-up
+
+After PR #11 and the walkthrough PR #12 merged, Damien requested an actual Ollama-then-frontier demo, saved evidence and any fixes. [PR #13](https://github.com/damogallagher/redpanda/pull/13) contains the [execution record](../evaluations/submission-demo.md), exact reproduction commands, [verification summary](../evidence/submission-demo-verification.json), and [visible conversation](../ai-log/sessions/2026-10-20-executed-demo.md). Both providers passed nine frozen cases and delivered three live results, including documented abstentions. A reproduced anonymous-volume leak in the two CLI helpers is fixed; the added real-Docker regression increases the cumulative integration count to 30. The original 416 unit tests still cover every application line and branch. Earlier results above remain attached to their original commits. Next step: Damien reviews PR #13 and completes his independent README observations before submission.

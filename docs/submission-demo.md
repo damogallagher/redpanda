@@ -1,10 +1,10 @@
 # Submission demo: Ollama, then a frontier model
 
-This walkthrough uses merged Phase 6 (`2b8b62c`, PR #11). Run commands from the repository root, in order, in one terminal. It resets this project's broker/database data between providers, retains downloaded Ollama weights, and processes at most **three live edits per provider**. It does not change application code.
+This walkthrough builds on merged Phase 6 and includes the helper-cleanup fix in [PR #13](https://github.com/damogallagher/redpanda/pull/13). Run commands from the repository root, in order, in one terminal. It resets this project's broker/database data between providers, retains downloaded Ollama weights, and processes at most **three live edits per provider**. It does not change application code.
 
 For the current evidence-count correction, see the [follow-up record](phases/06-evidence-limits.md). Its added tests increase the baseline counts below; the current [README](../README.md) gives this branch's expected totals. Oversized edits now abstain before inference, so new model-call counts can differ from the earlier recorded demos.
 
-The commands below are for you to execute. Expected outcomes are based on the implemented contracts and recorded acceptance; they are not new live results from the documentation session. Live Wikipedia edits and model responses vary. The fixed-case evaluations previously passed 9/9 for both configured models.
+The commands below are for you to execute. Expected outcomes are based on the implemented contracts; see the [executed demo record](evaluations/submission-demo.md) for actual runs, fixes, and saved evidence. Live Wikipedia edits and model responses vary. The fixed-case evaluations previously passed 9/9 for both configured models.
 
 ## 1. Prepare and stop the existing application
 
@@ -20,7 +20,9 @@ mkdir -p reports
 ./scripts/clean-docker.sh
 ```
 
-Expected: the clean merged checkout is selected; cleanup prints `PASS: project stopped. All data and model weights retained.` Existing `.env` is required and is already present on Damien's machine. For a new clone, create the profiles from the examples and select/copy one to `.env` first, as described in the [operator guide](operations.md). Stop if Git reports local changes that prevent switching; do not discard them.
+To reproduce PR #13 before it is merged, replace `git switch main` and `git pull --ff-only` above with `gh pr checkout 13`. The new helper regression increases the integration count from 29 to 30.
+
+Expected: the clean merged checkout (or the selected review branch) is selected; cleanup prints `PASS: project stopped. All data and model weights retained.` Existing `.env` is required and is already present on Damien's machine. For a new clone, create the profiles from the examples and select/copy one to `.env` first, as described in the [operator guide](operations.md). Stop if Git reports local changes that prevent switching; do not discard them.
 
 Use a fresh terminal without manually exported application/Compose settings; launchers clear conflicting settings themselves, while direct `docker compose` inspection commands use the terminal environment.
 
@@ -32,7 +34,7 @@ make demo-success
 make demo-failures
 ```
 
-Expected: all exit 0. `make test` reports **416 unit tests, 29 integration/configuration checks, 72 native Connect cases, 100% application line and branch coverage**, and no warnings. It ends with `PASS: Phase 6 deterministic acceptance. Real model/live-source checks are separate.` The narrower demonstrations repeat subsets so you can watch them individually; they are already included in `make test`.
+Expected: all exit 0. `make test` reports **416 unit tests, 30 integration/configuration checks, 72 native Connect cases, 100% application line and branch coverage**, and no warnings. It ends with `PASS: Phase 6 deterministic acceptance. Real model/live-source checks are separate.` The narrower demonstrations repeat subsets so you can watch them individually; they are already included in `make test`.
 
 `demo-success` verifies fixture source → real Connect/broker → actual worker → sink/Postgres → API, using controlled Wikipedia/model responses. Two edits become `review` results with two reasoning stages. `demo-failures` passes only when invalid output, outages, replay and recovery behave as asserted. These commands create and remove disposable projects, make no model calls, and do not change your application volumes.
 
@@ -91,7 +93,7 @@ docker compose ps -a
 docker compose logs -f worker
 ```
 
-Expected: the launcher prints `Started local mode using .env.local -> .env.` Its generic final hint mentions ten edits by default; your authoritative check is `worker_started` with `max_items: 3`, `backend: "ollama"`, and the configured model. Wait for three `record_committed` messages and `worker_stopped` with `processed: 3`. Press Ctrl+C if log following remains open after that message; this ends log viewing, not the containers.
+Expected: the launcher prints `Started local mode using .env.local -> .env.` The selected profile controls the batch size; your authoritative check is `worker_started` with `max_items: 3`, `backend: "ollama"`, and the configured model. Wait for three `record_committed` messages and `worker_stopped` with `processed: 3`. Press Ctrl+C if log following remains open after that message; this ends log viewing, not the containers.
 
 `model-init`, `topics`, `db-migrate`, and the completed worker may show `Exited (0)`, which is successful completion. Broker/Postgres/Ollama/API should be running and healthy; Connect and the sink should remain running. Model initialization and current feed availability affect elapsed time. If the worker has not completed after roughly 15 minutes with weights already ready, inspect the troubleshooting section instead of launching another batch.
 
@@ -120,7 +122,7 @@ uvx --from uv==0.13.4 uv run --frozen python -m json.tool "reports/live-$DEMO_MO
 
 Expected readiness: `{"status":"ready"}`. After asynchronous sink delivery, the storage consumer should have zero lag. If the list is initially empty or short, wait a few seconds and repeat the block. Three distinct edits routed to `results` should produce three rows with version `triage-v1`. Every corresponding worker commit should say `output_topic: "results"`. Duplicate source revisions can collapse to one stored row; errors are routed separately and must be investigated.
 
-Decisions may be `routine`, `review`, or `insufficient_evidence`. An abstention with retained evidence/reasoning metadata demonstrates safe delivery, **not successful semantic assessment**. The last recorded public sample abstained on all three edits, so do not promise a particular live classification or use it as an accuracy benchmark.
+Decisions may be `routine`, `review`, or `insufficient_evidence`. An abstention with retained evidence/reasoning metadata demonstrates safe delivery, **not successful semantic assessment**. In the [executed demo](evaluations/submission-demo.md), Ollama assessed one edit and abstained on two invalid outputs; frontier assessed two edits and abstained on incomplete source evidence. Do not promise a particular live classification or use these different live samples as an accuracy benchmark.
 
 If the list contains at least one item, fetch the newest row's full detail automatically:
 

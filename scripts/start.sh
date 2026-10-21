@@ -56,7 +56,7 @@ mv -f "$temporary" .env
 temporary=
 docker compose --env-file .env up --build -d --remove-orphans
 printf 'Started %s mode using %s -> .env.\n' "$mode" "$profile"
-echo 'Worker processes ten edits by default; model calls begin when evidence is ready.'
+echo 'The selected profile controls the batch size; model calls begin when evidence is ready.'
 echo 'Inspect services: docker compose ps -a'
 if [ "$mode" = local ]; then
     echo 'Wait for model initialization: docker compose logs -f model-init'

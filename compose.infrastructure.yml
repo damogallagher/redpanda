@@ -20,6 +20,8 @@ services:
     mem_limit: 2g
   topics:
     image: *redpanda-image
+    # The CLI helper needs no broker data; mask the image's anonymous VOLUME.
+    tmpfs: ["/var/lib/redpanda/data:size=1m"]
     entrypoint: ["rpk"]
     command: ["topic", "create", "edits", "results", "ingest-errors", "processing-errors", "sink-errors", "--if-not-exists", "--partitions", "1", "--replicas", "1", "-X", "brokers=redpanda:9092"]
     depends_on:
@@ -62,6 +64,8 @@ services:
     stop_grace_period: 25s
   db-migrate:
     image: *postgres-image
+    # psql connects to the real database; this helper never owns a data directory.
+    tmpfs: ["/var/lib/postgresql/data:size=1m"]
     entrypoint: ["psql"]
     command: ["-h", "postgres", "-U", "triage", "-d", "triage", "-v", "ON_ERROR_STOP=1", "-f", "/migrations/002-results.sql", "-f", "/migrations/003-service-roles.sql"]
     environment:

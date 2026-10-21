@@ -1,6 +1,8 @@
 """Real infrastructure behavior checks."""
 
 import json
+import subprocess
+from time import monotonic, sleep
 
 import pytest
 
@@ -95,3 +97,30 @@ def test_database_schema_initialization_is_idempotent_and_persistent(compose):
         "SELECT count(*) FROM schema_migrations WHERE version = 1",
     )
     assert count.strip() == "1"
+
+
+def test_one_shot_helpers_complete_without_persistent_volumes(compose):
+    compose("up", "-d", "topics", "db-migrate")
+    containers = {
+        service: compose("ps", "-aq", service).strip() for service in ["topics", "db-migrate"]
+    }
+    deadline = monotonic() + 30
+    for service, container in containers.items():
+        while True:
+            state = json.loads(
+                subprocess.run(
+                    ["docker", "inspect", container],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    timeout=10,
+                ).stdout
+            )[0]
+            if state["State"]["Status"] == "exited":
+                break
+            assert monotonic() < deadline, f"{service} did not finish"
+            sleep(0.2)
+        assert state["State"]["ExitCode"] == 0
+        assert not any(mount["Type"] == "volume" for mount in state["Mounts"]), (
+            f"{service} creates unused persistent storage that ordinary shutdown leaves behind"
+        )
