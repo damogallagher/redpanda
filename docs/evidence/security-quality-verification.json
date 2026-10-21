@@ -261,5 +261,34 @@
       "conclusion": "success",
       "pr_state": "merged"
     }
+  },
+  "handover_ci": {
+    "status": "success",
+    "run_id": 39692092595,
+    "tested_commit": "8c1c9140113ef2200c839903665ce0b0e373184a",
+    "url": "https://github.com/damogallagher/redpanda/actions/runs/39692092595",
+    "unit_tests": 453,
+    "integration_tests": 32,
+    "native_connect_cases": 72,
+    "coverage": {
+      "covered_lines": 1172,
+      "num_statements": 1172,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100.00",
+      "missing_lines": 0,
+      "excluded_lines": 0,
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100.00",
+      "num_branches": 286,
+      "num_partial_branches": 0,
+      "covered_branches": 286,
+      "missing_branches": 0,
+      "percent_branches_covered": 100.0,
+      "percent_branches_covered_display": "100.00"
+    },
+    "emitted_warnings": 0,
+    "check_annotations": 0,
+    "optional_uv_cache_disabled": true,
+    "review_pr": "https://github.com/damogallagher/redpanda/pull/17"
   }
 }

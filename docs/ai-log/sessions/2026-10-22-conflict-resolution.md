@@ -55,3 +55,39 @@ The final tests are green, but the artifact review caught one CI warning: concur
 Both conflict-resolution runs and combined-main CI passed. The final main run has 453 unit / 32 integration / 72 Connect cases at 100% coverage; its single cache-reservation warning is retained in the evidence and addressed by disabling the optional cache in this handover. No application code changes are needed. The original assignment checksum, reserved README paragraphs and all four study-pack asset hashes remain unchanged. No disposable test container remains running.
 
 The user explicitly authorized normal computer shutdown after final evidence and the documentation follow-up PR. System Events access was verified. A short delayed normal shutdown will be requested only after the handover is committed, pushed, opened as a PR and its final check completes. Unsaved-work prompts must not be force-dismissed; a powered-off session cannot independently observe final shutdown completion.
+
+## Assistant — progress
+
+The final evidence and cache-warning fix are in [PR #17](https://github.com/damogallagher/redpanda/pull/17). Everything is pushed and saved. I’m waiting for its CI run to confirm the cache warning is gone; then I’ll request normal shutdown.
+
+## Assistant — progress
+
+PR #17’s lint and dependency-audit steps passed. The full integration suite is running now. There is no local work left; shutdown is waiting on this final check.
+
+## Assistant — progress
+
+The only remaining step is GitHub’s full acceptance suite, which includes service restarts and recovery tests. The PR is mergeable and the evidence is saved. I’ll let that check finish before shutting down.
+
+## Assistant — progress
+
+CI is still running the acceptance suite, with no failure reported. The computer will stay on until that run finishes so I can verify the cache-warning fix before shutdown.
+
+## Assistant — progress
+
+The hosted check is taking longer than the local run. No failure has been reported; shutdown remains pending on its result.
+
+## Assistant — progress
+
+Final CI passed with 453 unit tests, 32 integration checks, 72 Connect cases, 100% coverage and zero warnings or annotations. I’m saving that confirmation and the closing prompt log, then scheduling normal shutdown.
+
+## Final verification
+
+PR #17 CI `39692092595` passed on `8c1c914`. Downloaded artifacts verify 453 unit / 32 integration tests, 100% line/branch coverage and zero emitted warnings/check annotations. This confirms the cache-save warning fix. The final evidence/log commit changes documentation only; application, tests and workflow are identical to the verified commit.
+
+## Assistant — final handover
+
+Done. [PR #17](https://github.com/damogallagher/redpanda/pull/17) contains the final evidence and documentation. Verification passed: **100% coverage, no CI warnings**. PRs #13 and #14 are resolved and merged.
+
+Remaining image vulnerabilities are documented.
+
+Normal shutdown is scheduled; unsaved-work prompts may pause it.
