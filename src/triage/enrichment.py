@@ -2,6 +2,7 @@
 
 from collections.abc import Callable
 from email.utils import parsedate_to_datetime
+from http import HTTPStatus
 from time import monotonic, sleep, time
 from typing import Annotated, Literal, Self
 
@@ -9,6 +10,7 @@ import httpx
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
 from triage.diff import extract_evidence
+from triage.limits import MAX_WIRE_HUNKS
 from triage.schema import Contract, EditEvent, Evidence, Revision, Text
 
 ENDPOINT = "https://en.wikipedia.org/w/api.php"
@@ -16,6 +18,9 @@ USER_AGENT = "WikipediaEditTriage/0.1 (https://github.com/damogallagher/redpanda
 MAX_RESPONSE_BYTES = 262_144
 MAX_EVIDENCE_CHARS = 16_000
 DEADLINE_SECONDS = 20.0
+MAX_REQUEST_ATTEMPTS = 2
+MAX_RETRY_SECONDS = 10
+REQUEST_TIMEOUT_SECONDS = 5.0
 Status = Literal[
     "ready",
     "no_text_change",
@@ -47,9 +52,10 @@ class EnrichmentResult(Contract):
     event: EditEvent
     source: Literal["wikipedia", "fixture"]
     status: Status
-    attempts: Annotated[int, Field(ge=0, le=2)]
+    attempts: Annotated[int, Field(ge=0, le=MAX_REQUEST_ATTEMPTS)]
     provenance: Provenance | None = None
-    evidence: Annotated[tuple[Evidence, ...], Field(max_length=20)] = ()
+    # Preserve v1 read compatibility; new parsing uses MAX_REASONING_HUNKS in diff.py.
+    evidence: Annotated[tuple[Evidence, ...], Field(max_length=MAX_WIRE_HUNKS)] = ()
     content_truncated: bool = False
 
     @model_validator(mode="after")
@@ -96,6 +102,14 @@ class APIResponse(BaseModel):
     error: APIError | None = None
 
 
+def api_error_status(code: str) -> Status:
+    if code in {"baddiff", "nosuchrevid", "missingcontent-revid", "missingcontent-revid-role"}:
+        return "revision_unavailable"
+    if code in {"maxlag", "ratelimited"}:
+        return "rate_limited"
+    return "upstream_unavailable"
+
+
 def decode_comparison(
     event: EditEvent,
     payload: bytes,
@@ -126,12 +140,7 @@ def decode_comparison(
     if response.error is not None:
         if response.compare is not None:
             return outcome("invalid_response")
-        code = response.error.code
-        if code in {"baddiff", "nosuchrevid", "missingcontent-revid", "missingcontent-revid-role"}:
-            return outcome("revision_unavailable")
-        if code in {"maxlag", "ratelimited"}:
-            return outcome("rate_limited")
-        return outcome("upstream_unavailable")
+        return outcome(api_error_status(response.error.code))
     data = response.compare
     if data is None:
         return outcome("invalid_response")
@@ -168,6 +177,40 @@ def retry_delay(header: str | None, wall_time: Callable[[], float]) -> float:
         except (ValueError, TypeError, OverflowError):
             seconds = 5.0
     return max(5.0, seconds)
+
+
+def read_comparison(
+    event: EditEvent,
+    response: httpx.Response,
+    attempts: int,
+    deadline: float,
+    clock: Callable[[], float],
+) -> EnrichmentResult:
+    def failure(status: Status) -> EnrichmentResult:
+        return EnrichmentResult(
+            event=event,
+            source="wikipedia",
+            status=status,
+            attempts=attempts,
+            content_truncated=status == "response_too_large",
+        )
+
+    if response.status_code == HTTPStatus.TOO_MANY_REQUESTS:
+        return failure("rate_limited")
+    if response.status_code >= HTTPStatus.INTERNAL_SERVER_ERROR:
+        return failure("upstream_unavailable")
+    if response.status_code != HTTPStatus.OK:
+        return failure("http_error")
+    if response.headers.get("Content-Encoding", "identity") != "identity":
+        return failure("invalid_response")
+    payload = bytearray()
+    for chunk in response.iter_bytes():
+        if clock() >= deadline:
+            return failure("deadline_exceeded")
+        if len(payload) + len(chunk) > MAX_RESPONSE_BYTES:
+            return failure("response_too_large")
+        payload.extend(chunk)
+    return decode_comparison(event, bytes(payload), source="wikipedia", attempts=attempts)
 
 
 def enrich(
@@ -212,7 +255,7 @@ def enrich(
                 ENDPOINT,
                 params=params,
                 follow_redirects=False,
-                timeout=httpx.Timeout(min(5.0, remaining)),
+                timeout=httpx.Timeout(min(REQUEST_TIMEOUT_SECONDS, remaining)),
                 headers={
                     "User-Agent": USER_AGENT,
                     "Accept": "application/json",
@@ -220,28 +263,7 @@ def enrich(
                 },
             ) as response:
                 delay = retry_delay(response.headers.get("Retry-After"), wall_time)
-                if response.status_code == 429:
-                    result = failure("rate_limited")
-                elif response.status_code >= 500:
-                    result = failure("upstream_unavailable")
-                elif response.status_code != 200:
-                    return failure("http_error")
-                elif response.headers.get("Content-Encoding", "identity") != "identity":
-                    return failure("invalid_response")
-                else:
-                    payload = bytearray()
-                    for chunk in response.iter_bytes():
-                        if clock() >= deadline:
-                            return failure("deadline_exceeded")
-                        if len(payload) + len(chunk) > MAX_RESPONSE_BYTES:
-                            return failure("response_too_large")
-                        payload.extend(chunk)
-                    result = decode_comparison(
-                        event,
-                        bytes(payload),
-                        source="wikipedia",
-                        attempts=attempts,
-                    )
+                result = read_comparison(event, response, attempts, deadline, clock)
         except httpx.TimeoutException:
             return failure("timeout")
         except httpx.HTTPError:
@@ -250,6 +272,10 @@ def enrich(
             return failure("deadline_exceeded")
         if result.status not in {"rate_limited", "upstream_unavailable"}:
             return result
-        if attempts == 2 or delay > 10 or clock() + delay >= deadline:
+        if (
+            attempts == MAX_REQUEST_ATTEMPTS
+            or delay > MAX_RETRY_SECONDS
+            or clock() + delay >= deadline
+        ):
             return result
         wait(delay)

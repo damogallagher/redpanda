@@ -16,12 +16,12 @@ def api():
     store.ready.return_value = True
     store.list.return_value = ResultPage(items=(), next_before_id=None)
     store.get.return_value = Store.stored(row())
-    with TestClient(create_app(store)) as client:
+    with TestClient(create_app(store), base_url="http://localhost") as client:
         yield client, store
 
 
 def test_default_factory_only_connects_when_database_is_requested():
-    with TestClient(create_app()) as client:
+    with TestClient(create_app(), base_url="http://localhost") as client:
         assert client.get("/health/live").json() == {"status": "alive"}
         assert client.get("/openapi.json").status_code == 200
 

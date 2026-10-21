@@ -159,6 +159,16 @@ PR #11 is merged as `2b8b62c`. Added a [submission walkthrough](submission-demo.
 
 Documentation checks: 16 shell blocks pass `sh -n`, embedded Python parses, and 181 relative Markdown links resolve. Read-only inspection verified rpk diagnostic flags against the installed CLI. Live reset/model commands were not executed; no new model results are claimed.
 
+## 21 October 2026 — Evidence-count correctness follow-up
+
+Created `fix/evidence-count-limits` from merged main `447920f`. New parsing and extraction share an eight-hunk capacity; oversized inputs produce explicit insufficient-evidence results without model calls. A defensive reasoning check handles historical inputs, and v1 schemas remain compatible with existing 20-hunk records. No prompt, dependency, migration or provider change is included.
+
+The new regression file failed before the fix (8 failures / 14 passes). After the fix, the 23-case focused command passed, including real broker/worker/Connect/Postgres/API delivery and historical-result compatibility. The [follow-up guide](phases/06-evidence-limits.md) documents behavior and exact test commands; the [session](ai-log/sessions/2026-10-21-evidence-limits.md) retains visible prompts/responses. Full cumulative verification and PR review remain in progress.
+
+Local verification completed on `97de5ba`: 438 unit / 30 integration / 72 Connect cases, 1,085 lines and 278 branches covered at 100%, no exclusions or warnings. The fixture-to-API check preserved all five expected rows and the historical 20-hunk payload. Test resources were removed with the original volume-name set unchanged. [PR #15](https://github.com/damogallagher/redpanda/pull/15) is open; GitHub CI is running and no merge is performed.
+
+[Linux CI](https://github.com/damogallagher/redpanda/actions/runs/39686956340) passed on `d0a0477`. Downloaded artifacts confirm the same 438 unit / 30 integration counts and 100% coverage with no exclusions; the complete job log and check annotations contain zero emitted warnings. Application/tests match the local `97de5ba` implementation. The closing commit records evidence and conversation only; PR #15 stays open for Damien.
+
 ## 20 October 2026 — Presentation study pack
 
 Created a documentation-only study pack from frozen snapshot `859b166` (including the executed-demo PR #13, which was open at preparation). The documentation branch starts from merged main `447920f` and does not duplicate or modify PR #13's application changes. The [study pack](study-guide/README.md) contains a 36-page PDF, editable narrative and standalone interactive HTML with seven phase views, six event traces, saved synthetic model transcripts, rehearsal questions and 14 presentation slides. Source links are pinned and recorded observations are distinguished from teaching examples and future proposals.
@@ -166,3 +176,7 @@ Created a documentation-only study pack from frozen snapshot `859b166` (includin
 [Artifact verification](evidence/study-guide-verification.json) records PDF render/layout checks, all interactive paths at four viewport widths, no JavaScript errors or unexpected network calls, and exact transcript correspondence. Existing application coverage evidence remains tied to its tested commits; no application code, dependency, profile or runtime was changed and no new model calls were made. The original assignment and independent personal README sections remain unchanged.
 
 Study-pack review: [PR #14](https://github.com/damogallagher/redpanda/pull/14). All 34 PDF contents destinations, artifact/ZIP hashes and 185 local documentation links verified. The full-screen presentation keeps navigation visible. No application files changed; the user retains merge control.
+
+## 21 October 2026 — Security and code-quality hardening
+
+Started `hardening/security-quality-audit` on pending PR #15 to retain the count fix. Added shared named limits and smaller reasoning/HTTP/parsing functions, private atomic report writes, accurate oversized-input evaluation, loopback Host validation, separate restricted database service roles, and repeatable source/dependency/shell/workflow/container-file gates. Refreshed compatible vendor image pins after scanning. The [audit guide](phases/06-security-quality.md) records commands, deployment behavior and remaining security boundaries; the [session](ai-log/sessions/2026-10-21-security-quality.md) preserves visible conversation. Full verification and upstream-image triage are in progress; no claim of vulnerability-free deployment or merge is made.

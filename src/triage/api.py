@@ -7,6 +7,7 @@ from fastapi import FastAPI, Path, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import RequestResponseEndpoint
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.responses import Response
 
 from triage.storage import (
@@ -23,11 +24,18 @@ def create_app(store: Store | None = None) -> FastAPI:
     repository = Store(DatabaseSettings.from_env(os.environ)) if store is None else store
     app = FastAPI(title="Wikipedia edit triage results", version="1.0", redoc_url=None)
 
+    # This is a loopback-only API. Reject hostile DNS Host names before storage access.
+    app.add_middleware(
+        TrustedHostMiddleware, allowed_hosts=["localhost", "127.0.0.1"], www_redirect=False
+    )
+
     @app.middleware("http")
     async def response_headers(request: Request, call_next: RequestResponseEndpoint) -> Response:
         response = await call_next(request)
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Cache-Control"] = "no-store"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Referrer-Policy"] = "no-referrer"
         return response
 
     @app.exception_handler(RequestValidationError)

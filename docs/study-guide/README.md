@@ -27,3 +27,7 @@ This is AI-assisted study material, not the assignment's independently authored 
 ## Artifact checks
 
 All 36 PDF pages were rendered and visually reviewed; contents targets and text bounds were verified. The HTML's seven phases, six trace scenarios, 18 provider/case views, ten rehearsal items and 14 slides were checked in a real browser. Desktop/tablet/mobile widths (1440, 768, 390 and 320 pixels) had no page overflow, JavaScript errors or unexpected network requests. Embedded model transcripts match the saved source JSON exactly. Full-screen presentation was also verified.
+
+## Changes after the frozen snapshot
+
+This pack still describes tested snapshot `859b166`; its PDF/HTML/Markdown assets and recorded model runs are unchanged. Current main additionally contains the [evidence-count fix](../phases/06-evidence-limits.md) and [security hardening](../phases/06-security-quality.md). Use those guides and the current repository README for present limits, service-role permissions and test counts. Historical observations in the pack are not new measurements of the hardened code.

@@ -266,7 +266,7 @@ def test_unrecognized_or_malformed_diff_never_claims_no_change(body):
         (HEADER + row("x" * 4096, "y"), 1, "ready"),
         (HEADER + row("x" * 4097, "y"), 0, "evidence_limit"),
         (HEADER + row("x", "y" * 4097), 0, "evidence_limit"),
-        ((HEADER + row("x", "y")) * 21, 20, "evidence_limit"),
+        ((HEADER + row("x", "y")) * 21, 8, "evidence_limit"),
         ((HEADER + row("x" * 4000, "y" * 4000)) * 3, 2, "evidence_limit"),
         (HEADER + row("x", "y") + HEADER + row("x" * 4097, "y"), 1, "evidence_limit"),
     ],

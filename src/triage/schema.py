@@ -4,7 +4,10 @@ from typing import Annotated, Literal, Self
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, model_validator
 
-Text = Annotated[str, Field(min_length=1, max_length=4096, pattern=r"\S")]
+from triage.limits import MAX_MODEL_CALLS, MAX_TEXT_CHARS, MAX_WIRE_HUNKS
+from triage.limits import MAX_REASONING_HUNKS as MAX_REASONING_HUNKS
+
+Text = Annotated[str, Field(min_length=1, max_length=MAX_TEXT_CHARS, pattern=r"\S")]
 Revision = Annotated[int, Field(gt=0, strict=True)]
 
 
@@ -39,8 +42,8 @@ class EditEvent(Contract):
 
 
 class Evidence(Contract):
-    before: Annotated[str, Field(max_length=4096)]
-    after: Annotated[str, Field(max_length=4096)]
+    before: Annotated[str, Field(max_length=MAX_TEXT_CHARS)]
+    after: Annotated[str, Field(max_length=MAX_TEXT_CHARS)]
 
     @model_validator(mode="after")
     def changed_text(self) -> Self:
@@ -59,8 +62,8 @@ class AnalysisResult(Contract):
     decision: Literal["routine", "review", "insufficient_evidence"]
     confidence: Annotated[float, Field(ge=0, le=1)]
     explanation: Text
-    evidence: Annotated[tuple[Evidence, ...], Field(max_length=20)]
-    attempts: Annotated[int, Field(ge=0, le=4)]
+    evidence: Annotated[tuple[Evidence, ...], Field(max_length=MAX_WIRE_HUNKS)]
+    attempts: Annotated[int, Field(ge=0, le=MAX_MODEL_CALLS)]
     latency_ms: Annotated[int, Field(ge=0)]
     content_truncated: bool
 

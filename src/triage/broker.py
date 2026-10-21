@@ -6,6 +6,8 @@ from typing import Any, Self
 from confluent_kafka import Consumer, KafkaException, Producer, TopicPartition
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from triage.limits import ITEM_DEADLINE_SECONDS, MAX_TCP_PORT
+
 
 class WorkerSettings(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, hide_input_in_errors=True)
@@ -27,19 +29,23 @@ class WorkerSettings(BaseModel):
     errors_topic: str = Field(
         default="processing-errors", min_length=1, max_length=249, pattern=r"^[A-Za-z0-9_.-]+$"
     )
-    item_timeout_seconds: float = Field(default=240, gt=0, le=240, allow_inf_nan=False)
+    item_timeout_seconds: float = Field(
+        default=ITEM_DEADLINE_SECONDS, gt=0, le=ITEM_DEADLINE_SECONDS, allow_inf_nan=False
+    )
     delivery_timeout_seconds: float = Field(default=10, ge=1, le=10, allow_inf_nan=False)
     max_items: int = Field(default=10, ge=0, le=10000)
 
     @model_validator(mode="after")
     def distinct_topics(self) -> Self:
         if any(
-            not 1 <= int(address.rsplit(":", 1)[1]) <= 65535 for address in self.brokers.split(",")
+            not 1 <= int(address.rsplit(":", 1)[1]) <= MAX_TCP_PORT
+            for address in self.brokers.split(",")
         ):
             raise ValueError("broker ports must be between 1 and 65535")
         if {self.input_topic, self.results_topic, self.errors_topic} & {".", ".."}:
             raise ValueError("invalid topic name")
-        if len({self.input_topic, self.results_topic, self.errors_topic}) != 3:
+        topics = (self.input_topic, self.results_topic, self.errors_topic)
+        if len(set(topics)) != len(topics):
             raise ValueError("input, result and error topics must differ")
         return self
 

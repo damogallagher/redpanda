@@ -28,6 +28,7 @@ def fake_reason(source, settings, client, *, record):
             )
         )
     return SimpleNamespace(
+        enrichment=source,
         analysis=SimpleNamespace(decision=case.expected, attempts=count),
         model_dump=lambda **kw: {"decision": case.expected},
     )

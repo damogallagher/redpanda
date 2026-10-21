@@ -101,7 +101,7 @@ output:
               sql_raw:
                 driver: pgx
                 # PGPASSWORD is a separate environment value; no URL interpolation of secrets.
-                dsn: postgres://triage@postgres:5432/triage?sslmode=disable&connect_timeout=3&statement_timeout=3000&lock_timeout=1000
+                dsn: postgres://triage_writer@postgres:5432/triage?sslmode=disable&connect_timeout=3&statement_timeout=3000&lock_timeout=1000
                 max_in_flight: 1
                 conn_max_open: 1
                 conn_max_idle: 1

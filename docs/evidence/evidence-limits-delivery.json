@@ -1,0 +1,595 @@
+{
+  "counts": [
+    8,
+    9,
+    20,
+    21
+  ],
+  "committed_offset": 4,
+  "model_calls": [
+    "Synthetic 8-hunk edit",
+    "Synthetic 8-hunk edit"
+  ],
+  "results": [
+    {
+      "schema_version": 1,
+      "analysis": {
+        "schema_version": 1,
+        "event": {
+          "schema_version": 1,
+          "wiki": "enwiki",
+          "title": "Synthetic 8-hunk edit",
+          "old_revision_id": 1007,
+          "revision_id": 1008,
+          "occurred_at": "2026-10-21T10:00:00Z"
+        },
+        "analysis_version": "triage-v1",
+        "backend": "ollama",
+        "model": "fixture-not-a-real-model",
+        "prompt_version": "edit-triage-v2",
+        "decision": "review",
+        "confidence": 0.95,
+        "explanation": "The claims changed.",
+        "evidence": [
+          {
+            "before": "Old claim 0.",
+            "after": "New claim 0."
+          },
+          {
+            "before": "Old claim 1.",
+            "after": "New claim 1."
+          },
+          {
+            "before": "Old claim 2.",
+            "after": "New claim 2."
+          },
+          {
+            "before": "Old claim 3.",
+            "after": "New claim 3."
+          },
+          {
+            "before": "Old claim 4.",
+            "after": "New claim 4."
+          },
+          {
+            "before": "Old claim 5.",
+            "after": "New claim 5."
+          },
+          {
+            "before": "Old claim 6.",
+            "after": "New claim 6."
+          },
+          {
+            "before": "Old claim 7.",
+            "after": "New claim 7."
+          }
+        ],
+        "attempts": 2,
+        "latency_ms": 5,
+        "content_truncated": false
+      },
+      "enrichment": {
+        "schema_version": 1,
+        "event": {
+          "schema_version": 1,
+          "wiki": "enwiki",
+          "title": "Synthetic 8-hunk edit",
+          "old_revision_id": 1007,
+          "revision_id": 1008,
+          "occurred_at": "2026-10-21T10:00:00Z"
+        },
+        "source": "wikipedia",
+        "status": "ready",
+        "attempts": 1,
+        "provenance": {
+          "endpoint": "https://en.wikipedia.org/w/api.php",
+          "page_id": 1008,
+          "from_title": "Synthetic 8-hunk edit",
+          "to_title": "Synthetic 8-hunk edit",
+          "source_url": "https://en.wikipedia.org/w/index.php?diff=1008&oldid=1007"
+        },
+        "evidence": [
+          {
+            "before": "Old claim 0.",
+            "after": "New claim 0."
+          },
+          {
+            "before": "Old claim 1.",
+            "after": "New claim 1."
+          },
+          {
+            "before": "Old claim 2.",
+            "after": "New claim 2."
+          },
+          {
+            "before": "Old claim 3.",
+            "after": "New claim 3."
+          },
+          {
+            "before": "Old claim 4.",
+            "after": "New claim 4."
+          },
+          {
+            "before": "Old claim 5.",
+            "after": "New claim 5."
+          },
+          {
+            "before": "Old claim 6.",
+            "after": "New claim 6."
+          },
+          {
+            "before": "Old claim 7.",
+            "after": "New claim 7."
+          }
+        ],
+        "content_truncated": false
+      },
+      "extraction": {
+        "changes": [
+          {
+            "hunk": 0,
+            "kind": "meaning",
+            "summary": "Claim changed.",
+            "before": "Old claim 0.",
+            "after": "New claim 0."
+          },
+          {
+            "hunk": 1,
+            "kind": "meaning",
+            "summary": "Claim changed.",
+            "before": "Old claim 1.",
+            "after": "New claim 1."
+          },
+          {
+            "hunk": 2,
+            "kind": "meaning",
+            "summary": "Claim changed.",
+            "before": "Old claim 2.",
+            "after": "New claim 2."
+          },
+          {
+            "hunk": 3,
+            "kind": "meaning",
+            "summary": "Claim changed.",
+            "before": "Old claim 3.",
+            "after": "New claim 3."
+          },
+          {
+            "hunk": 4,
+            "kind": "meaning",
+            "summary": "Claim changed.",
+            "before": "Old claim 4.",
+            "after": "New claim 4."
+          },
+          {
+            "hunk": 5,
+            "kind": "meaning",
+            "summary": "Claim changed.",
+            "before": "Old claim 5.",
+            "after": "New claim 5."
+          },
+          {
+            "hunk": 6,
+            "kind": "meaning",
+            "summary": "Claim changed.",
+            "before": "Old claim 6.",
+            "after": "New claim 6."
+          },
+          {
+            "hunk": 7,
+            "kind": "meaning",
+            "summary": "Claim changed.",
+            "before": "Old claim 7.",
+            "after": "New claim 7."
+          }
+        ]
+      },
+      "steps": [
+        {
+          "stage": "extract",
+          "outcome": "valid"
+        },
+        {
+          "stage": "assess",
+          "outcome": "valid"
+        }
+      ],
+      "outcome": "assessed"
+    },
+    {
+      "schema_version": 1,
+      "analysis": {
+        "schema_version": 1,
+        "event": {
+          "schema_version": 1,
+          "wiki": "enwiki",
+          "title": "Synthetic 9-hunk edit",
+          "old_revision_id": 1008,
+          "revision_id": 1009,
+          "occurred_at": "2026-10-21T10:00:00Z"
+        },
+        "analysis_version": "triage-v1",
+        "backend": "ollama",
+        "model": "fixture-not-a-real-model",
+        "prompt_version": "edit-triage-v2",
+        "decision": "insufficient_evidence",
+        "confidence": 0.0,
+        "explanation": "Source evidence is incomplete: evidence_limit.",
+        "evidence": [],
+        "attempts": 0,
+        "latency_ms": 0,
+        "content_truncated": true
+      },
+      "enrichment": {
+        "schema_version": 1,
+        "event": {
+          "schema_version": 1,
+          "wiki": "enwiki",
+          "title": "Synthetic 9-hunk edit",
+          "old_revision_id": 1008,
+          "revision_id": 1009,
+          "occurred_at": "2026-10-21T10:00:00Z"
+        },
+        "source": "wikipedia",
+        "status": "evidence_limit",
+        "attempts": 1,
+        "provenance": {
+          "endpoint": "https://en.wikipedia.org/w/api.php",
+          "page_id": 1009,
+          "from_title": "Synthetic 9-hunk edit",
+          "to_title": "Synthetic 9-hunk edit",
+          "source_url": "https://en.wikipedia.org/w/index.php?diff=1009&oldid=1008"
+        },
+        "evidence": [
+          {
+            "before": "Old claim 0.",
+            "after": "New claim 0."
+          },
+          {
+            "before": "Old claim 1.",
+            "after": "New claim 1."
+          },
+          {
+            "before": "Old claim 2.",
+            "after": "New claim 2."
+          },
+          {
+            "before": "Old claim 3.",
+            "after": "New claim 3."
+          },
+          {
+            "before": "Old claim 4.",
+            "after": "New claim 4."
+          },
+          {
+            "before": "Old claim 5.",
+            "after": "New claim 5."
+          },
+          {
+            "before": "Old claim 6.",
+            "after": "New claim 6."
+          },
+          {
+            "before": "Old claim 7.",
+            "after": "New claim 7."
+          }
+        ],
+        "content_truncated": true
+      },
+      "extraction": null,
+      "steps": [],
+      "outcome": "incomplete_source"
+    },
+    {
+      "schema_version": 1,
+      "analysis": {
+        "schema_version": 1,
+        "event": {
+          "schema_version": 1,
+          "wiki": "enwiki",
+          "title": "Synthetic 20-hunk edit",
+          "old_revision_id": 1019,
+          "revision_id": 1020,
+          "occurred_at": "2026-10-21T10:00:00Z"
+        },
+        "analysis_version": "triage-v1",
+        "backend": "ollama",
+        "model": "fixture-not-a-real-model",
+        "prompt_version": "edit-triage-v2",
+        "decision": "insufficient_evidence",
+        "confidence": 0.0,
+        "explanation": "Source evidence is incomplete: evidence_limit.",
+        "evidence": [],
+        "attempts": 0,
+        "latency_ms": 0,
+        "content_truncated": true
+      },
+      "enrichment": {
+        "schema_version": 1,
+        "event": {
+          "schema_version": 1,
+          "wiki": "enwiki",
+          "title": "Synthetic 20-hunk edit",
+          "old_revision_id": 1019,
+          "revision_id": 1020,
+          "occurred_at": "2026-10-21T10:00:00Z"
+        },
+        "source": "wikipedia",
+        "status": "evidence_limit",
+        "attempts": 1,
+        "provenance": {
+          "endpoint": "https://en.wikipedia.org/w/api.php",
+          "page_id": 1020,
+          "from_title": "Synthetic 20-hunk edit",
+          "to_title": "Synthetic 20-hunk edit",
+          "source_url": "https://en.wikipedia.org/w/index.php?diff=1020&oldid=1019"
+        },
+        "evidence": [
+          {
+            "before": "Old claim 0.",
+            "after": "New claim 0."
+          },
+          {
+            "before": "Old claim 1.",
+            "after": "New claim 1."
+          },
+          {
+            "before": "Old claim 2.",
+            "after": "New claim 2."
+          },
+          {
+            "before": "Old claim 3.",
+            "after": "New claim 3."
+          },
+          {
+            "before": "Old claim 4.",
+            "after": "New claim 4."
+          },
+          {
+            "before": "Old claim 5.",
+            "after": "New claim 5."
+          },
+          {
+            "before": "Old claim 6.",
+            "after": "New claim 6."
+          },
+          {
+            "before": "Old claim 7.",
+            "after": "New claim 7."
+          }
+        ],
+        "content_truncated": true
+      },
+      "extraction": null,
+      "steps": [],
+      "outcome": "incomplete_source"
+    },
+    {
+      "schema_version": 1,
+      "analysis": {
+        "schema_version": 1,
+        "event": {
+          "schema_version": 1,
+          "wiki": "enwiki",
+          "title": "Synthetic 21-hunk edit",
+          "old_revision_id": 1020,
+          "revision_id": 1021,
+          "occurred_at": "2026-10-21T10:00:00Z"
+        },
+        "analysis_version": "triage-v1",
+        "backend": "ollama",
+        "model": "fixture-not-a-real-model",
+        "prompt_version": "edit-triage-v2",
+        "decision": "insufficient_evidence",
+        "confidence": 0.0,
+        "explanation": "Source evidence is incomplete: evidence_limit.",
+        "evidence": [],
+        "attempts": 0,
+        "latency_ms": 0,
+        "content_truncated": true
+      },
+      "enrichment": {
+        "schema_version": 1,
+        "event": {
+          "schema_version": 1,
+          "wiki": "enwiki",
+          "title": "Synthetic 21-hunk edit",
+          "old_revision_id": 1020,
+          "revision_id": 1021,
+          "occurred_at": "2026-10-21T10:00:00Z"
+        },
+        "source": "wikipedia",
+        "status": "evidence_limit",
+        "attempts": 1,
+        "provenance": {
+          "endpoint": "https://en.wikipedia.org/w/api.php",
+          "page_id": 1021,
+          "from_title": "Synthetic 21-hunk edit",
+          "to_title": "Synthetic 21-hunk edit",
+          "source_url": "https://en.wikipedia.org/w/index.php?diff=1021&oldid=1020"
+        },
+        "evidence": [
+          {
+            "before": "Old claim 0.",
+            "after": "New claim 0."
+          },
+          {
+            "before": "Old claim 1.",
+            "after": "New claim 1."
+          },
+          {
+            "before": "Old claim 2.",
+            "after": "New claim 2."
+          },
+          {
+            "before": "Old claim 3.",
+            "after": "New claim 3."
+          },
+          {
+            "before": "Old claim 4.",
+            "after": "New claim 4."
+          },
+          {
+            "before": "Old claim 5.",
+            "after": "New claim 5."
+          },
+          {
+            "before": "Old claim 6.",
+            "after": "New claim 6."
+          },
+          {
+            "before": "Old claim 7.",
+            "after": "New claim 7."
+          }
+        ],
+        "content_truncated": true
+      },
+      "extraction": null,
+      "steps": [],
+      "outcome": "incomplete_source"
+    }
+  ],
+  "legacy_result": {
+    "schema_version": 1,
+    "analysis": {
+      "schema_version": 1,
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "Synthetic storage example 3",
+        "old_revision_id": 102,
+        "revision_id": 103,
+        "occurred_at": "2026-10-20T10:00:00Z"
+      },
+      "analysis_version": "legacy-count-v1",
+      "backend": "ollama",
+      "model": "fixture-not-a-real-model",
+      "prompt_version": "fixture-v1",
+      "decision": "insufficient_evidence",
+      "confidence": 0.0,
+      "explanation": "Synthetic demonstration: insufficient_evidence",
+      "evidence": [],
+      "attempts": 2,
+      "latency_ms": 0,
+      "content_truncated": false
+    },
+    "enrichment": {
+      "schema_version": 1,
+      "event": {
+        "schema_version": 1,
+        "wiki": "enwiki",
+        "title": "Synthetic storage example 3",
+        "old_revision_id": 102,
+        "revision_id": 103,
+        "occurred_at": "2026-10-20T10:00:00Z"
+      },
+      "source": "fixture",
+      "status": "ready",
+      "attempts": 0,
+      "provenance": {
+        "endpoint": "https://en.wikipedia.org/w/api.php",
+        "page_id": 42,
+        "from_title": "Synthetic storage example 3",
+        "to_title": "Synthetic storage example 3",
+        "source_url": "https://en.wikipedia.org/w/index.php?diff=103&oldid=102"
+      },
+      "evidence": [
+        {
+          "before": "Old claim 0.",
+          "after": "New claim 0."
+        },
+        {
+          "before": "Old claim 1.",
+          "after": "New claim 1."
+        },
+        {
+          "before": "Old claim 2.",
+          "after": "New claim 2."
+        },
+        {
+          "before": "Old claim 3.",
+          "after": "New claim 3."
+        },
+        {
+          "before": "Old claim 4.",
+          "after": "New claim 4."
+        },
+        {
+          "before": "Old claim 5.",
+          "after": "New claim 5."
+        },
+        {
+          "before": "Old claim 6.",
+          "after": "New claim 6."
+        },
+        {
+          "before": "Old claim 7.",
+          "after": "New claim 7."
+        },
+        {
+          "before": "Old claim 8.",
+          "after": "New claim 8."
+        },
+        {
+          "before": "Old claim 9.",
+          "after": "New claim 9."
+        },
+        {
+          "before": "Old claim 10.",
+          "after": "New claim 10."
+        },
+        {
+          "before": "Old claim 11.",
+          "after": "New claim 11."
+        },
+        {
+          "before": "Old claim 12.",
+          "after": "New claim 12."
+        },
+        {
+          "before": "Old claim 13.",
+          "after": "New claim 13."
+        },
+        {
+          "before": "Old claim 14.",
+          "after": "New claim 14."
+        },
+        {
+          "before": "Old claim 15.",
+          "after": "New claim 15."
+        },
+        {
+          "before": "Old claim 16.",
+          "after": "New claim 16."
+        },
+        {
+          "before": "Old claim 17.",
+          "after": "New claim 17."
+        },
+        {
+          "before": "Old claim 18.",
+          "after": "New claim 18."
+        },
+        {
+          "before": "Old claim 19.",
+          "after": "New claim 19."
+        }
+      ],
+      "content_truncated": false
+    },
+    "extraction": null,
+    "steps": [
+      {
+        "stage": "extract",
+        "outcome": "invalid_output"
+      },
+      {
+        "stage": "extract",
+        "outcome": "invalid_output"
+      }
+    ],
+    "outcome": "invalid_output"
+  },
+  "sink_offset": 5,
+  "stored_rows": 5
+}

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Explicit synthetic demo; publishes to results without invoking Wikipedia or a model.
 set -eu
-cd "$(CDPATH= cd "$(dirname "$0")/.." && pwd)"
+cd "$(CDPATH='' cd "$(dirname "$0")/.." && pwd)"
 docker compose up --build -d --wait sink api
 for entry in review:101 routine:102 insufficient_evidence:103; do
     name=${entry%:*}

@@ -1,8 +1,13 @@
 """Extract text from MediaWiki table diffs; unsupported structures fail closed."""
 
+from collections.abc import Iterator
 from html.parser import HTMLParser
 
-from triage.schema import Evidence
+from triage.limits import MAX_TEXT_CHARS
+from triage.schema import MAX_REASONING_HUNKS, Evidence
+
+MAX_HTML_DEPTH = 16  # Normal table diffs are shallow; bound hostile nesting.
+MIN_SIDE_CELLS = 2  # Marker followed by the text cell (except the empty placeholder).
 
 ROLES = {
     "diff-lineno",
@@ -24,7 +29,7 @@ class DiffParser(HTMLParser):
         self.parts: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        if len(self.stack) >= 16:
+        if len(self.stack) >= MAX_HTML_DEPTH:
             raise ValueError("diff nesting exceeds limit")
         if tag == "tr" and not self.stack:
             self.cells = []
@@ -80,7 +85,7 @@ def side(cells: list[tuple[str, str]], changed_role: str) -> tuple[str, str]:
         if text:
             raise ValueError("nonempty placeholder")
         return role, text
-    if len(cells) < 2 or cells.pop(0)[0] != "diff-marker":
+    if len(cells) < MIN_SIDE_CELLS or cells.pop(0)[0] != "diff-marker":
         raise ValueError("missing diff marker")
     role, text = cells.pop(0)
     if role not in {"diff-context", changed_role}:
@@ -88,39 +93,15 @@ def side(cells: list[tuple[str, str]], changed_role: str) -> tuple[str, str]:
     return role, text
 
 
-def extract_evidence(body: str, total_limit: int) -> tuple[tuple[Evidence, ...], bool]:
-    if not body.strip():
-        return (), False
-    parser = DiffParser()
-    parser.feed(body)
-    parser.close()
-    if parser.stack or not parser.rows:
-        raise ValueError("incomplete diff")
-    evidence: list[Evidence] = []
+def text_hunks(rows: list[list[tuple[str, str]]]) -> Iterator[tuple[str, str]]:
     before: list[str] = []
     after: list[str] = []
-    truncated = False
-    total = 0
-
-    def finish() -> None:
-        nonlocal total, truncated
-        old, new = "\n".join(before), "\n".join(after)
-        if old == new:
-            raise ValueError("nonempty diff without an extractable change")
-        size = len(old) + len(new)
-        if len(old) > 4096 or len(new) > 4096 or total + size > total_limit or len(evidence) >= 20:
-            truncated = True
-        else:
-            evidence.append(Evidence(before=old, after=new))
-            total += size
-        before.clear()
-        after.clear()
-
     started = False
-    for row in parser.rows:
+    for row in rows:
         if [role for role, _ in row] == ["diff-lineno", "diff-lineno"]:
             if started:
-                finish()
+                yield "\n".join(before), "\n".join(after)
+            before, after = [], []
             started = True
             continue
         if not started:
@@ -135,5 +116,32 @@ def extract_evidence(body: str, total_limit: int) -> tuple[tuple[Evidence, ...],
             before.append(old)
         if right_role != "diff-empty":
             after.append(new)
-    finish()
+    yield "\n".join(before), "\n".join(after)
+
+
+def extract_evidence(body: str, total_limit: int) -> tuple[tuple[Evidence, ...], bool]:
+    if not body.strip():
+        return (), False
+    parser = DiffParser()
+    parser.feed(body)
+    parser.close()
+    if parser.stack or not parser.rows:
+        raise ValueError("incomplete diff")
+    evidence: list[Evidence] = []
+    total = 0
+    truncated = False
+    for old, new in text_hunks(parser.rows):
+        if old == new:
+            raise ValueError("nonempty diff without an extractable change")
+        size = len(old) + len(new)
+        if (
+            len(old) > MAX_TEXT_CHARS
+            or len(new) > MAX_TEXT_CHARS
+            or total + size > total_limit
+            or len(evidence) >= MAX_REASONING_HUNKS
+        ):
+            truncated = True
+        else:
+            evidence.append(Evidence(before=old, after=new))
+            total += size
     return tuple(evidence), truncated

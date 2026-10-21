@@ -3,6 +3,7 @@
 import json
 import re
 from collections.abc import Callable
+from dataclasses import dataclass, field
 from time import monotonic, sleep
 from typing import Annotated, Literal
 
@@ -11,12 +12,13 @@ from pydantic import Field
 
 from triage.config import Settings
 from triage.enrichment import EnrichmentResult
+from triage.limits import ITEM_DEADLINE_SECONDS, MAX_MODEL_CALLS, MAX_STAGE_ATTEMPTS, MAX_WIRE_HUNKS
 from triage.llm import ModelError, complete
 from triage.prompts import ANALYSIS_VERSION, ASSESS, EXTRACT, PROMPT_VERSION, REVIEW
-from triage.schema import AnalysisResult, Contract, Evidence
+from triage.schema import MAX_REASONING_HUNKS, AnalysisResult, Contract, Evidence
 
 CONFIDENCE_THRESHOLD = 0.8
-MAX_CALLS = 4
+MAX_CALLS = MAX_MODEL_CALLS
 Stage = Literal["extract", "assess", "review"]
 Outcome = Literal[
     "assessed",
@@ -30,7 +32,7 @@ Outcome = Literal[
 
 
 class Change(Contract):
-    hunk: Annotated[int, Field(ge=0, le=19)]
+    hunk: Annotated[int, Field(ge=0, le=MAX_WIRE_HUNKS - 1)]
     kind: Literal["wording", "meaning", "evidence", "unclear"]
     summary: Annotated[str, Field(min_length=1, max_length=400, pattern=r"\S")]
     before: Annotated[str, Field(max_length=512)]
@@ -38,7 +40,7 @@ class Change(Contract):
 
 
 class Extraction(Contract):
-    changes: Annotated[tuple[Change, ...], Field(min_length=1, max_length=8)]
+    changes: Annotated[tuple[Change, ...], Field(min_length=1, max_length=MAX_REASONING_HUNKS)]
 
 
 class Assessment(Contract):
@@ -57,7 +59,7 @@ class ReasonedEdit(Contract):
     analysis: AnalysisResult
     enrichment: EnrichmentResult
     extraction: Extraction | None
-    steps: Annotated[tuple[Step, ...], Field(max_length=4)]
+    steps: Annotated[tuple[Step, ...], Field(max_length=MAX_CALLS)]
     outcome: Outcome
 
 
@@ -125,21 +127,50 @@ def reason(
     record: Callable[[CallRecord], None] | None = None,
 ) -> ReasonedEdit:
     start = clock()
-    deadline = start + 240 if deadline is None else deadline
-    steps: list[Step] = []
-    extraction: Extraction | None = None
-    input_data = {
-        "title": source.event.title,
-        "hunks": [item.model_dump() for item in source.evidence],
-    }
+    deadline = start + ITEM_DEADLINE_SECONDS if deadline is None else deadline
+    # Old v1 inputs can contain 20 hunks. Preserve read compatibility, but never
+    # spend model calls on an impossible extraction or classify a partial edit.
+    if len(source.evidence) > MAX_REASONING_HUNKS:
+        source = EnrichmentResult.model_validate(
+            {
+                **source.model_dump(),
+                "evidence": source.evidence[:MAX_REASONING_HUNKS],
+                "status": "evidence_limit",
+                "content_truncated": True,
+            }
+        )
+    return _Reasoner(source, settings, client, start, deadline, clock, wait, record).run()
 
-    def finish(outcome: Outcome, assessment: Assessment | None = None) -> ReasonedEdit:
+
+@dataclass
+class _Reasoner:
+    """State for one item only; all stages share the same call and deadline budgets."""
+
+    source: EnrichmentResult
+    settings: Settings
+    client: httpx.Client
+    start: float
+    deadline: float
+    clock: Callable[[], float]
+    wait: Callable[[float], None]
+    record: Callable[[CallRecord], None] | None
+    steps: list[Step] = field(default_factory=list)
+    extraction: Extraction | None = None
+
+    @property
+    def input_data(self) -> dict[str, object]:
+        return {
+            "title": self.source.event.title,
+            "hunks": [item.model_dump() for item in self.source.evidence],
+        }
+
+    def finish(self, outcome: Outcome, assessment: Assessment | None = None) -> ReasonedEdit:
         if assessment is None:
             explanations = {
                 "invalid_output": "Model output could not be validated within the call budget.",
                 "low_confidence": "The bounded review did not resolve uncertainty.",
                 "contradiction": "Extraction and assessments disagree; evidence is insufficient.",
-                "incomplete_source": f"Source evidence is incomplete: {source.status}.",
+                "incomplete_source": f"Source evidence is incomplete: {self.source.status}.",
                 "no_change": "The API returned no textual difference between these revisions.",
             }
             assessment = Assessment(
@@ -149,106 +180,131 @@ def reason(
             )
         evidence = (
             ()
-            if extraction is None
+            if self.extraction is None
             else tuple(
-                Evidence(before=change.before, after=change.after) for change in extraction.changes
+                Evidence(before=change.before, after=change.after)
+                for change in self.extraction.changes
             )
         )
         analysis = AnalysisResult(
-            event=source.event,
+            event=self.source.event,
             analysis_version=ANALYSIS_VERSION,
-            backend=settings.backend,
-            model=settings.model,
+            backend=self.settings.backend,
+            model=self.settings.model,
             prompt_version=PROMPT_VERSION,
             **assessment.model_dump(),
             evidence=evidence,
-            attempts=len(steps),
-            latency_ms=int((clock() - start) * 1000),
-            content_truncated=source.content_truncated,
+            attempts=len(self.steps),
+            latency_ms=int((self.clock() - self.start) * 1000),
+            content_truncated=self.source.content_truncated,
         )
         return ReasonedEdit(
             analysis=analysis,
-            enrichment=source,
-            extraction=extraction,
-            steps=tuple(steps),
+            enrichment=self.source,
+            extraction=self.extraction,
+            steps=tuple(self.steps),
             outcome=outcome,
         )
 
+    def request(self, stage: Stage, instructions: str, user: str, attempt: int) -> str | None:
+        try:
+            raw = complete(
+                self.settings,
+                instructions,
+                user,
+                self.client,
+                deadline=self.deadline,
+                clock=self.clock,
+            )
+        except ModelError:
+            self.steps.append(Step(stage=stage, outcome="model_error"))
+            if self.record is not None:
+                self.record(
+                    CallRecord(
+                        stage=stage, system_prompt=instructions, user_prompt=user, response=None
+                    )
+                )
+            if self.clock() >= self.deadline:
+                raise ReasoningFailure("deadline_exceeded", tuple(self.steps)) from None
+            if attempt == MAX_STAGE_ATTEMPTS - 1 or len(self.steps) == MAX_CALLS:
+                raise ReasoningFailure("model_failed", tuple(self.steps)) from None
+            self.wait(max(0.0, min(1.0, self.deadline - self.clock())))
+            return None
+        if self.record is not None:
+            self.record(
+                CallRecord(stage=stage, system_prompt=instructions, user_prompt=user, response=raw)
+            )
+        return raw
+
     def call[T: Contract](
+        self,
         stage: Stage,
         contract: type[T],
         system: str,
         extra: dict[str, object],
         validate: Callable[[T], None] | None = None,
     ) -> T | None:
-        for attempt in range(2):
-            if len(steps) >= MAX_CALLS:
+        for attempt in range(MAX_STAGE_ATTEMPTS):
+            if len(self.steps) >= MAX_CALLS:
                 return None
-            if clock() >= deadline:
-                raise ReasoningFailure("deadline_exceeded", tuple(steps))
-            user = json.dumps({**input_data, **extra, "repair": attempt > 0}, ensure_ascii=False)
+            if self.clock() >= self.deadline:
+                raise ReasoningFailure("deadline_exceeded", tuple(self.steps))
+            user = json.dumps(
+                {**self.input_data, **extra, "repair": attempt > 0}, ensure_ascii=False
+            )
             instructions = system + "\nJSON schema: " + json.dumps(contract.model_json_schema())
-            try:
-                raw = complete(settings, instructions, user, client, deadline=deadline, clock=clock)
-            except ModelError:
-                steps.append(Step(stage=stage, outcome="model_error"))
-                if record is not None:
-                    record(
-                        CallRecord(
-                            stage=stage, system_prompt=instructions, user_prompt=user, response=None
-                        )
-                    )
-                if clock() >= deadline:
-                    raise ReasoningFailure("deadline_exceeded", tuple(steps)) from None
-                if attempt == 1 or len(steps) == MAX_CALLS:
-                    raise ReasoningFailure("model_failed", tuple(steps)) from None
-                wait(max(0.0, min(1.0, deadline - clock())))
+            raw = self.request(stage, instructions, user, attempt)
+            if raw is None:
                 continue
-            if record is not None:
-                record(
-                    CallRecord(
-                        stage=stage, system_prompt=instructions, user_prompt=user, response=raw
-                    )
-                )
-            if clock() >= deadline:
-                steps.append(Step(stage=stage, outcome="model_error"))
-                raise ReasoningFailure("deadline_exceeded", tuple(steps))
+            if self.clock() >= self.deadline:
+                self.steps.append(Step(stage=stage, outcome="model_error"))
+                raise ReasoningFailure("deadline_exceeded", tuple(self.steps))
             try:
                 parsed = parse_output(raw, contract)
                 if validate is not None:
                     validate(parsed)
             except ValueError:
-                steps.append(Step(stage=stage, outcome="invalid_output"))
+                self.steps.append(Step(stage=stage, outcome="invalid_output"))
                 continue
-            steps.append(Step(stage=stage, outcome="valid"))
+            self.steps.append(Step(stage=stage, outcome="valid"))
             return parsed
         return None
 
-    if source.status != "ready":
-        return finish("no_change" if source.status == "no_text_change" else "incomplete_source")
-    extraction = call(
-        "extract", Extraction, EXTRACT, {}, lambda value: validate_grounding(value, source)
-    )
-    if extraction is None:
-        return finish("invalid_output")
-    extra: dict[str, object] = {"extraction": extraction.model_dump(mode="json")}
-    assessment = call("assess", Assessment, ASSESS, extra)
-    if assessment is None:
-        return finish("invalid_output")
-    substantive = any(change.kind != "wording" for change in extraction.changes)
-    conflict = assessment.decision == "routine" and substantive
-    if assessment.decision == "insufficient_evidence":
-        return finish("assessed", assessment)
-    if assessment.confidence >= CONFIDENCE_THRESHOLD and not conflict:
-        return finish("assessed", assessment)
-    extra["first_assessment"] = assessment.model_dump(mode="json")
-    reviewed = call("review", Assessment, REVIEW, extra)
-    if reviewed is None:
-        return finish("invalid_output")
-    if reviewed.decision == "insufficient_evidence":
-        return finish("reviewed", reviewed)
-    if reviewed.confidence < CONFIDENCE_THRESHOLD:
-        return finish("low_confidence")
-    if reviewed.decision != assessment.decision or (reviewed.decision == "routine" and substantive):
-        return finish("contradiction")
-    return finish("reviewed", reviewed)
+    def run(self) -> ReasonedEdit:
+        if self.source.status != "ready":
+            return self.finish(
+                "no_change" if self.source.status == "no_text_change" else "incomplete_source"
+            )
+        self.extraction = self.call(
+            "extract", Extraction, EXTRACT, {}, lambda value: validate_grounding(value, self.source)
+        )
+        if self.extraction is None:
+            return self.finish("invalid_output")
+        extra: dict[str, object] = {"extraction": self.extraction.model_dump(mode="json")}
+        assessment = self.call("assess", Assessment, ASSESS, extra)
+        if assessment is None:
+            return self.finish("invalid_output")
+        substantive = any(change.kind != "wording" for change in self.extraction.changes)
+        conflict = assessment.decision == "routine" and substantive
+        if assessment.decision == "insufficient_evidence":
+            return self.finish("assessed", assessment)
+        if assessment.confidence >= CONFIDENCE_THRESHOLD and not conflict:
+            return self.finish("assessed", assessment)
+        return self.review(assessment, substantive, extra)
+
+    def review(
+        self, assessment: Assessment, substantive: bool, extra: dict[str, object]
+    ) -> ReasonedEdit:
+        extra["first_assessment"] = assessment.model_dump(mode="json")
+        reviewed = self.call("review", Assessment, REVIEW, extra)
+        if reviewed is None:
+            return self.finish("invalid_output")
+        if reviewed.decision == "insufficient_evidence":
+            return self.finish("reviewed", reviewed)
+        if reviewed.confidence < CONFIDENCE_THRESHOLD:
+            return self.finish("low_confidence")
+        if reviewed.decision != assessment.decision or (
+            reviewed.decision == "routine" and substantive
+        ):
+            return self.finish("contradiction")
+        return self.finish("reviewed", reviewed)

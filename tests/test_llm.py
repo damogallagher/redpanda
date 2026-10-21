@@ -95,7 +95,7 @@ def test_connection_errors_are_sanitized(error):
 
     with (
         httpx.Client(transport=httpx.MockTransport(handler)) as client,
-        pytest.raises(ModelError, match="^model connection or timeout failure$"),
+        pytest.raises(ModelError, match=r"^model connection or timeout failure$"),
     ):
         complete(Settings(), "system", "user", client)
 
