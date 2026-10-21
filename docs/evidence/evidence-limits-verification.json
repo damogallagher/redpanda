@@ -1,0 +1,129 @@
+{
+  "date": "2026-10-21",
+  "branch": "fix/evidence-count-limits",
+  "pull_request": "https://github.com/damogallagher/redpanda/pull/15",
+  "base_commit": "447920f0c543f50ee2ce1a822ab8c6e8cdc6024d",
+  "tested_implementation_commit": "97de5bab949744b370fbbb4cab3adf520fd2919e",
+  "commands": {
+    "focused": "make test-evidence-limits UV='uvx --from uv==0.13.4 uv'",
+    "cumulative": "COMPOSE_PROJECT_NAME=triage-evidence-gate-20261021 make test UV='uvx --from uv==0.13.4 uv'"
+  },
+  "cumulative_exit_code": 0,
+  "focused_exit_code": 0,
+  "before_fix": {
+    "tests": 22,
+    "failures": 8,
+    "errors": 0,
+    "skipped": 0
+  },
+  "focused": {
+    "tests": 23,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "unit": {
+    "tests": 438,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "integration": {
+    "tests": 30,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "count_boundary_scenario": {
+      "input_counts": [
+        8,
+        9,
+        20,
+        21
+      ],
+      "worker_committed_offset": 4,
+      "sink_committed_offset": 5,
+      "stored_rows": 5,
+      "historical_20_hunk_result": "identical through API",
+      "model_HTTP_double_calls": 2,
+      "oversized_model_calls": 0,
+      "processing_errors": 0,
+      "sink_errors": 0
+    }
+  },
+  "connect_cases": {
+    "ingestion": 40,
+    "sink": 32
+  },
+  "coverage": {
+    "covered_lines": 1085,
+    "num_statements": 1085,
+    "percent_covered": 100.0,
+    "percent_covered_display": "100.00",
+    "missing_lines": 0,
+    "excluded_lines": 0,
+    "percent_statements_covered": 100.0,
+    "percent_statements_covered_display": "100.00",
+    "num_branches": 278,
+    "num_partial_branches": 0,
+    "covered_branches": 278,
+    "missing_branches": 0,
+    "percent_branches_covered": 100.0,
+    "percent_branches_covered_display": "100.00"
+  },
+  "real_model_requests": 0,
+  "live_wikipedia_requests": 0,
+  "new_hunk_counts": [
+    0,
+    1,
+    8,
+    9,
+    20,
+    21
+  ],
+  "legacy_hunk_counts": [
+    9,
+    20
+  ],
+  "compatibility": {
+    "v1_json_schemas": "unchanged",
+    "database_schema": "unchanged",
+    "prompt_versions": "unchanged",
+    "model_call_token_budgets": "unchanged"
+  },
+  "cleanup": {
+    "preexisting_volume_names_preserved": true,
+    "new_volumes_remaining": 0,
+    "test_containers_remaining": 0
+  },
+  "assignment_sha256": "89a4840092423818c59a81f4042f9007d36e90fe7da7bc8111a4d96f1662e40a",
+  "limitations": [
+    "Nine or more hunks deliberately abstain; no partial-edit classification or large-edit chunking.",
+    "Deterministic provider doubles verify control flow, not real-model quality.",
+    "Broader deployment limitations in docs/handover.md remain."
+  ],
+  "report_sha256": {
+    "coverage.json": "6afbd771b42aebc164065b56932ef263c39c5372fe3bb95e84d6a7c70f3b3c73",
+    "unit.xml": "d09f0c4ac39867ec0fb867e4b2e3da63535ec80b27f987ce9e8e49297aead991",
+    "integration.xml": "ed0b08886da83d8d280524d3c9a94c565aabe3febd7c5cc40aae766196d5c49e",
+    "evidence-limits.xml": "8966b251652e58b632aa0a1a84d2cc5749645ead21d0fe9490c2674ff51c7db0",
+    "evidence-limits-before.xml": "7a88b1621cf3fe0558bf9902b1577b6ea1e4fe5d1f5bbca8e3fc097da1f5ab20",
+    "evidence-limits-delivery.json": "0339f61764438c4709cdd33eb3183656076e39af2cea7e3a8154a77ca264aac1",
+    "evidence-full-gate.log": "86c1c454613ea3920b2e9d935db30fe5981e8eb769dbd43f5cc7cd5e0613128b"
+  },
+  "ci": {
+    "status": "passed",
+    "run_url": "https://github.com/damogallagher/redpanda/actions/runs/39686956340",
+    "tested_commit": "d0a0477be7a71af982e183b89519666bc7c618cc",
+    "application_tests_match_local_commit": true,
+    "unit": 438,
+    "integration": 30,
+    "line_coverage_percent": 100,
+    "branch_coverage_percent": 100,
+    "missing_lines": 0,
+    "missing_branches": 0,
+    "excluded_lines": 0,
+    "emitted_warnings_in_job_log": 0,
+    "check_annotations": 0,
+    "downloaded_artifacts_verified": true
+  }
+}

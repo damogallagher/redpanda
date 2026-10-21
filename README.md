@@ -5,6 +5,7 @@ Wikipedia edit triage in Python, using Redpanda and a selectable local or hosted
 **Phase 6 adds operational acceptance and handover.** Redpanda Connect ingests Wikipedia edits; a Python worker enriches and reasons over revision evidence; a second Connect pipeline validates and upserts results into Postgres. The API exposes decisions, evidence, versions, and step outcomes with bounded pagination.
 
 - [Simple run/test/cleanup guide](docs/operations.md)
+- [Evidence-count fix: boundaries, compatibility and tests](docs/phases/06-evidence-limits.md)
 - [Phase 6: acceptance evidence and handover](docs/phases/06-acceptance.md)
 - [Code/data flow and assignment checklist](docs/handover.md)
 - [Phase 5: persistence, results API, replay, and recovery](docs/phases/05-serving.md)
@@ -25,6 +26,7 @@ For a clean Ollama → frontier submission walkthrough with exact commands and e
 | I want to… | Run |
 |---|---|
 | Check everything without a model/key | `make test` |
+| Check evidence counts and historical-result compatibility | `make test-evidence-limits` |
 | Watch a successful end-to-end fixture | `make demo-success` |
 | Verify faults and recovery | `make demo-failures` |
 | See an intentionally failed test | `make demo-test-failure` (expected nonzero exit) |
@@ -55,7 +57,7 @@ Expected final line:
 PASS: Phase 6 deterministic acceptance. Real model/live-source checks are separate.
 ```
 
-Expected: **416 unit tests, 29 integration/configuration tests, 72 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make test UV='uvx --from uv==0.13.4 uv'`.
+Expected on this branch: **438 unit tests, 30 integration/configuration tests, 72 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make test UV='uvx --from uv==0.13.4 uv'`.
 
 To demonstrate live ingestion without a model or key, run `make smoke-ingestion` (about 40 seconds with cached images). It samples the public stream for 30 seconds in an isolated project, prints validated topic records and counts, and cleans up. See [Phase 2](docs/phases/02-ingestion.md) for exact expected fixture outputs, interactive `rpk` inspection, metrics, cleanup, and reconnect limitations.
 
@@ -72,6 +74,8 @@ make smoke-enrichment
 ```
 
 This separate live check makes at most two public requests and no model calls. See the [Phase 3 walkthrough](docs/phases/03-enrichment.md) for the exact revision IDs, expected evidence, unavailable/oversized demonstrations, exit codes, and limits. `make test-enrichment` runs the focused offline tests. The Phase 4 worker uses this same enrichment client.
+
+New edits must fit **eight complete changed sections**, plus the existing text/byte limits, before inference. An edit exceeding those limits returns `insufficient_evidence`, `evidence_limit` and `content_truncated: true` with **zero model calls**. Retained sections are diagnostic evidence; no partial-edit classification is made. Existing v1 records containing up to 20 sections remain readable. See the [count-boundary checks](docs/phases/06-evidence-limits.md).
 
 ## Follow an edit through reasoning and delivery
 

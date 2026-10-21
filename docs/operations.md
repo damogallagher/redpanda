@@ -18,6 +18,7 @@ All three are **free of model/API calls**. They use disposable Docker projects a
 | `make demo-success` | Two fixture edits traverse Connect → actual worker → Connect → Postgres → API; both are `review` with two reasoning steps and the expected before/after text |
 | `make demo-failures` | Invalid model output abstains; model timeout routes an error; failed publication leaves offsets unchanged; database/broker recovery drains pending work; death after publication replays a duplicate into one SQL row |
 | `make test-unit` | Fast offline unit checks with coverage; no Docker needed after dependency installation |
+| `make test-evidence-limits` | 23 cases pass: eight-hunk processing, zero-call abstention for larger edits, bounded repair of mismatched model counts, and historical 20-hunk records served through real storage/API |
 | `make test-connect` | Native Redpanda Connect lint and 72 exact input/output cases |
 
 The failure demonstration **passes because the expected failure was detected and recovery was verified**. It does not hide a broken application behind a green exit code. Model/Wikipedia responses are controlled in deterministic infrastructure tests; brokers, Connect, database, API and worker are real.
