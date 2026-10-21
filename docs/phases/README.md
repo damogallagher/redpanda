@@ -11,5 +11,6 @@ Every phase has its own branch and PR into `main`. Status and test evidence must
 - [Phase 04: Multi-step reasoning and durable delivery](04-reasoning.md)
 - [Phase 05: Persistence and readable results](05-serving.md)
 - [Phase 06: Operational acceptance and handover](06-acceptance.md)
+- [Correctness follow-up: evidence-count boundaries and compatibility](06-evidence-limits.md)
 
-Phases are sequential because each checkpoint extends the previous working system. Phases 1–5 have executable checks; each record distinguishes observed evidence from pending checks. Commands in unstarted Phase 6 are proposed, not verified.
+Phases are sequential because each checkpoint extends the previous working system. Phases 1–6 have executable checks; each record distinguishes observed evidence at its tested commit from pending checks and later follow-ups.

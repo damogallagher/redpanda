@@ -25,3 +25,7 @@ I’m now checking that these results travel correctly through the real broker, 
 The broker-to-API check passed: the eight-section edit was assessed, the nine-, 20- and 21-section edits were stored as explicit abstentions with zero model calls, and an older 20-section result remained readable unchanged.
 
 The fix preserves the existing schema and inference budgets. I’m running the full acceptance and coverage checks now.
+
+## Assistant — progress
+
+All 438 unit tests passed with 100% line and branch coverage, with no exclusions. The full suite is now working through the broker and database recovery checks. The docs include a single command, `make test-evidence-limits`, to verify the count handling and compatibility behavior.
