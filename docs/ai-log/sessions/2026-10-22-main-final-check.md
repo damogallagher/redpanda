@@ -59,4 +59,3 @@ Runtime prompt templates and curated model-evaluation transcripts are different 
 The [assignment explicitly requires the personal write-up without AI assistance](https://github.com/damogallagher/redpanda/blob/7a3410842e5a9f12813a93d32366c564a8f1dda9/docs/assignment/fde-take-home-exercise.md#required-write-up-about-30-minutes). Before submitting, write those three personal sections yourself from your understanding, without AI drafting or polishing—or ask the reviewer how to handle the assistance already received. Omitting logs would not resolve that requirement.
 
 This check’s verification evidence and conversation record are saved locally; no new commit or PR was created.
-

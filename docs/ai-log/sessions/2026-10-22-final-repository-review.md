@@ -43,4 +43,3 @@ I caught one more stale count: the focused foundation target now runs five check
 The revised inspection commands returned the expected five topics, both migration versions, the results table, API readiness and all three synthetic decisions. The isolated demo is cleaned up, and all 24 pre-existing Docker volumes are still present.
 
 I’m recording the audit and opening a documentation PR. Your personal README sections and the study-pack files are unchanged. This review used no live model calls; the earlier model results and security scans remain clearly dated.
-
