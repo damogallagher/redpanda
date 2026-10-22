@@ -70,4 +70,12 @@ The [security review](../security-review.md) and machine-readable audit evidence
 
 ## Verification record
 
-Pending final local and GitHub verification; replace this paragraph with exact observed results before handover.
+Implementation `4d8247b` passed the complete local gate: **453 unit tests, 31 integration checks, 72 native Connect cases**, with **1,172 lines and 286 branches covered at 100%**, zero exclusions. `make test-security` passed **62** checks. `make audit-tools` and the 63-package hashed dependency audit passed. A deliberately unsafe untracked fixture failed the quality gate as expected; it was never added to the application.
+
+[Linux CI](https://github.com/damogallagher/redpanda/actions/runs/39690196848) passed on the same commit. Downloaded artifacts confirm counts/coverage; emitted warnings and check annotations are both zero. [Verification JSON](../evidence/security-quality-verification.json) contains commands, scope, hashes and results. The [image findings](../evidence/security-quality-images.json) are separately disclosed failing vulnerability scans, not rolled into a misleading green result.
+
+PR #16 was merged by Damien during verification. This evidence handover follows current main, disables the optional CI cache and does not change application code. PR #13 and PR #14 were subsequently refreshed against the merged hardening branch and merged by Damien; PR #13 adds one integration case, so the combined expected count is **32 integration checks**. The study pack remains pinned to its historical snapshot.
+
+Final combined-main [Linux CI](https://github.com/damogallagher/redpanda/actions/runs/39690982066) passed on `872974c`: **453 unit / 32 integration / 72 Connect cases**, **100% lines/branches**. Both conflict-resolution PR checks passed. Downloaded artifacts confirm the results; one setup-uv cache-save warning annotation appeared because concurrent runs tried to reserve the same optional cache key. This follow-up disables that optional cache using the pinned action's documented input. Source, tests and dependency pins are unchanged. All disposable local containers were removed; profiles, model weights and retained application data were preserved.
+
+Follow-up [PR #17](https://github.com/damogallagher/redpanda/pull/17) passed [Linux CI](https://github.com/damogallagher/redpanda/actions/runs/39692092595) on `8c1c914`: 453 unit / 32 integration / 72 Connect cases, 100% application lines and branches, **zero emitted warnings and zero check annotations**. Downloaded artifacts verify the optional-cache fix. The closing evidence/transcript update changes documentation only; application, tests and workflow match this tested commit.

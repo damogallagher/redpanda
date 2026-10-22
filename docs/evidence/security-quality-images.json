@@ -1,0 +1,4696 @@
+{
+  "scope": "Local ARM64 pinned app and four deployed upstream images. HIGH/CRITICAL OS and embedded-language findings; not a clean scan. Previous postgres/ollama images included for comparison.",
+  "tool": "Trivy 0.76.1",
+  "checked_on": "2026-10-21",
+  "architecture_limit": "ARM64 for every selected runtime image; an additional AMD64 Ollama scan is included. Other AMD64 images are functionally tested in CI but were not separately vulnerability-scanned.",
+  "updates": "Fresh Python/Postgres digests and Ollama 0.40.8 did not remove the observed high/critical findings.",
+  "raw_reports": "Ignored reports/security-image-*.json; condensed findings retain every advisory/package/version/fix/target.",
+  "images": [
+    {
+      "name": "app",
+      "artifact": "triage-test-afcedf77fa-model-check",
+      "image_id": "sha256:4424c55cdf177fc7fc4646af6fd936cb331f254d305d83ef6f05ff0bbc6d546b",
+      "architecture": "arm64",
+      "os": {
+        "Family": "debian",
+        "Name": "13.7"
+      },
+      "scan_exit_code": 1,
+      "pairs_by_severity": {
+        "HIGH": 44
+      },
+      "unique_advisories": 8,
+      "findings": [
+        {
+          "id": "CVE-2026-76642",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-76642",
+          "target": "triage-test-afcedf77fa-model-check (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "liblastlog2-2",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "login",
+              "InstalledVersion": "1:4.16.0-2+really2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78408",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78408",
+          "target": "triage-test-afcedf77fa-model-check (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "liblastlog2-2",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "login",
+              "InstalledVersion": "1:4.16.0-2+really2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78409",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78409",
+          "target": "triage-test-afcedf77fa-model-check (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "liblastlog2-2",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "login",
+              "InstalledVersion": "1:4.16.0-2+really2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78410",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78410",
+          "target": "triage-test-afcedf77fa-model-check (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "liblastlog2-2",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "login",
+              "InstalledVersion": "1:4.16.0-2+really2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-54369",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-54369",
+          "target": "triage-test-afcedf77fa-model-check (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "libacl1",
+              "InstalledVersion": "2.3.2-2+b1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2025-69720",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2025-69720",
+          "target": "triage-test-afcedf77fa-model-check (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "libncursesw6",
+              "InstalledVersion": "6.5+20250216-2",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libtinfo6",
+              "InstalledVersion": "6.5+20250216-2",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "ncurses-base",
+              "InstalledVersion": "6.5+20250216-2",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "ncurses-bin",
+              "InstalledVersion": "6.5+20250216-2",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-16742",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-16742",
+          "target": "triage-test-afcedf77fa-model-check (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "libsystemd0",
+              "InstalledVersion": "257.13-1~deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libudev1",
+              "InstalledVersion": "257.13-1~deb13u1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-9538",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-9538",
+          "target": "triage-test-afcedf77fa-model-check (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "perl-base",
+              "InstalledVersion": "5.40.1-6+deb13u1",
+              "FixedVersion": null
+            }
+          ]
+        }
+      ],
+      "report_sha256": "f78fa5c4a1afd14746690a06a85f85a83f9114cc5fe60f2cb671558e48eb2c1e",
+      "scan_created_at": "2026-10-21T23:58:11.551738+01:00"
+    },
+    {
+      "name": "redpanda",
+      "artifact": "docker.redpanda.com/redpandadata/redpanda:v26.2.5@sha256:badca2d958f81da675c3055a9ecb6ebb590325582bcf16936148ffd65e96e920",
+      "image_id": "sha256:badca2d958f81da675c3055a9ecb6ebb590325582bcf16936148ffd65e96e920",
+      "architecture": "arm64",
+      "os": {
+        "Family": "debian",
+        "Name": "13.7"
+      },
+      "scan_exit_code": 1,
+      "pairs_by_severity": {
+        "HIGH": 48
+      },
+      "unique_advisories": 10,
+      "findings": [
+        {
+          "id": "CVE-2026-76642",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-76642",
+          "target": "docker.redpanda.com/redpandadata/redpanda:v26.2.5@sha256:badca2d958f81da675c3055a9ecb6ebb590325582bcf16936148ffd65e96e920 (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "liblastlog2-2",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "login",
+              "InstalledVersion": "1:4.16.0-2+really2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78408",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78408",
+          "target": "docker.redpanda.com/redpandadata/redpanda:v26.2.5@sha256:badca2d958f81da675c3055a9ecb6ebb590325582bcf16936148ffd65e96e920 (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "liblastlog2-2",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "login",
+              "InstalledVersion": "1:4.16.0-2+really2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78409",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78409",
+          "target": "docker.redpanda.com/redpandadata/redpanda:v26.2.5@sha256:badca2d958f81da675c3055a9ecb6ebb590325582bcf16936148ffd65e96e920 (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "liblastlog2-2",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "login",
+              "InstalledVersion": "1:4.16.0-2+really2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78410",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78410",
+          "target": "docker.redpanda.com/redpandadata/redpanda:v26.2.5@sha256:badca2d958f81da675c3055a9ecb6ebb590325582bcf16936148ffd65e96e920 (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "liblastlog2-2",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "login",
+              "InstalledVersion": "1:4.16.0-2+really2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.41.5-0+deb13u1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-12064",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-12064",
+          "target": "docker.redpanda.com/redpandadata/redpanda:v26.2.5@sha256:badca2d958f81da675c3055a9ecb6ebb590325582bcf16936148ffd65e96e920 (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "curl",
+              "InstalledVersion": "8.14.1-2+deb13u7",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libcurl4t64",
+              "InstalledVersion": "8.14.1-2+deb13u7",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-8458",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-8458",
+          "target": "docker.redpanda.com/redpandadata/redpanda:v26.2.5@sha256:badca2d958f81da675c3055a9ecb6ebb590325582bcf16936148ffd65e96e920 (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "curl",
+              "InstalledVersion": "8.14.1-2+deb13u7",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libcurl4t64",
+              "InstalledVersion": "8.14.1-2+deb13u7",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-54369",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-54369",
+          "target": "docker.redpanda.com/redpandadata/redpanda:v26.2.5@sha256:badca2d958f81da675c3055a9ecb6ebb590325582bcf16936148ffd65e96e920 (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "libacl1",
+              "InstalledVersion": "2.3.2-2+b1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2025-69720",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2025-69720",
+          "target": "docker.redpanda.com/redpandadata/redpanda:v26.2.5@sha256:badca2d958f81da675c3055a9ecb6ebb590325582bcf16936148ffd65e96e920 (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "libncursesw6",
+              "InstalledVersion": "6.5+20250216-2",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libtinfo6",
+              "InstalledVersion": "6.5+20250216-2",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "ncurses-base",
+              "InstalledVersion": "6.5+20250216-2",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "ncurses-bin",
+              "InstalledVersion": "6.5+20250216-2",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-16742",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-16742",
+          "target": "docker.redpanda.com/redpandadata/redpanda:v26.2.5@sha256:badca2d958f81da675c3055a9ecb6ebb590325582bcf16936148ffd65e96e920 (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "libsystemd0",
+              "InstalledVersion": "257.13-1~deb13u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libudev1",
+              "InstalledVersion": "257.13-1~deb13u1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-9538",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-9538",
+          "target": "docker.redpanda.com/redpandadata/redpanda:v26.2.5@sha256:badca2d958f81da675c3055a9ecb6ebb590325582bcf16936148ffd65e96e920 (debian 13.7)",
+          "packages": [
+            {
+              "PkgName": "perl-base",
+              "InstalledVersion": "5.40.1-6+deb13u1",
+              "FixedVersion": null
+            }
+          ]
+        }
+      ],
+      "report_sha256": "56fe49ce503014177106afcaa97133bf801b5abc8cf05a24742021e1c514f259",
+      "scan_created_at": "2026-10-21T23:50:24.988155+01:00"
+    },
+    {
+      "name": "connect",
+      "artifact": "docker.redpanda.com/redpandadata/connect:4.114.0@sha256:481e8df48ed733f080623ae67f0dccc82d29ae509dfb3f957347a9e900e74910",
+      "image_id": "sha256:481e8df48ed733f080623ae67f0dccc82d29ae509dfb3f957347a9e900e74910",
+      "architecture": "arm64",
+      "os": null,
+      "scan_exit_code": 1,
+      "pairs_by_severity": {
+        "HIGH": 1
+      },
+      "unique_advisories": 1,
+      "findings": [
+        {
+          "id": "CVE-2026-111943",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-111943",
+          "target": "redpanda-connect",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.9",
+              "FixedVersion": "1.26.10, 1.27.3"
+            }
+          ]
+        }
+      ],
+      "report_sha256": "6463234f0e83daa60545d7b15688d795ab934b7a28b1852e4f6924e0114ecb66",
+      "scan_created_at": "2026-10-21T23:50:26.614411+01:00"
+    },
+    {
+      "name": "postgres",
+      "artifact": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4",
+      "image_id": "sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4",
+      "architecture": "arm64",
+      "os": {
+        "Family": "debian",
+        "Name": "12.15"
+      },
+      "scan_exit_code": 1,
+      "pairs_by_severity": {
+        "HIGH": 96,
+        "CRITICAL": 4
+      },
+      "unique_advisories": 50,
+      "findings": [
+        {
+          "id": "CVE-2026-53613",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-53613",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux-extra",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-53615",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-53615",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux-extra",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-76642",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-76642",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux-extra",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78408",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78408",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux-extra",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78409",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78409",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux-extra",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78410",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78410",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux-extra",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-41992",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-41992",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "gzip",
+              "InstalledVersion": "1.12-1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-54369",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-54369",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libacl1",
+              "InstalledVersion": "2.3.1-3",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2023-2953",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2023-2953",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libldap-2.5-0",
+              "InstalledVersion": "2.5.13+dfsg-5",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2025-69720",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2025-69720",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libncursesw6",
+              "InstalledVersion": "6.4-4",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libtinfo6",
+              "InstalledVersion": "6.4-4",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "ncurses-base",
+              "InstalledVersion": "6.4-4",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "ncurses-bin",
+              "InstalledVersion": "6.4-4",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-9538",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-9538",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libperl5.36",
+              "InstalledVersion": "5.36.0-7+deb12u4",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "perl",
+              "InstalledVersion": "5.36.0-7+deb12u4",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "perl-base",
+              "InstalledVersion": "5.36.0-7+deb12u4",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "perl-modules-5.36",
+              "InstalledVersion": "5.36.0-7+deb12u4",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2025-7458",
+          "severity": "CRITICAL",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2025-7458",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libsqlite3-0",
+              "InstalledVersion": "3.40.1-2+deb12u2",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-11822",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-11822",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libsqlite3-0",
+              "InstalledVersion": "3.40.1-2+deb12u2",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-11824",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-11824",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libsqlite3-0",
+              "InstalledVersion": "3.40.1-2+deb12u2",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-84782",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-84782",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libssl3",
+              "InstalledVersion": "3.0.22-1~deb12u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "openssl",
+              "InstalledVersion": "3.0.22-1~deb12u1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-16742",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-16742",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libsystemd0",
+              "InstalledVersion": "252.39-1~deb12u2",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libudev1",
+              "InstalledVersion": "252.39-1~deb12u2",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-6653",
+          "severity": "CRITICAL",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-6653",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libxml2",
+              "InstalledVersion": "2.9.14+dfsg-1.3~deb12u6",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-74860",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-74860",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libxml2",
+              "InstalledVersion": "2.9.14+dfsg-1.3~deb12u6",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-86138",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-86138",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libxml2",
+              "InstalledVersion": "2.9.14+dfsg-1.3~deb12u6",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-86140",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-86140",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libxml2",
+              "InstalledVersion": "2.9.14+dfsg-1.3~deb12u6",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-86142",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-86142",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libxml2",
+              "InstalledVersion": "2.9.14+dfsg-1.3~deb12u6",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-86143",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-86143",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libxml2",
+              "InstalledVersion": "2.9.14+dfsg-1.3~deb12u6",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-86144",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-86144",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libxml2",
+              "InstalledVersion": "2.9.14+dfsg-1.3~deb12u6",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2023-45853",
+          "severity": "CRITICAL",
+          "status": "will_not_fix",
+          "url": "https://avd.aquasec.com/nvd/cve-2023-45853",
+          "target": "postgres:16.15-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "zlib1g",
+              "InstalledVersion": "1:1.2.13.dfsg-1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2025-68121",
+          "severity": "CRITICAL",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2025-68121",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.24.13, 1.25.7, 1.26.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2025-61726",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2025-61726",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.24.12, 1.25.6"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2025-61729",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2025-61729",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.24.11, 1.25.5"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-111943",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-111943",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.26.10, 1.27.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-25679",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-25679",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.8, 1.26.1"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-27145",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-27145",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.11, 1.26.4"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-32280",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32280",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.9, 1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-32281",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32281",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.9, 1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-32283",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32283",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.9, 1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33811",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33811",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33814",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33814",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33818",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33818",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39820",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39820",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39821",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39821",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39822",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39822",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.12, 1.26.5, 1.27.0-rc.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39836",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39836",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-42499",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-42499",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-42504",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-42504",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.11, 1.26.4"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56853",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56853",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56858",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56858",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56859",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56859",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56860",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56860",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56862",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56862",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78667",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78667",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.26.9, 1.27.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78669",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78669",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.26.9, 1.27.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-97031",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-97031",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.26.9, 1.27.2"
+            }
+          ]
+        }
+      ],
+      "report_sha256": "4f53e264766647b280089419804dc85c8ebe5e36f082011e4c6aa4da42d17323",
+      "scan_created_at": "2026-10-21T23:50:28.937368+01:00"
+    },
+    {
+      "name": "postgres-updated",
+      "artifact": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0",
+      "image_id": "sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0",
+      "architecture": "arm64",
+      "os": {
+        "Family": "debian",
+        "Name": "12.15"
+      },
+      "scan_exit_code": 1,
+      "pairs_by_severity": {
+        "HIGH": 96,
+        "CRITICAL": 4
+      },
+      "unique_advisories": 50,
+      "findings": [
+        {
+          "id": "CVE-2026-53613",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-53613",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux-extra",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-53615",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-53615",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux-extra",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-76642",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-76642",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux-extra",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78408",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78408",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux-extra",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78409",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78409",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux-extra",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78410",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78410",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "bsdutils",
+              "InstalledVersion": "1:2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libblkid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libmount1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libsmartcols1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libuuid1",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "mount",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "util-linux-extra",
+              "InstalledVersion": "2.38.1-5+deb12u3",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-41992",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-41992",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "gzip",
+              "InstalledVersion": "1.12-1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-54369",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-54369",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libacl1",
+              "InstalledVersion": "2.3.1-3",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2023-2953",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2023-2953",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libldap-2.5-0",
+              "InstalledVersion": "2.5.13+dfsg-5",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2025-69720",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2025-69720",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libncursesw6",
+              "InstalledVersion": "6.4-4",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libtinfo6",
+              "InstalledVersion": "6.4-4",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "ncurses-base",
+              "InstalledVersion": "6.4-4",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "ncurses-bin",
+              "InstalledVersion": "6.4-4",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-9538",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-9538",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libperl5.36",
+              "InstalledVersion": "5.36.0-7+deb12u4",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "perl",
+              "InstalledVersion": "5.36.0-7+deb12u4",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "perl-base",
+              "InstalledVersion": "5.36.0-7+deb12u4",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "perl-modules-5.36",
+              "InstalledVersion": "5.36.0-7+deb12u4",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2025-7458",
+          "severity": "CRITICAL",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2025-7458",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libsqlite3-0",
+              "InstalledVersion": "3.40.1-2+deb12u2",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-11822",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-11822",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libsqlite3-0",
+              "InstalledVersion": "3.40.1-2+deb12u2",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-11824",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-11824",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libsqlite3-0",
+              "InstalledVersion": "3.40.1-2+deb12u2",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-84782",
+          "severity": "HIGH",
+          "status": "affected",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-84782",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libssl3",
+              "InstalledVersion": "3.0.22-1~deb12u1",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "openssl",
+              "InstalledVersion": "3.0.22-1~deb12u1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-16742",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-16742",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libsystemd0",
+              "InstalledVersion": "252.39-1~deb12u2",
+              "FixedVersion": null
+            },
+            {
+              "PkgName": "libudev1",
+              "InstalledVersion": "252.39-1~deb12u2",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-6653",
+          "severity": "CRITICAL",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-6653",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libxml2",
+              "InstalledVersion": "2.9.14+dfsg-1.3~deb12u6",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-74860",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-74860",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libxml2",
+              "InstalledVersion": "2.9.14+dfsg-1.3~deb12u6",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-86138",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-86138",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libxml2",
+              "InstalledVersion": "2.9.14+dfsg-1.3~deb12u6",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-86140",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-86140",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libxml2",
+              "InstalledVersion": "2.9.14+dfsg-1.3~deb12u6",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-86142",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-86142",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libxml2",
+              "InstalledVersion": "2.9.14+dfsg-1.3~deb12u6",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-86143",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-86143",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libxml2",
+              "InstalledVersion": "2.9.14+dfsg-1.3~deb12u6",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-86144",
+          "severity": "HIGH",
+          "status": "fix_deferred",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-86144",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "libxml2",
+              "InstalledVersion": "2.9.14+dfsg-1.3~deb12u6",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2023-45853",
+          "severity": "CRITICAL",
+          "status": "will_not_fix",
+          "url": "https://avd.aquasec.com/nvd/cve-2023-45853",
+          "target": "postgres:16.15-bookworm@sha256:d81f7b51697014367236d07ec58b54153fc28f828b72bf247fe5c7487520bcb0 (debian 12.15)",
+          "packages": [
+            {
+              "PkgName": "zlib1g",
+              "InstalledVersion": "1:1.2.13.dfsg-1",
+              "FixedVersion": null
+            }
+          ]
+        },
+        {
+          "id": "CVE-2025-68121",
+          "severity": "CRITICAL",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2025-68121",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.24.13, 1.25.7, 1.26.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2025-61726",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2025-61726",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.24.12, 1.25.6"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2025-61729",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2025-61729",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.24.11, 1.25.5"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-111943",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-111943",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.26.10, 1.27.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-25679",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-25679",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.8, 1.26.1"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-27145",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-27145",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.11, 1.26.4"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-32280",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32280",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.9, 1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-32281",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32281",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.9, 1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-32283",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32283",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.9, 1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33811",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33811",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33814",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33814",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33818",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33818",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39820",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39820",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39821",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39821",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39822",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39822",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.12, 1.26.5, 1.27.0-rc.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39836",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39836",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-42499",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-42499",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-42504",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-42504",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.11, 1.26.4"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56853",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56853",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56858",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56858",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56859",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56859",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56860",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56860",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56862",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56862",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78667",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78667",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.26.9, 1.27.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78669",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78669",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.26.9, 1.27.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-97031",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-97031",
+          "target": "usr/local/bin/gosu",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.24.6",
+              "FixedVersion": "1.26.9, 1.27.2"
+            }
+          ]
+        }
+      ],
+      "report_sha256": "ec732c6de1b3cb54502123f4b581d59df7a6a15bd7427433376b3e1ff9e07d1c",
+      "scan_created_at": "2026-10-21T23:53:48.41517+01:00"
+    },
+    {
+      "name": "ollama",
+      "artifact": "ollama/ollama:0.40.6@sha256:265409e1d931028a8f7d5a32bcbafddd7bffbc6cc629d77efe9560adf692a5e7",
+      "image_id": "sha256:265409e1d931028a8f7d5a32bcbafddd7bffbc6cc629d77efe9560adf692a5e7",
+      "architecture": "arm64",
+      "os": {
+        "Family": "ubuntu",
+        "Name": "24.04"
+      },
+      "scan_exit_code": 1,
+      "pairs_by_severity": {
+        "HIGH": 50
+      },
+      "unique_advisories": 46,
+      "findings": [
+        {
+          "id": "CVE-2026-32285",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32285",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "github.com/buger/jsonparser",
+              "InstalledVersion": "v1.1.1",
+              "FixedVersion": "1.1.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-63209",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-63209",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "github.com/klauspost/compress",
+              "InstalledVersion": "v1.18.3",
+              "FixedVersion": "1.18.7"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39828",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39828",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39829",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39829",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39830",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39830",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39831",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39831",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39832",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39832",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39835",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39835",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-42508",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-42508",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-46595",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-46595",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-46597",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-46597",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56854",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56854",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.55.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-46602",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-46602",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/image",
+              "InstalledVersion": "v0.22.0",
+              "FixedVersion": "0.43.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-46603",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-46603",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/image",
+              "InstalledVersion": "v0.22.0",
+              "FixedVersion": "0.45.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56864",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56864",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/mod",
+              "InstalledVersion": "v0.30.0",
+              "FixedVersion": "0.40.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56865",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56865",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/mod",
+              "InstalledVersion": "v0.30.0",
+              "FixedVersion": "0.40.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-25681",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-25681",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.55.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-27136",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-27136",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.55.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33814",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33814",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.53.0"
+            },
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39821",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39821",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.55.0"
+            },
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-46600",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-46600",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.56.0"
+            },
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78669",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78669",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.60.0"
+            },
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.9, 1.27.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56851",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56851",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/text",
+              "InstalledVersion": "v0.30.0",
+              "FixedVersion": "0.41.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56852",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56852",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/text",
+              "InstalledVersion": "v0.30.0",
+              "FixedVersion": "0.39.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-111943",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-111943",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.10, 1.27.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-25679",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-25679",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.8, 1.26.1"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-27137",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-27137",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.1"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-27145",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-27145",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.11, 1.26.4"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-32280",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32280",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.9, 1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-32281",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32281",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.9, 1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-32283",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32283",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.9, 1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33810",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33810",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33811",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33811",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33818",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33818",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39820",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39820",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39822",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39822",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.12, 1.26.5, 1.27.0-rc.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39836",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39836",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-42499",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-42499",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-42504",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-42504",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.11, 1.26.4"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56853",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56853",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56858",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56858",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56859",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56859",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56860",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56860",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56862",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56862",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78667",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78667",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.9, 1.27.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-97031",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-97031",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.9, 1.27.2"
+            }
+          ]
+        }
+      ],
+      "report_sha256": "389658deca3a4a7b26301a007b6bc0a9d4d68354ff6c4d2a8f695c666e9e07c3",
+      "scan_created_at": "2026-10-21T23:51:01.932066+01:00"
+    },
+    {
+      "name": "ollama-updated",
+      "artifact": "ollama/ollama:0.40.8@sha256:2b8eecdb85aa6ea67c381c8ecffec04b2658496cf2821a8f88b0485bdff198e8",
+      "image_id": "sha256:2b8eecdb85aa6ea67c381c8ecffec04b2658496cf2821a8f88b0485bdff198e8",
+      "architecture": "arm64",
+      "os": {
+        "Family": "ubuntu",
+        "Name": "24.04"
+      },
+      "scan_exit_code": 1,
+      "pairs_by_severity": {
+        "HIGH": 50
+      },
+      "unique_advisories": 46,
+      "findings": [
+        {
+          "id": "CVE-2026-32285",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32285",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "github.com/buger/jsonparser",
+              "InstalledVersion": "v1.1.1",
+              "FixedVersion": "1.1.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-63209",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-63209",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "github.com/klauspost/compress",
+              "InstalledVersion": "v1.18.3",
+              "FixedVersion": "1.18.7"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39828",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39828",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39829",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39829",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39830",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39830",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39831",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39831",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39832",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39832",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39835",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39835",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-42508",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-42508",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-46595",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-46595",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-46597",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-46597",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56854",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56854",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.55.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-46602",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-46602",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/image",
+              "InstalledVersion": "v0.22.0",
+              "FixedVersion": "0.43.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-46603",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-46603",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/image",
+              "InstalledVersion": "v0.22.0",
+              "FixedVersion": "0.45.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56864",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56864",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/mod",
+              "InstalledVersion": "v0.30.0",
+              "FixedVersion": "0.40.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56865",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56865",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/mod",
+              "InstalledVersion": "v0.30.0",
+              "FixedVersion": "0.40.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-25681",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-25681",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.55.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-27136",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-27136",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.55.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33814",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33814",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.53.0"
+            },
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39821",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39821",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.55.0"
+            },
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-46600",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-46600",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.56.0"
+            },
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78669",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78669",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.60.0"
+            },
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.9, 1.27.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56851",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56851",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/text",
+              "InstalledVersion": "v0.30.0",
+              "FixedVersion": "0.41.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56852",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56852",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/text",
+              "InstalledVersion": "v0.30.0",
+              "FixedVersion": "0.39.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-111943",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-111943",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.10, 1.27.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-25679",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-25679",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.8, 1.26.1"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-27137",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-27137",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.1"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-27145",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-27145",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.11, 1.26.4"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-32280",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32280",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.9, 1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-32281",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32281",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.9, 1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-32283",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32283",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.9, 1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33810",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33810",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33811",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33811",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33818",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33818",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39820",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39820",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39822",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39822",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.12, 1.26.5, 1.27.0-rc.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39836",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39836",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-42499",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-42499",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-42504",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-42504",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.11, 1.26.4"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56853",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56853",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56858",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56858",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56859",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56859",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56860",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56860",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56862",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56862",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78667",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78667",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.9, 1.27.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-97031",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-97031",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.9, 1.27.2"
+            }
+          ]
+        }
+      ],
+      "report_sha256": "bc7a4825a2cde8fd3978dc7c75588777374c5bc2b0e44adac289864d56ed36c1",
+      "scan_created_at": "2026-10-22T00:00:34.465104+01:00"
+    },
+    {
+      "name": "ollama-updated-amd64",
+      "artifact": "ollama/ollama:0.40.8@sha256:2b8eecdb85aa6ea67c381c8ecffec04b2658496cf2821a8f88b0485bdff198e8",
+      "image_id": "sha256:a95ca06aa736fc602819a6df80b5dbf8448a3bba189e12836e1aa631c1ebbb80",
+      "architecture": "amd64",
+      "os": {
+        "Family": "ubuntu",
+        "Name": "24.04"
+      },
+      "scan_exit_code": 1,
+      "pairs_by_severity": {
+        "HIGH": 50
+      },
+      "unique_advisories": 46,
+      "findings": [
+        {
+          "id": "CVE-2026-32285",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32285",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "github.com/buger/jsonparser",
+              "InstalledVersion": "v1.1.1",
+              "FixedVersion": "1.1.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-63209",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-63209",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "github.com/klauspost/compress",
+              "InstalledVersion": "v1.18.3",
+              "FixedVersion": "1.18.7"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39828",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39828",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39829",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39829",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39830",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39830",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39831",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39831",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39832",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39832",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39835",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39835",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-42508",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-42508",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-46595",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-46595",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-46597",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-46597",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.52.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56854",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56854",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/crypto",
+              "InstalledVersion": "v0.43.0",
+              "FixedVersion": "0.55.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-46602",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-46602",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/image",
+              "InstalledVersion": "v0.22.0",
+              "FixedVersion": "0.43.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-46603",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-46603",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/image",
+              "InstalledVersion": "v0.22.0",
+              "FixedVersion": "0.45.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56864",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56864",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/mod",
+              "InstalledVersion": "v0.30.0",
+              "FixedVersion": "0.40.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56865",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56865",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/mod",
+              "InstalledVersion": "v0.30.0",
+              "FixedVersion": "0.40.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-25681",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-25681",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.55.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-27136",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-27136",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.55.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33814",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33814",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.53.0"
+            },
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39821",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39821",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.55.0"
+            },
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-46600",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-46600",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.56.0"
+            },
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78669",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78669",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/net",
+              "InstalledVersion": "v0.46.0",
+              "FixedVersion": "0.60.0"
+            },
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.9, 1.27.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56851",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56851",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/text",
+              "InstalledVersion": "v0.30.0",
+              "FixedVersion": "0.41.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56852",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56852",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "golang.org/x/text",
+              "InstalledVersion": "v0.30.0",
+              "FixedVersion": "0.39.0"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-111943",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-111943",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.10, 1.27.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-25679",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-25679",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.8, 1.26.1"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-27137",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-27137",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.1"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-27145",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-27145",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.11, 1.26.4"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-32280",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32280",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.9, 1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-32281",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32281",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.9, 1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-32283",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-32283",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.9, 1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33810",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33810",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33811",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33811",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-33818",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-33818",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39820",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39820",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39822",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39822",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.12, 1.26.5, 1.27.0-rc.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-39836",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-39836",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-42499",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-42499",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.10, 1.26.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-42504",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-42504",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.11, 1.26.4"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56853",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56853",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56858",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56858",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56859",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56859",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56860",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56860",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-56862",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-56862",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.25.13, 1.26.6, 1.27.0-rc.3"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-78667",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-78667",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.9, 1.27.2"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-97031",
+          "severity": "HIGH",
+          "status": "fixed",
+          "url": "https://avd.aquasec.com/nvd/cve-2026-97031",
+          "target": "usr/bin/ollama",
+          "packages": [
+            {
+              "PkgName": "stdlib",
+              "InstalledVersion": "v1.26.0",
+              "FixedVersion": "1.26.9, 1.27.2"
+            }
+          ]
+        }
+      ],
+      "report_sha256": "cca08642d771924b7e92c080a5f20734e258b7953c044862829e9f948a3a4c89",
+      "scan_created_at": "2026-10-21T23:53:44.444822+01:00"
+    }
+  ],
+  "finalized_on_local": "2026-10-22 Europe/Dublin",
+  "vulnerability_database": {
+    "Version": 2,
+    "NextUpdate": "2026-10-22T19:18:22.876312904Z",
+    "UpdatedAt": "2026-10-21T19:18:22.876313144Z",
+    "DownloadedAt": "2026-10-21T22:50:23.381584Z"
+  }
+}

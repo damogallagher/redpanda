@@ -1,0 +1,294 @@
+{
+  "implementation_commit": "4d8247b022493e0a73945782c053558998144ac5",
+  "checks": {
+    "full_gate": {
+      "command": "make test UV='uvx --from uv==0.13.4 uv'",
+      "exit_code": 0,
+      "unit": {
+        "tests": 453,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "integration": {
+        "tests": 31,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "native_connect_cases": 72,
+      "coverage": {
+        "covered_lines": 1172,
+        "num_statements": 1172,
+        "percent_covered": 100.0,
+        "percent_covered_display": "100.00",
+        "missing_lines": 0,
+        "excluded_lines": 0,
+        "percent_statements_covered": 100.0,
+        "percent_statements_covered_display": "100.00",
+        "num_branches": 286,
+        "num_partial_branches": 0,
+        "covered_branches": 286,
+        "missing_branches": 0,
+        "percent_branches_covered": 100.0,
+        "percent_branches_covered_display": "100.00"
+      },
+      "exclusions": 0
+    },
+    "source": {
+      "ruff": "0.17.1",
+      "maximum_function_complexity": 10,
+      "magic_comparison_findings": 0,
+      "security_findings": 0,
+      "mypy": "2.4.0 strict",
+      "bandit": "1.9.4",
+      "bandit_findings": 0,
+      "reviewed_hotspots": [
+        "B404: local Docker subprocess import",
+        "B603/S603: no shell; trusted operator Compose/PATH, Docker executable guard"
+      ]
+    },
+    "native_linters": {
+      "shellcheck": "0.11.0",
+      "actionlint": "1.7.12",
+      "hadolint": "2.15.1",
+      "command": "make audit-tools",
+      "exit_code": 0
+    },
+    "dependencies": {
+      "tool": "pip-audit 2.10.1",
+      "command": "make audit-dependencies UV='uvx --from uv==0.13.4 uv'",
+      "exit_code": 0,
+      "audited_packages": 63,
+      "known_advisories": 0,
+      "skipped_packages": 0
+    },
+    "secret_scan": {
+      "tool": "Trivy 0.76.1",
+      "scope": "Current source tree, excluding .git, .venv and reports; not historical Git commits or private user profiles.",
+      "findings": 0
+    },
+    "configuration_scan": {
+      "findings": [
+        {
+          "target": "Dockerfile",
+          "id": "DS-0026",
+          "severity": "LOW",
+          "title": "No HEALTHCHECK defined"
+        }
+      ],
+      "review": "DS-0026: Compose health checks are service-specific; shared worker/API image intentionally has no HTTP HEALTHCHECK."
+    },
+    "negative_quality_gate": {
+      "exit_code": 1,
+      "detected_rules": [
+        "PLR2004",
+        "S602"
+      ],
+      "purpose": "Untracked deliberate unsafe shell and magic-number fixture; application unchanged."
+    },
+    "ollama_bootstrap": {
+      "image": "ollama/ollama:0.40.8@sha256:2b8eecdb85aa6ea67c381c8ecffec04b2658496cf2821a8f88b0485bdff198e8",
+      "version": {
+        "version": "0.40.8"
+      },
+      "tags": {
+        "models": []
+      },
+      "model_calls": 0,
+      "weights_downloaded": false,
+      "temporary_filesystem": true
+    },
+    "focused_security": {
+      "command": "make test-security UV='uvx --from uv==0.13.4 uv'",
+      "exit_code": 0,
+      "passed": 62
+    },
+    "final_merged_source_scan": {
+      "base_commit": "872974c",
+      "tool": "Trivy 0.76.1",
+      "secret_findings": 0,
+      "configuration_findings": [
+        {
+          "id": "DS-0026",
+          "severity": "LOW"
+        }
+      ],
+      "report_sha256": "447a9fd908e2318c042a4dcc04f32a212771be7f25223b2ae1c28ca1384b6c47",
+      "scope": "Current merged source, demo/study material and audit documentation; excludes .git, .venv and reports."
+    }
+  },
+  "logs": {
+    "unit.xml": "04a69097d7ba7987fccc19a219b4fafa1937878f813ab85b89e55e97f358ec22",
+    "integration.xml": "4e5e89433677f9863f810bba8c0667c7378635af824bcc3fef02b77688f18da5",
+    "coverage.json": "ab1f311a589d2e7c99d33470442c246671a2110b1d019fb6b0734f2d7f1bb26a",
+    "security-full-gate.log": "93e7d57d4717c0b8013291480b25afe17bdbbc8882ae9815d6060781c56a7572",
+    "bandit.json": "33a3df3e13ad2190f8739b7815bce3aa72fb15bd7cc22882df041550d6ca8694",
+    "repository-security-final.json": "8beac86fc01b9fc13f02a98b39cbd2014fc4659eb1f7e14b42b672e772581b12"
+  },
+  "production_approval": false,
+  "unresolved": [
+    "Vendor image findings listed in security-quality-images.json",
+    "No internet-facing authentication/TLS/ACL/HA/backup deployment implementation",
+    "No full penetration test or SonarQube server run",
+    "No new live-model semantic evaluation for the Ollama patch; API boot and both adapters covered separately"
+  ],
+  "github_ci": {
+    "status": "success",
+    "url": "https://github.com/damogallagher/redpanda/actions/runs/39690196848",
+    "tested_commit": "4d8247b",
+    "unit_tests": 453,
+    "integration_tests": 31,
+    "coverage": {
+      "covered_lines": 1172,
+      "num_statements": 1172,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100.00",
+      "missing_lines": 0,
+      "excluded_lines": 0,
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100.00",
+      "num_branches": 286,
+      "num_partial_branches": 0,
+      "covered_branches": 286,
+      "missing_branches": 0,
+      "percent_branches_covered": 100.0,
+      "percent_branches_covered_display": "100.00"
+    },
+    "emitted_warning_count": 0,
+    "check_annotations": 0
+  },
+  "pr": "https://github.com/damogallagher/redpanda/pull/16",
+  "combined_main": {
+    "base_commit": "872974c",
+    "local_tested_commit": "b96a9f6",
+    "application_config_tests_match_main": true,
+    "unit": {
+      "tests": 453,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "integration": {
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "native_connect_cases": 72,
+    "coverage": {
+      "covered_lines": 1172,
+      "num_statements": 1172,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100.00",
+      "missing_lines": 0,
+      "excluded_lines": 0,
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100.00",
+      "num_branches": 286,
+      "num_partial_branches": 0,
+      "covered_branches": 286,
+      "missing_branches": 0,
+      "percent_branches_covered": 100.0,
+      "percent_branches_covered_display": "100.00"
+    },
+    "local_gate": "make test UV='uvx --from uv==0.13.4 uv'",
+    "local_gate_exit_code": 0,
+    "log_sha256": "16e4971f6b953058dceebf9aaaede9d4653415d3ca57bbcd4c6a832e0e0ee2e6",
+    "study_artifacts_original_hashes_verified": true,
+    "original_assignment_sha256": "89a4840092423818c59a81f4042f9007d36e90fe7da7bc8111a4d96f1662e40a",
+    "personal_readme_unchanged": true,
+    "github_ci": {
+      "status": "success",
+      "run_id": 39690982066,
+      "tested_commit": "872974c",
+      "unit": {
+        "tests": 453,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "integration": {
+        "tests": 32,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "coverage": {
+        "covered_lines": 1172,
+        "num_statements": 1172,
+        "percent_covered": 100.0,
+        "percent_covered_display": "100.00",
+        "missing_lines": 0,
+        "excluded_lines": 0,
+        "percent_statements_covered": 100.0,
+        "percent_statements_covered_display": "100.00",
+        "num_branches": 286,
+        "num_partial_branches": 0,
+        "covered_branches": 286,
+        "missing_branches": 0,
+        "percent_branches_covered": 100.0,
+        "percent_branches_covered_display": "100.00"
+      },
+      "emitted_log_warnings": 0,
+      "check_annotations": [
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/damogallagher/redpanda/blob/872974c4bd93c5cdff09861093e483e0343692d5/.github",
+          "start_line": 6,
+          "start_column": null,
+          "end_line": 6,
+          "end_column": null,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Failed to save: Unable to reserve cache with key setup-uv-2-x86_64-unknown-linux-gnu-ubuntu-24.04-unknown-6c91114fa14fe979ba0b9d058659b7a744fc9835935156fe35d91a75397d96e9, another job may be creating this cache.",
+          "raw_details": ""
+        }
+      ],
+      "followup": "Disable optional setup-uv shared cache to eliminate concurrent-save warning; no application change."
+    }
+  },
+  "conflict_pr_checks": {
+    "13": {
+      "commit": "b96a9f6",
+      "run_id": 39690963685,
+      "conclusion": "success",
+      "pr_state": "merged"
+    },
+    "14": {
+      "commit": "cb48882",
+      "run_id": 39690939911,
+      "conclusion": "success",
+      "pr_state": "merged"
+    }
+  },
+  "handover_ci": {
+    "status": "success",
+    "run_id": 39692092595,
+    "tested_commit": "8c1c9140113ef2200c839903665ce0b0e373184a",
+    "url": "https://github.com/damogallagher/redpanda/actions/runs/39692092595",
+    "unit_tests": 453,
+    "integration_tests": 32,
+    "native_connect_cases": 72,
+    "coverage": {
+      "covered_lines": 1172,
+      "num_statements": 1172,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100.00",
+      "missing_lines": 0,
+      "excluded_lines": 0,
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100.00",
+      "num_branches": 286,
+      "num_partial_branches": 0,
+      "covered_branches": 286,
+      "missing_branches": 0,
+      "percent_branches_covered": 100.0,
+      "percent_branches_covered_display": "100.00"
+    },
+    "emitted_warnings": 0,
+    "check_annotations": 0,
+    "optional_uv_cache_disabled": true,
+    "review_pr": "https://github.com/damogallagher/redpanda/pull/17"
+  }
+}
