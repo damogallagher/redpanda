@@ -2,7 +2,7 @@
 
 Wikipedia edit triage in Python, using Redpanda and a selectable local or hosted model.
 
-**Phase 6 adds operational acceptance and handover.** Redpanda Connect ingests Wikipedia edits; a Python worker enriches and reasons over revision evidence; a second Connect pipeline validates and upserts results into Postgres. The API exposes decisions, evidence, versions, and step outcomes with bounded pagination.
+Redpanda Connect ingests Wikipedia edits; a Python worker enriches and reasons over revision evidence; a second Connect pipeline validates and upserts results into Postgres. The API exposes decisions, evidence, versions, and step outcomes with bounded pagination.
 
 - [Presentation study pack: PDF, interactive walkthrough and rehearsal](docs/study-guide/README.md)
 - [Simple run/test/cleanup guide](docs/operations.md)
@@ -39,7 +39,7 @@ For a clean Ollama → frontier submission walkthrough with exact commands and e
 | Delete this project's broker/database data | `./scripts/clean-docker.sh --delete-data` |
 | Delete this project's downloaded model weights | `./scripts/clean-ollama.sh --delete-models` |
 
-The [operator guide](docs/operations.md) gives profile setup, expected pass/fail output, report locations, fresh-start acceptance, restart steps and troubleshooting. Cleanup is scoped to this project. Model tests preserve active `.env`; the startup scripts below copy the selected profile over it. Run one operation at a time. **Submission still needs Damien's independently written personal sections at the end of this README.**
+The [operator guide](docs/operations.md) gives profile setup, expected pass/fail output, report locations, fresh-start acceptance, restart steps and troubleshooting. Cleanup is scoped to this project. Model tests preserve active `.env`; the startup scripts below copy the selected profile over it. Run one operation at a time.
 
 ## Quick verification — no model or API key needed
 
@@ -208,12 +208,14 @@ This is the assignment's single-node development deployment: internal broker/dat
 
 ## Tradeoffs
 
-Reserved for Damien to write independently, in his own words, as requested by the assignment. Choose two of the assignment's pairs and describe the choice, alternative, and when to change it. No AI-authored submission prose has been supplied.
+**Multi-step reasoning versus one classification call.** I split the reasoning into extraction and assessment, with review or repair when needed. The worker first identifies changes using exact quotes from the revision diff, then assesses those changes against the original text. That gives someone reviewing a result a way to inspect the evidence behind it and see which step failed. A single call could return a label and explanation with less latency and fewer requests, but it would combine those responsibilities in one response. The extra steps have a cost: a normal assessment needs two model calls, and the application has more validation and failure paths to maintain. There is a shared limit of four calls per edit, including repairs and retries. Unusable evidence or repeatedly invalid model output leads to an explicit insufficient-evidence result. This does not guarantee a correct judgment: two steps can repeat the same semantic mistake, as the [development evaluation](docs/evaluations/development.md) showed. I would consider one call if a representative evaluation showed comparable quality, including difficult edits and abstention behavior, and latency or cost justified simplifying the flow. The [reasoning record](docs/phases/04-reasoning.md) documents the branching and delivery tests behind this design.
+
+**Connect as the sink versus database writes in Python.** The worker publishes a result to Kafka, and a separate Connect pipeline validates it and inserts or updates the Postgres row. This keeps the reasoning code focused on fetching evidence and interpreting it, while Connect handles database delivery and retries. It also means a temporary database outage can leave results waiting in the topic for the sink to process after recovery. Putting the writes directly in Python would remove a pipeline and keep more of the behavior in one language. The tradeoff is that the worker would then own database connections, SQL retries and the relationship between a database write and its Kafka offset commit. The separate sink has its own complexity: the result contract must agree across Python, Connect and Postgres, and failures need to be traced across those boundaries. Replaying a result preserves one logical SQL row, but a worker crash can still repeat inference; this is not exactly-once processing. I would consider app-side writes if storage needed complex business transactions or database-specific logic that became harder to express and test in Connect. For this small result schema, the [persistence and recovery tests](docs/phases/05-serving.md) give a concrete way to check the split.
 
 ## Surprises and production failure modes
 
-Reserved for Damien's independently written observations after running the system.
+I was surprised by the quality of the model I could run locally on my laptop. That led me to make the solution work with either a local model or a frontier model. Provider selection is explicit, with no automatic fallback. Reviewers can use their own hardware or select hosted inference, while keeping the same processing flow. The recorded results also show why that flexibility needs evaluation: [Ollama passed nine fixed cases, then abstained on two of three live edits](docs/evaluations/submission-demo.md) after invalid extraction output. Those small, historical runs do not establish general accuracy. Before using this with a customer, the model needs testing against their actual content and review criteria. Operationally, the sequential worker can fall behind the feed, reconnecting to Wikipedia can miss events, and public deployment needs authentication, TLS, backup/restore and availability work. The [handover](docs/handover.md#deployment-limits-and-next-operational-decisions) records these limits; 100% code coverage does not remove them.
 
 ## Why this matters
 
-Reserved for Damien's independently written three-to-four-sentence explanation for a non-technical customer stakeholder.
+This is intended for people reviewing changes to Wikipedia articles, who need to decide which edits deserve a closer look. It gives them the before-and-after text and a reason to review an edit, so they can prioritise their attention and make the final decision themselves. A false alarm costs reviewer time, while a missed change or unavailable result can leave a misleading edit unnoticed. Wikipedia is the demonstration use case; applying the same approach to a customer's knowledge base would require separate evaluation against that team's content and review process.
