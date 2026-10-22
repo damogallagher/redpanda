@@ -1,0 +1,112 @@
+{
+  "checked_at": "2026-10-22T23:01:11.233275+00:00",
+  "base_commit": "7a3410842e5a9f12813a93d32366c564a8f1dda9",
+  "branch": "docs/final-repository-review",
+  "scope": "Documentation accuracy and deterministic behavior; no fresh real-model, feed or image-scan claims.",
+  "local_gate": {
+    "command": "COMPOSE_PROJECT_NAME=triage-final-docs-check make verify-phase-6 UV='uvx --from uv==0.13.4 uv'",
+    "exit_code": 0,
+    "unit": {
+      "tests": 453,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "integration": {
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "native_connect_cases": {
+      "ingest": 40,
+      "sink": 32
+    },
+    "coverage": {
+      "covered_lines": 1172,
+      "num_statements": 1172,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100.00",
+      "missing_lines": 0,
+      "excluded_lines": 0,
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100.00",
+      "num_branches": 286,
+      "num_partial_branches": 0,
+      "covered_branches": 286,
+      "missing_branches": 0,
+      "percent_branches_covered": 100.0,
+      "percent_branches_covered_display": "100.00"
+    },
+    "emitted_warning_lines": 0
+  },
+  "documentation": {
+    "markdown_files": 38,
+    "local_links": 361,
+    "anchors": 25,
+    "shell_blocks_syntax_checked": 60,
+    "make_target_references": 142,
+    "personal_readme_unchanged": true,
+    "assignment_unchanged": true,
+    "study_pack_checksums_match": true,
+    "runtime_tests_config_unchanged": true,
+    "errors": []
+  },
+  "quickstart": {
+    "clean_tracked_export": true,
+    "private_profiles_created_mode": "0600",
+    "repeat_setup_preserved_existing_files": true,
+    "seed_command_exit_code": 0,
+    "topic_names": [
+      "edits",
+      "results",
+      "ingest-errors",
+      "processing-errors",
+      "sink-errors"
+    ],
+    "migration_versions": [
+      1,
+      2
+    ],
+    "table": "triage_results",
+    "ready_response": {
+      "status": "ready"
+    },
+    "empty_live_version_response": {
+      "items": [],
+      "next_before_id": null
+    },
+    "synthetic_decisions": {
+      "101": "review",
+      "102": "routine",
+      "103": "insufficient_evidence"
+    },
+    "detail_model": "fixture-not-a-real-model",
+    "existing_volumes_preserved": 24,
+    "remaining_containers": 0
+  },
+  "limitations": {
+    "real_model_calls": 0,
+    "live_feed_requests": 0,
+    "new_image_scans": 0,
+    "external_link_availability_checked": false,
+    "historical_conversations_not_rewritten": true
+  },
+  "baseline_ci": {
+    "url": "https://github.com/damogallagher/redpanda/actions/runs/39864138316",
+    "commit": "7a3410842e5a9f12813a93d32366c564a8f1dda9",
+    "conclusion": "success",
+    "line_and_branch_percent": 100,
+    "emitted_warnings": 0,
+    "check_annotations": 0
+  },
+  "local_report_sha256": {
+    "unit.xml": "a3357f6b96d05605a2a7811aaabef08ae872d2b16a450392a49c2d903ca8dca4",
+    "integration.xml": "36e7217f17356cebc3e389d9b1d59efe05abe3e62de0ab4d35b2e1347b59d36d",
+    "coverage.json": "10c3cc4d0958400987f6fbc7614527f1cc9f699c4f8a81053c32048398f6409d",
+    "final-review-gate.log": "8ce0e4efbeed052e41daa6729c03c9b0f7b6448a00e27993f6e7d2765424d8ed",
+    "final-review-doc-checks.json": "23d97d9b73bb217ce16ac819543cf4d5a57ea434546ae38fa16010a49e6bebb2",
+    "final-review-seeded-results.json": "5c514a893af09b09119144757308ac9de3f21f4d7922e5181c03523643407ba7",
+    "final-review-seeded-detail.json": "71385e45640fca6771a70dd9de15733a35c1423d906d6887da55bdeebdd1e439"
+  }
+}

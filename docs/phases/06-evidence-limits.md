@@ -1,6 +1,8 @@
 # Evidence-count follow-up
 
-Requested 21 October 2026 after the solution-gap review. Branch `fix/evidence-count-limits` starts from merged main `447920f`. PR #13 (executed-demo cleanup) and PR #14 (frozen study pack) remain separate reviews; this change does not merge them or duplicate their changes.
+Historical checkpoint, merged in [PR #15](https://github.com/damogallagher/redpanda/pull/15). Behavior, versions, counts and handover statements below describe their recorded commits. Check out the recorded revision to reproduce that checkpoint. For the current system, use the [README](../../README.md), [verification commands](../phase-verification.md) and [handover](../handover.md).
+
+Requested 21 October 2026 after the solution-gap review. Branch `fix/evidence-count-limits` starts from merged main `447920f`. PR #13 (executed-demo cleanup) and PR #14 (frozen study pack) were separate reviews at that time; this change did not merge them or duplicate their changes. Both were subsequently merged.
 
 ## Problem and behavior
 

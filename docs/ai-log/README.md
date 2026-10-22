@@ -12,7 +12,7 @@ Runtime model prompts are a separate artifact: version the actual prompt templat
 
 Latest demo: [Executed submission demo](sessions/2026-10-20-executed-demo.md). Earlier: [walkthrough](sessions/2026-10-20-submission-demo.md), [Actions maintenance](sessions/2026-10-20-actions-maintenance.md), [Phase 6](sessions/2026-10-20-phase-6.md).
 
-Latest study session: [Presentation study pack](sessions/2026-10-20-study-guide.md).
+Latest study session: [Current-system study-pack refresh](sessions/2026-10-22-walkthrough-refresh.md). Earlier: [original presentation study pack](sessions/2026-10-20-study-guide.md).
 
 Latest review: [Study-pack location and solution gaps](sessions/2026-10-21-gap-review.md).
 
@@ -25,3 +25,7 @@ Conflict resolution: [PR #13 and PR #14](sessions/2026-10-22-conflict-resolution
 Latest submission check and documentation cleanup: [Submission readiness](sessions/2026-10-22-submission-readiness.md).
 
 Latest walkthrough maintenance: [Current-system study-pack refresh](sessions/2026-10-22-walkthrough-refresh.md).
+
+Final merged-main check and packaging advice: [Main verification](sessions/2026-10-22-main-final-check.md).
+
+Final repository documentation audit: [Review conversation](sessions/2026-10-22-final-repository-review.md).

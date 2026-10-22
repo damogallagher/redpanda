@@ -1,5 +1,7 @@
 # Walkthrough material refresh - 22 October 2026
 
+Historical checkpoint, merged in [PR #20](https://github.com/damogallagher/redpanda/pull/20). Behavior, versions, counts and handover statements below describe their recorded commits. Check out the recorded revision to reproduce that checkpoint. For the current system, use the [README](../../README.md), [verification commands](../phase-verification.md) and [handover](../handover.md).
+
 Branch `docs/walkthrough-refresh` starts from merged main `30510a88e54f7f75b374773c5ec725be090974f1`, after PR #19. This is a documentation/artifact update. The complete root README, original assignment, application, tests, schemas, dependencies and CI workflow are unchanged. Damien reviews and merges the PR.
 
 ## What changed and why

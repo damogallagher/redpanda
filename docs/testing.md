@@ -33,7 +33,7 @@ Available now: `make check`, `make test-unit`, `make test-foundation`, `make tes
 - `make check`: formatting, lint, types, and applicable config checks (unit coverage is a separate target).
 - `make test-unit`: deterministic unit suite with 100% line/branch coverage enforcement.
 - `make test-connect`: native Connect processor tests and configuration lint.
-- `make test-foundation`: the four Phase 1 integration checks only.
+- `make test-foundation`: five infrastructure checks on current main: hosted configuration, topic initialization/roundtrip, database persistence, helper-volume cleanup, and the PostgreSQL minor-version upgrade. The original Phase 1 counts remain in its historical record.
 - `make test-integration`: all 32 deterministic integration/configuration checks, including real Redpanda/Postgres/HTTP ingestion, Compose profiles, evidence compatibility, database permissions and helper-volume cleanup.
 - `make test-evidence-limits`: 22 count-boundary/repair unit cases and one real broker → worker → Connect → Postgres → API compatibility check; no real model calls. See the [regression record](phases/06-evidence-limits.md).
 - `make test-startup`: 13 launcher behavior tests plus two actual Compose profile contracts.

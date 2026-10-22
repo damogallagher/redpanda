@@ -1,10 +1,12 @@
 # Phase 6 follow-up: clean CI and current dependencies
 
+Historical checkpoint, merged in [PR #11](https://github.com/damogallagher/redpanda/pull/11). Behavior, versions, counts and handover statements below describe their recorded commits. Check out the recorded revision to reproduce that checkpoint. For the current system, use the [README](../../README.md), [verification commands](../phase-verification.md) and [handover](../handover.md).
+
 Review branch: `phase/06-acceptance`, [PR #11](https://github.com/damogallagher/redpanda/pull/11). Damien reviews and merges.
 
 ## Failure and changes
 
-The [reported main-branch run](https://github.com/damogallagher/redpanda/actions/runs/39478225848) failed on `119.99999999999999 == 120` in the Ollama request-contract test. Elapsed-time arithmetic makes exact equality unreliable with a real clock. Phase 6 commit `8ea8ec4` already supplies a fixed clock for that contract test; production timeouts and separate elapsed-time tests remain intact. Re-running the old commit would still run its old test/workflow; the correction reaches main when this PR is merged.
+The [reported main-branch run](https://github.com/damogallagher/redpanda/actions/runs/39478225848) failed on `119.99999999999999 == 120` in the Ollama request-contract test. Elapsed-time arithmetic makes exact equality unreliable with a real clock. Phase 6 commit `8ea8ec4` already supplies a fixed clock for that contract test; production timeouts and separate elapsed-time tests remain intact. Re-running the old commit would still run its old test/workflow; the correction reached main when PR #11 was merged.
 
 All three actions are updated to their latest official stable releases as checked on 20 October 2026, pinned by full commit SHA: checkout 7.0.1, setup-uv 10.3.0, upload-artifact 7.0.2. All declare Node 24 directly. This replaces the old artifact action that produced Node 20, `punycode`, and `url.parse()` deprecation messages. Checkout explicitly uses `main` for Git initialization, resolving the initial-branch migration hint. Missing test artifacts now fail the upload step instead of producing a warning.
 

@@ -1,5 +1,7 @@
 # Phase 1 maintenance: dependency updates
 
+Historical checkpoint, merged in [PR #5](https://github.com/damogallagher/redpanda/pull/5). Behavior, versions, counts and handover statements below describe their recorded commits. Check out the recorded revision to reproduce that checkpoint. For the current system, use the [README](../../README.md), [verification commands](../phase-verification.md) and [handover](../handover.md).
+
 Date: 20 October 2026. Base: merged main `cf664e1`.
 Branch: `maintenance/phase-1-dependency-updates`. Damien reviews and merges.
 
@@ -68,7 +70,7 @@ Tested implementation commit: `68d33a3`. The full Phase 1 command above passed l
 - 4 real integration tests passed, including the old-to-new database upgrade.
 - Formatting, lint, strict types, both Compose configurations, and the rebuilt packaged CLI passed.
 
-See the [machine-readable evidence](../evidence/phase-1-dependency-updates.json). The original [Phase 1 evidence](../evidence/phase-1-verification.json) is retained unchanged. No live model request was needed because model dependencies and behavior did not change. Phase 2 has not started.
+See the [machine-readable evidence](../evidence/phase-1-dependency-updates.json). The original [Phase 1 evidence](../evidence/phase-1-verification.json) is retained unchanged. No live model request was needed because model dependencies and behavior did not change. Phase 2 had not started at this maintenance checkpoint.
 
 Review [PR #5](https://github.com/damogallagher/redpanda/pull/5). The [GitHub Linux CI run](https://github.com/damogallagher/redpanda/actions/runs/39418079879) passed on `e853a1f` in 1 minute 7 seconds; this commit contains the same implementation as `68d33a3` plus documentation. Subsequent documentation-only commits do not change the tested implementation; the PR shows their latest checks.
 
