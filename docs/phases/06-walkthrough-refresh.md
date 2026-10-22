@@ -50,3 +50,5 @@ Application coverage, artifact QA, model quality and vulnerability scans are sep
 ## Handover
 
 Review the documentation diff and artifacts, then merge when satisfied. The original demo checkout must pull merged main before rehearsal. The [current prompt log](../ai-log/sessions/2026-10-22-walkthrough-refresh.md) records this requested refresh; it does not recreate previously omitted personal-README exchanges. Personal README editing remains outside this change.
+
+Review: [PR #20](https://github.com/damogallagher/redpanda/pull/20). Content commit `af110eaf6f58b19b8d7d534eaa6f611183b1e93e` contains the verified artifacts. The normal Phase 6 workflow runs on each PR head; use the PR's current checks for final CI status. No merge is performed by the assistant.

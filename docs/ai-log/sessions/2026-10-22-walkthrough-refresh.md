@@ -29,3 +29,7 @@ The full Phase 6 gate passed. The companion also passed all seven trace scenario
 ## Assistant
 
 The final document checks passed: 287 local links resolve, all 77 pinned source files exist, and the saved model transcripts are unchanged. The full README and original assignment also match main byte for byte. I’m publishing the documentation branch and opening the PR now.
+
+## Assistant
+
+[PR #20](https://github.com/damogallagher/redpanda/pull/20) is open. GitGuardian has passed, and the Phase 6 CI run is in progress. The PR includes the refreshed PDF, interactive companion, verification evidence and prompt log.

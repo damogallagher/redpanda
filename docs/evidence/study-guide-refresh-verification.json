@@ -96,5 +96,7 @@
     "check_annotations": 0
   },
   "relative_markdown_links_checked": 287,
-  "shell_blocks_syntax_checked": 37
+  "shell_blocks_syntax_checked": 37,
+  "artifact_content_commit": "af110eaf6f58b19b8d7d534eaa6f611183b1e93e",
+  "review_pr": "https://github.com/damogallagher/redpanda/pull/20"
 }
