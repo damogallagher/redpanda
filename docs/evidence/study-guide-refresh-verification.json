@@ -1,0 +1,102 @@
+{
+  "date": "2026-10-22",
+  "source_commit": "30510a88e54f7f75b374773c5ec725be090974f1",
+  "branch": "docs/walkthrough-refresh",
+  "scope": "Current-system documentation/artifact refresh; deterministic application gate; no new live-model or vulnerability results.",
+  "previous_artifact_verification": "study-guide-verification.json (historical, unchanged)",
+  "chapters": 34,
+  "phases": 7,
+  "trace_scenarios": 7,
+  "trace_step_transitions": 46,
+  "provider_case_views": 18,
+  "quiz_items": 10,
+  "presentation_slides": 14,
+  "widths": [
+    1440,
+    768,
+    390,
+    320
+  ],
+  "page_errors": [],
+  "unexpected_network_requests": [],
+  "horizontal_page_overflow": [],
+  "passed": true,
+  "pdf_pages": 36,
+  "pdf_chapters": 34,
+  "pdf_unique_contents_destinations": 34,
+  "pdf_rendered_and_visually_reviewed": true,
+  "pdf_contents_targets_verified": true,
+  "pdf_text_within_page_bounds": true,
+  "source_file_targets_verified": 77,
+  "embedded_transcripts_equal_source": true,
+  "fullscreen_verified": true,
+  "fullscreen_controls_fit_viewport": true,
+  "readme_unchanged": true,
+  "original_assignment_unchanged": true,
+  "application_tests_workflow_unchanged": true,
+  "live_model_calls": 0,
+  "live_source_requests": 0,
+  "new_vulnerability_scans": 0,
+  "artifact_sha256": {
+    "redpanda-study-guide.pdf": "15ab3fd2cf449fa242c2476abc81841d535c63ee99e77f4c2bf6074676d76e1f",
+    "redpanda-study-companion.html": "45acb7c3086c224e9ee7a2e325ab69bf7c6cfd4dbb91739476e34dcbd5ae4ce6",
+    "redpanda-study-guide.md": "59c88e228cc0ae381190b5d0f7643aac3e89e127565ec75b91d2b964eb032dcf",
+    "START-HERE.md": "ee20c1b56e24db92c31e3cd21ddc042b417693a94703a57be00df2e688ee459b",
+    "README.md": "ee20c1b56e24db92c31e3cd21ddc042b417693a94703a57be00df2e688ee459b"
+  },
+  "local_gate": {
+    "command": "make verify-phase-6",
+    "exit_code": 0,
+    "application_commit": "30510a88e54f7f75b374773c5ec725be090974f1",
+    "unit": {
+      "tests": 453,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "integration": {
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "native_connect_cases": 72,
+    "coverage": {
+      "covered_lines": 1172,
+      "num_statements": 1172,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100.00",
+      "missing_lines": 0,
+      "excluded_lines": 0,
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100.00",
+      "num_branches": 286,
+      "num_partial_branches": 0,
+      "covered_branches": 286,
+      "missing_branches": 0,
+      "percent_branches_covered": 100.0,
+      "percent_branches_covered_display": "100.00"
+    },
+    "emitted_warning_lines": 0,
+    "artifact_sha256": {
+      "unit.xml": "e036e378704dd40fd194012fddb1ce4be9c0895e890e62ceb54df7e352b473d2",
+      "integration.xml": "2b8e271bf7a47655751e8f8bb569674cd028da2fa54e36bb1d4860379aa88ada",
+      "coverage.json": "e5ca4887e568341ac3559f656022450c8e19751bdfb8e188b1e0e4c4646d08eb",
+      "walkthrough-refresh-gate.log": "a59723edb2cb3d6cdeee47521918dab8f2dcc9fffc39c2b04955ff412dffa526"
+    }
+  },
+  "prior_main_ci": {
+    "commit": "30510a88e54f7f75b374773c5ec725be090974f1",
+    "url": "https://github.com/damogallagher/redpanda/actions/runs/39859001474",
+    "unit_tests": 453,
+    "integration_checks": 32,
+    "native_connect_cases": 72,
+    "line_and_branch_percent": 100,
+    "emitted_warnings": 0,
+    "check_annotations": 0
+  },
+  "relative_markdown_links_checked": 287,
+  "shell_blocks_syntax_checked": 37,
+  "artifact_content_commit": "af110eaf6f58b19b8d7d534eaa6f611183b1e93e",
+  "review_pr": "https://github.com/damogallagher/redpanda/pull/20"
+}

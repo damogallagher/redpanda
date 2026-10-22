@@ -1,29 +1,34 @@
-# Wikipedia edit triage — presentation study pack
+# Wikipedia edit triage - presentation study pack
 
-Prepared for Damien Gallagher, 20 October 2026.
-
-GitHub review: https://github.com/damogallagher/redpanda/pull/14
+Updated for Damien Gallagher, 22 October 2026. System reference: merged main `30510a88e54f7f75b374773c5ec725be090974f1` (PRs #1-19 merged).
 
 ## Start here
 
-1. Open `redpanda-study-companion.html` in Chrome, Safari or another modern browser. It works directly from disk: no installation, server, API key or model calls.
-2. Use **Phase explorer** for the project story and **Trace an edit** for success/failure paths. Those traces are labelled teaching simulations.
-3. Use **Model evidence** to inspect the actual saved local/frontier synthetic prompts and responses. These are embedded offline; selecting a case never calls a model.
-4. Choose **Present** for 14 slides. Use Previous/Next or left/right arrows, Home/End, and Full screen. Escape exits full screen. Each slide links back to its detailed chapter.
-5. Read `redpanda-study-guide.pdf` for the complete 36-page, 34-chapter guide. Its contents page and source links are clickable. `redpanda-study-guide.md` is the editable text version and includes the presentation outline.
+1. Open [the interactive companion](redpanda-study-companion.html) in a browser. It runs directly from disk without a server, API key or model calls. GitHub shows the HTML source; download the files together or open your local copy to use it.
+2. Use **Phase explorer** for the build sequence and **Trace an edit** for seven success/failure paths, including oversized evidence producing a zero-call abstention. These traces are labelled teaching simulations.
+3. Use **Model evidence** to inspect the unchanged saved local/frontier synthetic prompts and responses. These are historical 20 October results, before final hardening and the Ollama image update.
+4. Choose **Present** for 14 slides. Previous/Next, arrow keys, Home/End and Full screen navigate the presentation. Each slide opens its detailed chapter.
+5. Read the [36-page PDF](redpanda-study-guide.pdf) or [editable guide](redpanda-study-guide.md) for all 34 chapters. Chapter 26 is the code tour; 30 has rehearsal questions; 31 is the 60-minute agenda; 32 prepares for the extension.
 
-Keep the files together so the HTML links to the PDF and editable guide continue to work. External source links require internet; the study content and interactions do not.
+Keep the files together so the HTML links to the PDF and editable guide work. External source links need internet. For real execution, follow the [current demo guide](../submission-demo.md) in order; the companion does not launch the application.
 
-## What is covered
+## What changed in this refresh
 
-Assignment requirements; planning and six implementation phases; each phase's purpose, inputs, outputs, tests and handoff; architecture; Kafka/Redpanda and Connect; Docker and mode profiles; local versus frontier inference; enrichment and grounding; reasoning budgets; offset/replay semantics; Postgres and the API; actual demo results; cleanup; testing history; improvements; code tour; glossary; rehearsal questions and a 60-minute presentation plan.
+- Phase 6 is implemented. The current cumulative gate is `make verify-phase-6`, also available as `make test`.
+- Current totals are **453 unit tests, 32 integration/configuration checks and 72 Connect cases**, with **100% of 1,172 application lines and 286 branches** covered. Main [CI run 39859001474](https://github.com/damogallagher/redpanda/actions/runs/39859001474) passed without emitted warnings or check annotations.
+- New enrichment and reasoning share an **eight-hunk capacity**. Larger inputs abstain before model calls; historical v1 records with 20 hunks remain readable. See the [boundary regression record](../phases/06-evidence-limits.md).
+- The API, sink and migration helper have separate database permissions. Host validation, private atomic reports and stronger code-quality gates are implemented. The current bundled Ollama image is **0.40.8**.
+- The security discussion reflects the broader recorded image scans, including remaining findings. Passing functional CI does not mean the images are vulnerability-free or the deployment is ready for public access.
+- Demo preparation accounts for private profiles, all three database passwords, isolated test helpers, asynchronous delivery and events versus distinct result rows. The actual extension is still pending from Redpanda; the pack explains how to implement, test and defend its diff once supplied.
 
 ## Evidence and scope
 
-The source snapshot is `859b1662f574a6ff749689834f2dfc3ef48c9748`, including the PR #13 follow-up. PR #13 was open when this pack was prepared; main before that fix has 29 integration tests, while its tested follow-up has 30. All repository source links are pinned to the snapshot. Model scores are recorded regression observations, not a general-accuracy benchmark. Current local deployment limitations are explicit.
+Repository source links are pinned to `30510a8`. Earlier phase checkpoints retain their historical counts. The model transcripts and live observations are unchanged historical evidence, not a new evaluation of the current images. Rerun the chosen model configuration before presenting; a small fixed-case pass does not establish general accuracy.
 
-This is AI-assisted study material, not the assignment's independently authored personal README write-up. The original assignment, application code and personal README sections are unchanged. Creation of this pack made no new model calls and did not run or modify application containers.
+The original 20 October pack remains available through Git history and [PR #14](https://github.com/damogallagher/redpanda/pull/14). This revision supersedes that pack's current-system descriptions. It is AI-assisted study material; the personal README sections and original assignment are unchanged by this refresh.
 
-## Artifact checks
+## How the refreshed pack was checked
 
-All 36 PDF pages were rendered and visually reviewed; contents targets and text bounds were verified. The HTML's seven phases, six trace scenarios, 18 provider/case views, ten rehearsal items and 14 slides were checked in a real browser. Desktop/tablet/mobile widths (1440, 768, 390 and 320 pixels) had no page overflow, JavaScript errors or unexpected network requests. Embedded model transcripts match the saved source JSON exactly. Full-screen presentation was also verified.
+The [refresh record](../phases/06-walkthrough-refresh.md) and [verification evidence](../evidence/study-guide-refresh-verification.json) describe the current checks. All 36 PDF pages were rendered and visually reviewed, with 34 contents destinations and page bounds checked. Browser checks covered seven phases, seven traces, 18 provider/case views, ten rehearsal items and 14 slides at widths 1440, 768, 390 and 320. No JavaScript errors, unexpected network requests or horizontal page overflow were observed; full-screen navigation and exact transcript correspondence passed.
+
+The cumulative application gate was rerun separately. No real model calls, public-feed requests or new vulnerability scans were made for this documentation change. [Artifact checksums](study-pack-checksums.json) identify this revision; the original [verification record](../evidence/study-guide-verification.json) remains historical.

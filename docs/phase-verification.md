@@ -1,6 +1,6 @@
 # Verify each phase
 
-**Current status: Phases 1–5 are implemented.** Run `make verify-phase-5` for cumulative deterministic checks, `make demo-reasoning` for the result/replay walkthrough, and `make evaluate-development` for the separate real-model evaluation. [Local/frontier startup scripts](startup.md) select the model profile. Persistence/API walkthrough: `make demo-results`. Final acceptance remains Phase 6.
+**Current status: Phases 1-6 are implemented.** Run `make verify-phase-6` (alias `make test`) for the cumulative deterministic gate. Current expected totals are **453 unit tests, 32 integration/configuration checks and 72 native Connect cases**, with **100% application line and branch coverage**. Use the [current demo guide](submission-demo.md) for setup, isolated test resources, success/failure demonstrations, local/frontier model checks and cleanup. Model quality and live-source checks remain separate from this deterministic gate.
 
 [Original assignment](assignment/fde-take-home-exercise.md) · [Phase records](phases/README.md) · [Testing policy](testing.md) · [Progress](progress.md)
 
@@ -16,7 +16,7 @@ Commands must use isolated test resources. Every implemented phase record must i
 
 ## Commands at a glance
 
-Phases 0–5 are available now. `make verify-phase-N` is the agreed entry point for deterministic verification; external-source/model smoke tests are separate so the repeatable checks do not depend on live services.
+Phases 0-6 are available now. `make verify-phase-N` is the agreed entry point for deterministic verification; external-source/model smoke tests are separate so the repeatable checks do not depend on live services.
 
 | Phase | Command from repository root | Evidence of intended behavior | Availability |
 |---|---|---|---|
@@ -26,7 +26,7 @@ Phases 0–5 are available now. `make verify-phase-N` is the agreed entry point 
 | [3: enrichment](phases/03-enrichment.md) | `make verify-phase-3` | Known revisions yield expected before/after evidence; unavailable content has an explicit status | Implemented |
 | [4: reasoning](phases/04-reasoning.md) | `make verify-phase-4` | Valid extraction/assessment results; bounded retries and abstention; no offset commit on publish failure | Implemented |
 | [5: serving](phases/05-serving.md) | `make verify-phase-5` | Seeded event reaches the API; replay leaves one logical stored result; sink recovers after outage | Implemented |
-| [6: acceptance](phases/06-acceptance.md) | `make verify-phase-6` | Cumulative tests, clean-start fixture path, and recovery drills pass; coverage has no missing lines/branches | Planned |
+| [6: acceptance](phases/06-acceptance.md) | `make verify-phase-6` | Cumulative tests, clean-start fixture path, and recovery drills pass; coverage has no missing lines/branches | Implemented |
 
 The table specifies assertions; actual observations are in the linked phase records. Live model quality and hardware feasibility require additional evidence even when deterministic checks pass.
 
@@ -105,7 +105,7 @@ Inspect both storage and API output: a successful HTTP status alone is insuffici
 
 Run all prior deterministic checks, including 100% application line and branch coverage, against isolated fresh test volumes. Rehearse worker/broker/database/model failure and recovery, checking results and offsets rather than just container restarts.
 
-**Separate live acceptance:** from a clean clone, follow the final README exactly using `docker compose up`. Verify local bootstrap and the documented hosted alternative, then process a live event. Run the held-out model evaluation using a predeclared rubric and report false alarms, missed review cases, evidence quality, abstention, and latency. Record limitations honestly.
+**Separate live acceptance:** follow the [current local/frontier demo guide](submission-demo.md), including private profiles, bounded batches, fresh report checks and cleanup. Evaluate the chosen model against the frozen nine-case regression set, then inspect actual live outcomes. The saved 20 October model runs predate final hardening and the Ollama image update; they are not new results for the current images or an unseen accuracy benchmark. Record failures, abstentions and latency as observed; three consumed events need not produce three distinct SQL rows.
 
 **Submission gate:** all required deterministic and live checks have evidence; no required check is silently skipped; the original assignment's deliverables exist; Damien has supplied his independent README sections. Use test-owned volumes for cleanup and never remove existing user data.
 
