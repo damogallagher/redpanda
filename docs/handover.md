@@ -55,7 +55,7 @@ New inference is limited to eight complete source hunks, sharing the extraction 
 | Redpanda tools used where sensible | Connect for both transport pipelines, native Connect tests/lint, `rpk` for topics/groups/lag/replay inspection |
 | Public code and original assignment | This repository, unchanged [assignment](assignment/fde-take-home-exercise.md), phase branches/PRs |
 | AI prompts and visible responses retained | [Conversation audit](ai-log/README.md), source prompt versions, sanitized curated model transcripts |
-| README: tradeoffs, surprises/production failure modes, customer value | **Damien must write these independently.** The reserved README paragraphs remain unchanged |
+| README: tradeoffs, surprises/production failure modes, customer value | Draft sections are present in [README](../README.md#tradeoffs). Damien must finalise the write-up in accordance with the assignment's independent-authorship requirement |
 
 ## Deployment limits and next operational decisions
 
@@ -66,6 +66,6 @@ New inference is limited to eight complete source hunks, sharing the extraction 
 - Image/Python/action pins make builds reproducible; model tags and provider internals can change. Evaluate the selected model, record its digest/ID, and set explicit cost limits. A tiny acceptance set does not establish general classification accuracy.
 - The [security review](security-review.md) describes exactly what was audited and any limits. Do not equate no reported package advisories with absence of vulnerabilities.
 
-PRs #1–#17 are merged. Main `54e3157` passed [the cumulative CI gate](https://github.com/damogallagher/redpanda/actions/runs/39840801993): 453 unit tests, 32 integration checks, 72 Connect cases, 100% application line/branch coverage, and zero emitted warnings or check annotations. Historical phase records and the frozen study pack retain the counts and observations from their tested commits.
+PRs #1–#18 are merged. Main `23c63d5` passed [the cumulative CI gate](https://github.com/damogallagher/redpanda/actions/runs/39850025900): 453 unit tests, 32 integration checks, 72 Connect cases, 100% application line/branch coverage, and zero emitted warnings or check annotations. Historical phase records and the frozen study pack retain the counts and observations from their tested commits.
 
-Before submission: review/merge any final documentation PR, confirm CI is green on the submitted commit, choose and verify a model path using the [current demo guide](submission-demo.md), rehearse one success and one failure recovery, inspect the original assignment, and write the three reserved README sections in your own words. The previous live-model evaluations predate the final hardening and Ollama image update. No further feature phase is required by the assignment; known upstream image vulnerabilities and deployment limitations remain disclosed in the [security review](security-review.md).
+Before submission: finalise the three personal README sections in your own words, review/merge any final documentation PR, confirm CI is green on the submitted commit, choose and verify a model path using the [current demo guide](submission-demo.md), rehearse one success and one failure recovery, and inspect the original assignment. The previous live-model evaluations predate the final hardening and Ollama image update. No further feature phase is required by the assignment; known upstream image vulnerabilities and deployment limitations remain disclosed in the [security review](security-review.md).
