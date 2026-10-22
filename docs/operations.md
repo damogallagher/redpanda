@@ -2,7 +2,7 @@
 
 Start Docker Desktop. From the repository folder, use the commands below. Prerequisites: Docker Compose 2.20+, Make, and uv (CI uses 0.13.4). First use downloads Python/packages/images. Do one operation at a time; do not switch profiles or clean up during a test. Python warnings fail the test gate; the [CI maintenance record](phases/06-ci-maintenance.md) explains dependency pins and how to inspect GitHub test artifacts.
 
-## Five-minute reviewer path (cached images)
+## Quick reviewer path (cached images)
 
 ```sh
 make test
@@ -10,7 +10,7 @@ make demo-success
 make demo-failures
 ```
 
-All three are **free of model/API calls**. They use disposable Docker projects and remove their own data afterward. `make test` includes all the demonstrations; the narrower commands let you watch them again. A first run takes longer to download/build images. A successful command ends in `PASS` and exits 0. An assertion or infrastructure error exits nonzero; do not continue as though the check passed. Machine-readable test and coverage reports are under `reports/` and attached to GitHub CI runs.
+All three are **free of model/API calls**. Integration fixtures use disposable Docker projects and remove their own data afterward. The build and native Connect CLI checks within `make test` also create helper resources; follow the [demo's isolated test-project setup and cleanup](submission-demo.md#2-run-the-free-verification-gate) to remove those without touching application data. `make test` includes all the demonstrations; the narrower commands let you watch them again. A first run takes longer to download/build images. A successful command ends in `PASS` and exits 0. An assertion or infrastructure error exits nonzero; do not continue as though the check passed. Machine-readable test and coverage reports are under `reports/` and attached to GitHub CI runs.
 
 | Command | What you should see |
 |---|---|
