@@ -76,3 +76,53 @@ Opened [PR #18](https://github.com/damogallagher/redpanda/pull/18) for your revi
 - Verified documentation links and command syntax. Your entire README remains untouched.
 
 The new PR’s checks are running. I haven’t merged it.
+
+## User
+
+Ensure the demo guide is up to date and 100% accurate
+
+## Assistant — progress
+
+I’ll check every command and expected result in the demo guide against the current code and configuration, then correct any discrepancies and update the PR.
+
+## Assistant — progress
+
+I found a few practical gaps: a fresh clone needs profiles created before cleanup, the free test gate can leave helper resources that need separate cleanup, and the result checks need to distinguish missing rows from duplicate revisions and error routing. I’m correcting those steps and validating the commands with disposable test resources.
+
+## Assistant — progress
+
+The guide now includes fresh-clone setup, isolated test cleanup, and checks that match stored rows to the worker’s committed result keys. I also verified the error-topic command against the pinned Redpanda CLI. The full deterministic suite is running; next I’ll exercise the guide’s API and report commands against controlled data.
+
+## Assistant — progress
+
+The full local gate passed, and PR #18’s existing checks are green. Coverage remains 100% for all 1,172 application lines and 286 branches. I’m now checking the exact API/report commands and the demonstration targets, including the intentionally failing test.
+
+## Assistant — progress
+
+The API commands worked against the fixture pipeline. They also exposed a useful timing detail: rows can be visible before the sink’s Kafka lag reaches zero. The guide now tells you to wait for both conditions. Empty and populated error-topic reads behaved as documented, and I’m finishing the success/failure demonstrations.
+
+## Assistant — progress
+
+The success demo passed, and the API inspection reached zero sink lag after the documented wait. Fresh-profile setup also passed: it creates private files and preserves them when repeated. The remaining checks are the fault/recovery demo, the expected red test, and confirmation that all pre-existing Docker volumes are retained.
+
+## Assistant — progress
+
+All checks are complete: the success demo passed, all 19 fault/recovery checks passed, and the intentional test failed exactly as documented. The subsequent unit run passed with 100% coverage. All 24 pre-existing Docker volumes were preserved, with no containers left behind. I’m saving the evidence and updating PR #18.
+
+## Demo audit verification
+
+Source/test/configuration tree: `f792301`, identical to main `54e3157`. The full local gate passed 453 unit / 32 integration / 72 Connect cases, all 1,172 lines and 286 branches covered without exclusions. The exact success target passed one scenario; the fault/recovery target passed 19. The intentionally wrong test failed once with Make exit 2; the following unit run passed all 453 cases at 100% coverage.
+
+Step 6's three literal shell blocks were run against controlled data in an isolated project. Readiness/list/detail output and empty error snapshots matched the guide; two inspections reached zero sink lag. A populated synthetic processing-error topic was consumed to its current end. Fresh-profile setup created mode-0600 files, preserved existing files on repeat, and both Compose profiles resolved to the documented settings. All 18 demo shell blocks passed syntax checks and all 255 relative Markdown file targets resolved. All 24 pre-existing volumes were retained, with zero containers before and after.
+
+The first scratch inspection harness failed because Docker exec consumed commands supplied on stdin; the corrected harness ran a script file, and the guide now detaches stdin for read-only inspection commands. The initial failure log and subsequent passing evidence remain in ignored reports. The audit made no real model calls, live Wikipedia requests or new vulnerability scans. Current model results are explicitly distinguished from the earlier saved evaluations. Evidence and hashes: `docs/evidence/demo-guide-verification.json`.
+
+## Assistant — final handover
+
+Updated [PR #18](https://github.com/damogallagher/redpanda/pull/18) with the audited demo guide and prompt log.
+
+- Fixed fresh-clone setup, test cleanup, result counts, error checks and sink-lag timing.
+- Executed the API commands, success/recovery demos and intentional failure.
+- Full suite passed with **100% line and branch coverage**; existing Docker data was preserved.
+
+Your README is untouched. Live-model outcomes are clearly marked as variable; this audit made no new model calls. The updated PR’s CI will run separately.

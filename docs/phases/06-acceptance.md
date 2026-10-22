@@ -70,3 +70,24 @@ The [CI maintenance record](06-ci-maintenance.md) documents the reported main-br
 ## Executed submission follow-up
 
 After PR #11 and the walkthrough PR #12 merged, Damien requested an actual Ollama-then-frontier demo, saved evidence and any fixes. [PR #13](https://github.com/damogallagher/redpanda/pull/13) contains the [execution record](../evaluations/submission-demo.md), exact reproduction commands, [verification summary](../evidence/submission-demo-verification.json), and [visible conversation](../ai-log/sessions/2026-10-20-executed-demo.md). Both providers passed nine frozen cases and delivered three live results, including documented abstentions. A reproduced anonymous-volume leak in the two CLI helpers is fixed; the added real-Docker regression increases the cumulative integration count to 30. The original 416 unit tests still cover every application line and branch. Earlier results above remain attached to their original commits. Next step: Damien reviews PR #13 and completes his independent README observations before submission.
+
+## Demo guide command audit — 22 October 2026
+
+At Damien's request, [PR #18](https://github.com/damogallagher/redpanda/pull/18) now also audits the [current demo guide](../submission-demo.md) against the implementation. The changes add missing-profile setup before cleanup, isolate and remove Make's helper resources, specify group IDs and all shared passwords, distinguish consumed events from unique stored revisions, check error topics as well as API rows, and wait for asynchronous sink commits. The guide explains mutable model tags, stale reports, exact JSON fields, insertion ordering and failure exits. The operator guide's helper-cleanup description is corrected too.
+
+The application/test/configuration tree is unchanged from `f792301` (and merged main `54e3157`). Executed locally with Docker 29.9.2 / Compose 5.6.0 and pinned uv 0.13.4:
+
+| Check | Command / method | Observed result |
+|---|---|---|
+| Cumulative gate | `COMPOSE_PROJECT_NAME="$DEMO_TEST_PROJECT" make verify-phase-6 UV='uvx --from uv==0.13.4 uv'` (`make test` is the same target) | 453 unit / 32 integration / 72 Connect cases; 1,172/1,172 lines and 286/286 branches; no coverage exclusions; exit 0 |
+| Successful path | `make demo-success UV='uvx --from uv==0.13.4 uv'` | One scenario passed; two controlled edits reached the API as `review` |
+| Fault/recovery paths | `make demo-failures UV='uvx --from uv==0.13.4 uv'` | All 19 scenarios passed; exit 0 |
+| Deliberately red test | `make demo-test-failure UV='uvx --from uv==0.13.4 uv'` | One failed test; Make exit 2, as intended |
+| Return to green | `make test-unit UV='uvx --from uv==0.13.4 uv'` | 453 tests passed, still 100% line/branch coverage |
+| Exact inspection commands | Execute step 6's three shell blocks with `DEMO_MODE=guide-fixture` against an isolated fixture pipeline | Readiness, list/detail JSON and empty error snapshots passed; a second inspection reached zero sink lag; an injected synthetic error was visible in a bounded topic snapshot |
+| Setup and syntax | Execute profile creation twice in a temporary directory; resolve both example Compose configurations; `sh -n` on every demo shell block | New profiles mode 0600, existing bytes preserved, three-event/group/provider settings correct; 18 shell blocks valid |
+| Cleanup | Use the guide's helper cleanup; integration/inspection fixtures delete only their own projects | Same 24 pre-existing volumes before/after, zero containers before/after; no application data/profile changes |
+
+The first temporary inspection harness passed its shell program on stdin, which a Docker exec command consumed, so its expected output file was absent. The harness was corrected to run a script file; the guide's read-only commands also detach stdin explicitly. Subsequent exact-block execution passed. This harness failure is retained in ignored reports and is not represented as an application test failure or a successful initial audit.
+
+[Verification JSON](../evidence/demo-guide-verification.json) records scope, commands, report hashes and the checked guide hash. No new application tests were added for these documentation edits. No real model calls, live Wikipedia requests or fresh vulnerability scans were made: model results remain historical and provider availability/semantic outputs remain variable. README.md (including the personal sections), the original assignment and frozen study pack are unchanged. Damien reviews/merges PR #18. The [conversation record](../ai-log/sessions/2026-10-22-submission-readiness.md) includes this audit.

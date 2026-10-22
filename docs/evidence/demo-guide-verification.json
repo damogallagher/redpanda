@@ -1,0 +1,153 @@
+{
+  "date": "2026-10-22",
+  "application_tested_commit": "f792301be65bba82e419816a9f386cae411bdc7c",
+  "application_matches_main": "54e31574266d33723fa4f69ce4feb1ab4e2848cd",
+  "guide_sha256": "c865c62c72317024eeed3b2d13dc9ff961317beca3604bb10a602cc67d1b41fb",
+  "runtime": {
+    "docker": "29.9.2",
+    "compose": "5.6.0",
+    "uv": "0.13.4",
+    "host": "macOS ARM64"
+  },
+  "checks": {
+    "cumulative": {
+      "command": "COMPOSE_PROJECT_NAME=\"$DEMO_TEST_PROJECT\" make verify-phase-6 UV='uvx --from uv==0.13.4 uv'",
+      "exit_code": 0,
+      "make_test_same_target": true,
+      "unit": {
+        "tests": 453,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "integration": {
+        "tests": 32,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "native_connect_cases": 72,
+      "coverage": {
+        "covered_lines": 1172,
+        "num_statements": 1172,
+        "percent_covered": 100.0,
+        "percent_covered_display": "100.00",
+        "missing_lines": 0,
+        "excluded_lines": 0,
+        "percent_statements_covered": 100.0,
+        "percent_statements_covered_display": "100.00",
+        "num_branches": 286,
+        "num_partial_branches": 0,
+        "covered_branches": 286,
+        "missing_branches": 0,
+        "percent_branches_covered": 100.0,
+        "percent_branches_covered_display": "100.00"
+      },
+      "helper_cleanup_exit_code": 0
+    },
+    "demo_success": {
+      "command": "make demo-success UV='uvx --from uv==0.13.4 uv'",
+      "exit_code": 0,
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "demo_failures": {
+      "command": "make demo-failures UV='uvx --from uv==0.13.4 uv'",
+      "exit_code": 0,
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "intentional_red_test": {
+      "command": "make demo-test-failure UV='uvx --from uv==0.13.4 uv'",
+      "expected_exit_code": 2,
+      "actual_exit_code": 2,
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "return_to_green": {
+      "command": "make test-unit UV='uvx --from uv==0.13.4 uv'",
+      "exit_code": 0,
+      "tests": 453,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "line_and_branch_coverage": 100
+    },
+    "literal_inspection": {
+      "project": "triage-doc-inspect-cf23ea7a3397",
+      "literal_step6_blocks_executed": 3,
+      "persisted_fixture_results": 2,
+      "detail_decision": "review",
+      "empty_error_topics_verified": true,
+      "nonempty_error_snapshot_verified": true,
+      "sink_lag": 0,
+      "inspection_attempts": 2,
+      "real_model_calls": 0,
+      "live_wikipedia_requests": 0
+    },
+    "profile_setup": {
+      "temporary_directory": true,
+      "new_profile_mode": "0600",
+      "repeat_preserves_existing_bytes": true,
+      "local_and_frontier_compose_settings_verified": true,
+      "acceptance_cases": 9,
+      "ready_cases": 7,
+      "maximum_evaluation_calls": 28,
+      "maximum_three_event_worker_calls": 12
+    },
+    "documentation": {
+      "relative_markdown_file_links": 255,
+      "shell_blocks_syntax_checked": 18,
+      "readme_unchanged": true,
+      "assignment_unchanged": true,
+      "study_files_unchanged": 6,
+      "application_tests_workflow_unchanged": true
+    },
+    "cleanup": {
+      "pre_existing_volumes": 24,
+      "retained_volumes": 24,
+      "containers_before": 0,
+      "containers_after": 0,
+      "test_projects_removed": true
+    }
+  },
+  "harness_correction": "Initial scratch harness fed shell commands through stdin; Docker exec consumed remaining input. Switched harness to a script file and added stdin detachment to guide inspection commands. Subsequent literal inspection passed; initial failure log retained.",
+  "scope": {
+    "application_changes": false,
+    "test_changes": false,
+    "readme_changes": false,
+    "private_profile_changes": false,
+    "real_model_calls": 0,
+    "live_wikipedia_requests": 0,
+    "fresh_image_scan": false,
+    "new_model_accuracy_claim": false
+  },
+  "artifact_sha256": {
+    "reports/demo-guide-audit/gate.log": "c0cb111b7d3839bfcd0da6b2e97ea0e61d8492dcfca632783ec6df9bd69a1de1",
+    "reports/demo-guide-audit/unit.xml": "f030f9d9cc637f8d62e67581ab5458a845e6047e4c63641d685a65536322034a",
+    "reports/demo-guide-audit/integration.xml": "1802e2b0fe2d5c4b480e043a787b2e2a4fa67a2018a1001ac383afea53d382c8",
+    "reports/demo-guide-audit/coverage.json": "5dd83e7e2d45cfdf622c89d421554345ae3a77240bd11f157ed48a1a5199a362",
+    "reports/demo-guide-audit/demo-success.log": "3dc3cec08780357451e67796b5ba127b9a5a89a0061ebe9dac95eccd91888691",
+    "reports/demo-guide-audit/demo-failures.log": "13cd63aa80a1e786b73486912c99e2a5295d8d1a08315f6258134ca9e58595c3",
+    "reports/demo-guide-audit/intentional-failure.log": "5112ec05e51ee91415a017cb97bb95af27c267ce87c400f36077b0b9dffd0dac",
+    "reports/demo-guide-audit/unit-after-failure.log": "9e742aa07934bb851f1d7cc547f43db8d3304d242e3a57fbb0727efcca1c1959",
+    "reports/demo-guide-audit/inspection-summary.json": "23bec1bb762e3b9fd43499b62348b91ba973d0f1a9d72c140112d6708773186d",
+    "reports/demo-guide-audit/literal-inspection-blocks.log": "010556b7d3f2522eceddd59205495f5c55499f6f7fdf79ff5fef82b7a897413b",
+    "reports/demo-guide-audit/inspection-harness-initial-failure.log": "1f7527e0111fd36ae1c6cb002563cd4a33a65eb73a4013e0e527a7adb9a2b986",
+    "reports/demo-guide-audit/volumes-before.txt": "06461801959719202738aab926d393b673541431ee86b8534714963a15310bf1",
+    "reports/demo-guide-audit/volumes-after.txt": "06461801959719202738aab926d393b673541431ee86b8534714963a15310bf1",
+    "reports/demo-guide-audit/containers-before.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/demo-guide-audit/containers-after.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/success-demo.xml": "55c4450e28fe860a0593d07a4e84c9f5424c56d0458f9bd22c4dfda957362ff0",
+    "reports/failure-demo.xml": "ae76f316697bda0a4b8b7e607a9f5f399b5f14d344f54073191245cc1a0e4076",
+    "reports/intentional-failure.xml": "524fb70491ad46cf8290c2590254ee33376956bdd08dce4486a365fb5ac59371",
+    "reports/unit.xml": "0d89040b58048d38e20bad6004ba565bc563e4f513864cd68827d3fa2395f18d",
+    "reports/coverage.json": "a7528043a8fc2bf687026255af332fa78d12d1d0d333b4e88a17c7e0b31e952f"
+  }
+}
