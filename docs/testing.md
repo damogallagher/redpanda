@@ -34,7 +34,7 @@ Available now: `make check`, `make test-unit`, `make test-foundation`, `make tes
 - `make test-unit`: deterministic unit suite with 100% line/branch coverage enforcement.
 - `make test-connect`: native Connect processor tests and configuration lint.
 - `make test-foundation`: the four Phase 1 integration checks only.
-- `make test-integration`: all 30 deterministic real Redpanda/Postgres/HTTP ingestion and Compose profile checks on this branch.
+- `make test-integration`: all 32 deterministic integration/configuration checks, including real Redpanda/Postgres/HTTP ingestion, Compose profiles, evidence compatibility, database permissions and helper-volume cleanup.
 - `make test-evidence-limits`: 22 count-boundary/repair unit cases and one real broker → worker → Connect → Postgres → API compatibility check; no real model calls. See the [regression record](phases/06-evidence-limits.md).
 - `make test-startup`: 13 launcher behavior tests plus two actual Compose profile contracts.
 - `make test-enrichment`: exact revision evidence, provenance, bounds, retries, failure outcomes, and CLI checks.

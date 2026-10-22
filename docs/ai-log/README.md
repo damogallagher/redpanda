@@ -23,3 +23,5 @@ Latest hardening: [Security and code quality](sessions/2026-10-21-security-quali
 Conflict resolution: [PR #13 and PR #14](sessions/2026-10-22-conflict-resolution.md).
 
 Latest submission check and documentation cleanup: [Submission readiness](sessions/2026-10-22-submission-readiness.md).
+
+Latest walkthrough maintenance: [Current-system study-pack refresh](sessions/2026-10-22-walkthrough-refresh.md).

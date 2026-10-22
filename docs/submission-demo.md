@@ -2,7 +2,7 @@
 
 This walkthrough builds on merged Phase 6 and includes the helper-cleanup fix in [PR #13](https://github.com/damogallagher/redpanda/pull/13). Run commands from the repository root, in order, in one terminal. It resets this project's broker/database data between providers, retains downloaded Ollama weights, and limits each worker run to **three consumed events per provider**. Duplicate revisions and processing errors can produce fewer than three stored results. It does not change application code.
 
-This guide reflects merged main after PR #17, including the [evidence-count correction](phases/06-evidence-limits.md) and [security hardening](phases/06-security-quality.md). The test counts below match the current [README](../README.md). Oversized edits abstain before inference, so new model-call counts can differ from the earlier recorded demos.
+This guide reflects merged main `30510a8` after PR #19, including the [evidence-count correction](phases/06-evidence-limits.md) and [security hardening](phases/06-security-quality.md). The test counts below match the current [README](../README.md). Oversized edits abstain before inference, so new model-call counts can differ from the earlier recorded demos.
 
 The commands below are for you to execute. Expected outcomes are based on the implemented contracts; see the [executed demo record](evaluations/submission-demo.md) for actual runs, fixes, and saved evidence. Live Wikipedia edits and model responses vary. The fixed-case evaluations previously passed 9/9 for both configured models. Those recorded model runs predate the final hardening and Ollama image update; they are historical evidence, not a new evaluation of the current images. Rerun the model checks below for your chosen configuration.
 
@@ -40,7 +40,7 @@ make demo-success
 make demo-failures
 ```
 
-Expected: all exit 0. `make test` reports **453 unit tests, 32 integration/configuration checks, 72 native Connect cases, 100% application line and branch coverage**, and no warnings. It ends with `PASS: Phase 6 deterministic acceptance. Real model/live-source checks are separate.` These totals passed on merged main `54e3157` in [GitHub CI](https://github.com/damogallagher/redpanda/actions/runs/39840801993). The narrower demonstrations repeat subsets so you can watch them individually; they are already included in `make test`.
+Expected: all exit 0. `make test` reports **453 unit tests, 32 integration/configuration checks, 72 native Connect cases, 100% application line and branch coverage**, and no warnings. It ends with `PASS: Phase 6 deterministic acceptance. Real model/live-source checks are separate.` These totals passed on merged main `30510a8` in [GitHub CI](https://github.com/damogallagher/redpanda/actions/runs/39859001474). The narrower demonstrations repeat subsets so you can watch them individually; they are already included in `make test`.
 
 `demo-success` verifies fixture source → real Connect/broker → actual worker → sink/Postgres → API, using controlled Wikipedia/model responses. Two edits become `review` results with two reasoning stages. `demo-failures` passes only when invalid output, outages, replay and recovery behave as asserted. The integration fixtures remove their own disposable projects. The `make test` build/Connect CLI checks also create helper resources, isolated above by `DEMO_TEST_PROJECT`. Remove that helper project after the gate, including if the gate fails:
 

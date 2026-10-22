@@ -46,7 +46,7 @@ For Ollama:
 ./scripts/test-local.sh
 ```
 
-This builds the test container, starts bundled Ollama and downloads the configured model if necessary, then checks nine fixed cases. Leave `OLLAMA_MODEL` and `LLM_MODEL` equal in `.env.local`. Expect `PASS: 9/9 cases` and `reports/model-local.json`. A smaller/different model may fail the rubric; the report shows exactly which case and its prompts/responses. The default Qwen2.5 7B weights occupy about 4.7 GB. The server remains available afterward; `make clean-ollama` stops it.
+This builds the test container, starts bundled Ollama and downloads the configured model if necessary, then checks nine fixed cases. Leave `OLLAMA_MODEL` and `LLM_MODEL` equal in `.env.local`. On a passing evaluation, expect `PASS: 9/9 cases` and `reports/model-local.json`. A smaller/different model may fail the rubric; the report shows exactly which case and its prompts/responses. The default Qwen2.5 7B weights occupy about 4.7 GB. The server remains available afterward; `make clean-ollama` stops it.
 
 For the hosted frontier model, edit `.env.frontier` and enter your own `OPENAI_API_KEY`, then:
 
@@ -54,9 +54,9 @@ For the hosted frontier model, edit `.env.frontier` and enter your own `OPENAI_A
 ./scripts/test-frontier.sh
 ```
 
-Expect `PASS: 9/9 cases` and `reports/model-frontier.json`. **This makes up to 28 paid calls**, with the profile's token limit per call. Technical provider failure stops the evaluation early. Wrong decisions fail their cases and the overall command. No provider fallback is allowed. An invalid/missing profile fails before inference. These scripts do not start ingestion or a worker, publish Kafka records, or overwrite `.env`; they use the corresponding private profile directly. Existing running application processes continue independently, so stop the application first if you want to isolate resource use/cost. `make test-local` and `make test-frontier` are aliases.
+On a passing evaluation, expect `PASS: 9/9 cases` and `reports/model-frontier.json`. **This makes up to 28 paid calls**, with the profile's token limit per call. Technical provider failure stops the evaluation early. Wrong decisions fail their cases and the overall command. No provider fallback is allowed. An invalid/missing profile fails before inference. These scripts do not start ingestion or a worker, publish Kafka records, or overwrite `.env`; they use the corresponding private profile directly. Existing running application processes continue independently, so stop the application first if you want to isolate resource use/cost. `make test-local` and `make test-frontier` are aliases.
 
-Reports contain visible model inputs/outputs for synthetic cases and are ignored by Git, created with mode 0600. Each run replaces that mode's report; copy a report before rerunning if you need both. The [rubric and first-run evidence](evaluations/acceptance.md) explain what a pass establishes and its limits.
+Reports contain visible model inputs/outputs for synthetic cases and are ignored by Git, created with mode 0600. A completed evaluation replaces that mode's report; copy a report before rerunning if you need both. A pre-evaluation failure may leave an older report, so check the exit status and report `checked_at`. Recorded model results predate the final hardening and Ollama image update; rerun the selected configuration before presenting. The [rubric and first-run evidence](evaluations/acceptance.md) explain what a pass establishes and its limits.
 
 Optional native Ollama: set `.env.local` to `COMPOSE_FILE=compose.infrastructure.yml` and `LLM_BASE_URL=http://host.docker.internal:11434`, and start/pull the model on the host yourself. The test script then skips bundled bootstrap. Native-host connectivity and alternative models depend on that machine; the recorded acceptance used bundled Ollama.
 

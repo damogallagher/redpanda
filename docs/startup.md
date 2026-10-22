@@ -32,7 +32,7 @@ For local inference, `.env.local` defaults to containerized Ollama and `qwen2.5:
 
 Edit the **profile** when changing settings; edits made only to `.env` are replaced on the next launch. The resulting `.env` has owner-only read/write permissions. Profiles, temporary files, and `.env` are ignored by Git and excluded from the Docker build context. The launchers never execute dotenv contents as shell commands.
 
-Keep `COMPOSE_PROJECT_NAME` and `POSTGRES_PASSWORD` identical in both profiles when reusing data. The examples use project `redpanda`, so switching keeps the same broker/database/model volumes. If you already have a configured stack, retain its project name, database password, and port in both profiles. This update prepared Damien's two profiles from his existing configuration and retained his key only in the frontier profile.
+Keep `COMPOSE_PROJECT_NAME`, `POSTGRES_PASSWORD`, `TRIAGE_READER_PASSWORD` and `TRIAGE_WRITER_PASSWORD` consistent in both profiles when reusing data. The normal launcher reconciles the restricted reader/writer roles before sink/API startup; see [database permissions](phases/06-security-quality.md#applying-the-database-permissions). The examples use project `redpanda`, so switching keeps the same broker/database/model volumes. If you already have a configured stack, retain its project name, database password, and port in both profiles. This update prepared Damien's two profiles from his existing configuration and retained his key only in the frontier profile.
 
 ## What each command does
 
@@ -42,7 +42,7 @@ Keep `COMPOSE_PROJECT_NAME` and `POSTGRES_PASSWORD` identical in both profiles w
 4. If `.env` exists, stop its stack, including optional tool services, without removing named volumes. A failure here leaves `.env` unchanged.
 5. Atomically replace `.env` with the selected configuration and start the corresponding Compose services. Remove temporary files and release the lock.
 
-Local mode uses `docker-compose.yml`: Redpanda, Postgres, Connect, the reasoning worker, Ollama, and one-time topic/model initialization. Frontier mode uses `compose.infrastructure.yml`: Redpanda, Postgres, Connect, the reasoning worker, and topic initialization, with no Ollama container or local weight download. **Phase 4 starts model processing automatically.** The worker waits for topic initialization; bundled local mode also waits for the model download. `WORKER_MAX_ITEMS=10` is the default in both profiles: up to four calls per edit, at most 40 calls per worker run. Frontier calls incur provider charges. Set `WORKER_MAX_ITEMS=0` explicitly for continuous processing. Existing profiles without this variable inherit the ten-edit default. `KAFKA_GROUP_ID=triage-v1` preserves progress across restarts and mode switches. Switching modes briefly stops ingestion; the existing public-stream gap limitations still apply.
+Local mode uses `docker-compose.yml`: Redpanda, Postgres, Connect, the reasoning worker, Ollama, and one-time topic/model initialization. Frontier mode uses `compose.infrastructure.yml`: Redpanda, Postgres, Connect, the reasoning worker, and topic initialization, with no Ollama container or local weight download. **Startup begins model processing automatically.** The worker waits for topic initialization; bundled local mode also waits for the model download. `WORKER_MAX_ITEMS=10` is the default in both profiles: up to four calls per edit, at most 40 calls per worker run. Frontier calls incur provider charges. Set `WORKER_MAX_ITEMS=0` explicitly for continuous processing. Existing profiles without this variable inherit the ten-edit default. `KAFKA_GROUP_ID=triage-v1` preserves progress across restarts and mode switches. Switching modes briefly stops ingestion; the existing public-stream gap limitations still apply.
 
 `Started` means Compose started the services successfully. Local weights may still be downloading. Check initialization before sending a model smoke request:
 
@@ -64,7 +64,7 @@ docker compose exec redpanda rpk group describe triage-v1
 
 `worker` exiting 0 after ten committed edits is expected. It can wait while no edits are available. `docker compose start worker` processes the next batch using committed offsets. A nonzero exit needs inspection and restart after fixing delivery. A stop signal drains the current record; allow up to nine minutes for slow model I/O. Changing model settings alone does not reanalyse already committed events. See the [Phase 4 guide](phases/04-reasoning.md) for replay and duplicate semantics.
 
-Both modes now start `db-migrate`, the Connect `sink`, and the read-only `api`. Migration runs against existing volumes before the sink/API start. No profile edit is needed for the defaults: API loopback 8000, sink diagnostics loopback 4196, sink group `triage-store-v1`. Override `API_PORT`, `SINK_PORT`, and `SINK_GROUP_ID` in the selected profile when needed. The launchers clear inherited overrides for these settings as well. The API and sink receive database credentials only; no hosted model key is passed to them.
+Both modes now start `db-migrate`, the Connect `sink`, and the read-only `api`. Migration runs against existing volumes before the sink/API start. No profile edit is needed for the defaults: API loopback 8000, sink diagnostics loopback 4196, sink group `triage-store-v1`. Override `API_PORT`, `SINK_PORT`, and `SINK_GROUP_ID` in the selected profile when needed. The launchers clear inherited overrides for these settings as well. The API receives the restricted reader password and the sink its writer password; neither receives the administrator password or hosted model key. Only the migration helper uses administrator credentials.
 
 ```sh
 curl --fail http://localhost:8000/health/ready
@@ -94,7 +94,7 @@ Do not add `--volumes` if you want to retain this stack's data. Launch either sc
 
 ```sh
 make test-startup UV='uvx --from uv==0.13.4 uv'
-make verify-phase-5 UV='uvx --from uv==0.13.4 uv'
+make verify-phase-6 UV='uvx --from uv==0.13.4 uv'
 ```
 
 The focused target runs 13 launcher tests against a recording Docker boundary and two real Compose/profile contract tests. Assertions cover both modes, file copying and permissions, source-profile preservation, startup order, no volume deletion, inherited-variable isolation, missing profiles, preflight/shutdown/startup failure, concurrent execution, and working directories containing spaces. Native Compose tests establish the actual service/backend/model settings and rejection of an empty hosted key. The cumulative gate also keeps 100% Python application line and branch coverage; shell glue is verified through behavior tests rather than counted as Python coverage.

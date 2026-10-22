@@ -1,7 +1,7 @@
 # Wikipedia edit triage
 ## Presentation study guide
-Prepared for Damien Gallagher · 20 October 2026
-Source snapshot: `859b1662f574a6ff749689834f2dfc3ef48c9748`. AI-assisted study material; personal README sections remain independent.
+Prepared for Damien Gallagher · 22 October 2026
+Source snapshot: `30510a88e54f7f75b374773c5ec725be090974f1`. AI-assisted study material; this refresh leaves personal README sections unchanged. Historical model results are labelled separately.
 
 ## 01. How to use this study pack
 Start with the story, then trace the evidence.
@@ -12,17 +12,17 @@ Study in three passes. First, read the architecture and phase map to understand 
 
 | Evidence label | How to interpret it |
 | --- | --- |
-| Implemented | Confirmed in the source snapshot, including the PR #13 follow-up. |
+| Implemented | Confirmed in merged main 30510a8, including evidence limits, security hardening and demo fixes. |
 | Recorded observation | A saved run on a named commit; not a promise about future live inputs. |
 | Synthetic example | A controlled fixture, mock provider response or labelled teaching projection. |
 | Proposed improvement | Future engineering work; not a feature of the submitted application. |
 
-**Version and review boundary**
-Source snapshot: 859b166, 20 October 2026. Main was 447920f; PRs #1-12 were merged. PR #13 was open at preparation time and contains the demo evidence plus helper-volume fix. The 30-integration-test total includes that fix; main before it has 29.
+**Version and evidence boundary**
+Current system: merged main 30510a8, 22 October 2026; PRs #1-19 are merged. Main CI run 39859001474 passed 453 unit, 32 integration and 72 Connect cases at 100% application line/branch coverage, with zero emitted warnings or check annotations. Historical phase/model runs keep their original dates and counts.
 
-This is an AI-assisted study aid, not the assignment’s independent personal write-up. The reserved README sections remain untouched. Use the evidence to form and write your own judgments. No new model calls or application executions are claimed by creation of this guide.
+This is AI-assisted study material. This refresh leaves the personal README sections unchanged; independent writing and the ability to defend the code remain Damien’s responsibility. Recorded model runs predate the final hardening and Ollama image update. No fresh live-model result is claimed by this documentation refresh.
 
-Sources: [README.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/README.md), [docs/handover.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/handover.md), [docs/evidence/submission-demo-verification.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/submission-demo-verification.json)
+Sources: [README.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/README.md), [docs/handover.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/handover.md), [docs/evidence/submission-demo-verification.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/submission-demo-verification.json), [docs/phases/06-evidence-limits.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/06-evidence-limits.md), [docs/phases/06-security-quality.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/06-security-quality.md)
 
 ## 02. What the exercise actually asked for
 Translate the brief into observable contracts.
@@ -48,7 +48,7 @@ The brief includes a generic Connect branch hint for LLM calls, but explicitly r
 **A useful distinction**
 Production-quality boundaries and tests are implemented. A single-node local deployment is not a certified production platform. Coverage, model quality and operational readiness are three separate claims.
 
-Sources: [docs/assignment/fde-take-home-exercise.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/assignment/fde-take-home-exercise.md), [docs/implementation-plan.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/implementation-plan.md), [docs/handover.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/handover.md)
+Sources: [docs/assignment/fde-take-home-exercise.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/assignment/fde-take-home-exercise.md), [docs/implementation-plan.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/implementation-plan.md), [docs/handover.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/handover.md)
 
 ## 03. The complete system
 Three independent concerns: move data, reason on evidence, serve results.
@@ -69,7 +69,7 @@ Python uses MediaWiki and either Ollama or OpenAI; error topics exist at ingesti
 
 Ollama and the hosted provider occupy the same model boundary. They are explicit alternatives selected by configuration, not a fallback chain. The API reads persisted data and never triggers inference. This separation lets storage recover independently and allows results to be replayed without paying for the model again.
 
-Sources: [compose.infrastructure.yml](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/compose.infrastructure.yml), [docker-compose.yml](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docker-compose.yml), [src/triage/worker.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/worker.py), [connect/sink.yaml](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/connect/sink.yaml)
+Sources: [compose.infrastructure.yml](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/compose.infrastructure.yml), [docker-compose.yml](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docker-compose.yml), [src/triage/worker.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/worker.py), [connect/sink.yaml](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/connect/sink.yaml)
 
 ## 04. Why the work was divided into phases
 Each phase creates a contract the next phase can trust.
@@ -90,9 +90,9 @@ Each phase creates a contract the next phase can trust.
 
 This order kept failures attributable. Ingestion could be verified without a model. Enrichment could be inspected without Kafka. Reasoning could use controlled HTTP responses while exercising a real broker. Serving could replay synthetic results before real inference was introduced.
 
-Review sequence: planning PR #1 and assignment/test documentation #2; foundation #3 with follow-ups #4-5; ingestion and launchers #6; enrichment #7; reasoning #8; serving #9 and handover #10; acceptance/CI #11; walkthrough #12; executed-demo fixes/evidence #13. Damien reviewed and merged phases; the agent did not auto-merge.
+Review sequence: planning PR #1 and assignment/test documentation #2; foundation #3 with follow-ups #4-5; ingestion and launchers #6; enrichment #7; reasoning #8; serving #9 and handover #10; acceptance/CI #11; walkthrough #12; executed demo #13; original study pack #14; evidence limit #15; security hardening #16; final scan/CI evidence #17; demo documentation #18; README draft #19. All are merged at this snapshot. Damien controls merges.
 
-Sources: [docs/progress.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/progress.md), [docs/phases/README.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/phases/README.md), [docs/implementation-plan.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/implementation-plan.md)
+Sources: [docs/progress.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/progress.md), [docs/phases/README.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/README.md), [docs/implementation-plan.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/implementation-plan.md)
 
 ## 05. Phase 0 · Make the work reviewable
 Purpose: agree the product and define evidence before implementation.
@@ -121,7 +121,7 @@ Phase 1 inherited an agreed architecture and explicit acceptance criteria, not w
 **Rehearsal prompt**
 Explain the difference between a plan, a passing test and an observed live result. Point to one artifact for each; do not treat a planned command as evidence of implementation.
 
-Sources: [docs/phases/00-plan.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/phases/00-plan.md), [docs/implementation-plan.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/implementation-plan.md), [docs/phase-verification.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/phase-verification.md), [docs/ai-log/README.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/ai-log/README.md)
+Sources: [docs/phases/00-plan.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/00-plan.md), [docs/implementation-plan.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/implementation-plan.md), [docs/phase-verification.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phase-verification.md), [docs/ai-log/README.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/ai-log/README.md)
 
 ## 06. Phase 1 · Foundation and model feasibility
 Purpose: prove the runtime and provider boundaries before adding the stream.
@@ -151,7 +151,7 @@ Ollama replied: “The meaning changed from suggesting a possible link to assert
 **Phase boundary**
 No live ingestion, multi-step worker, sink or results API existed yet. Phase 2 could now rely on the broker, schemas and reproducible packaging.
 
-Sources: [docs/phases/01-foundation.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/phases/01-foundation.md), [src/triage/config.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/config.py), [src/triage/llm.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/llm.py), [docs/evidence/phase-1-local-model.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/phase-1-local-model.json), [docs/evidence/phase-1-hosted-model.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/phase-1-hosted-model.json)
+Sources: [docs/phases/01-foundation.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/01-foundation.md), [src/triage/config.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/config.py), [src/triage/llm.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/llm.py), [docs/evidence/phase-1-local-model.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/phase-1-local-model.json), [docs/evidence/phase-1-hosted-model.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/phase-1-hosted-model.json)
 
 ## 07. Foundation verification and model choice
 Purpose: establish a reproducible baseline, not just healthy containers.
@@ -172,7 +172,7 @@ The recorded Qwen3 4B candidate took 25.687 seconds and produced an unwanted lon
 
 Recorded hardware was an ARM64 Mac with 32 GiB RAM. The default local weights are about 4.7 GB. Documentation suggests roughly 12 GiB Docker RAM and 12 GB free disk for local mode, or 4 GiB Docker RAM for hosted mode; those are starting allocations, not benchmarked minimums.
 
-Container digests and Python dependencies are pinned. Current snapshot: Python 3.13.16, uv 0.13.4, Redpanda 26.2.5, Connect 4.114.0, Postgres 16.15 and Ollama 0.40.6. These are recorded project pins, not a claim about today’s latest releases. Model tags remain mutable, so evaluation evidence records the actual model identity/digest.
+Container digests and Python dependencies are pinned. Current snapshot: Python 3.13.16, uv 0.13.4, Redpanda 26.2.5, Connect 4.114.0, Postgres 16.15 and Ollama 0.40.8. These are recorded project pins, not a claim about today’s latest releases. Model tags remain mutable, so evaluation evidence records the actual model identity/digest.
 
 ```text
 make verify-phase-1
@@ -184,7 +184,7 @@ Current commands; historical counts belong to their recorded commits
 **What to be ready to explain**
 Why the adapter rejects truncated responses; why provider failures are sanitized; why the same model interface does not imply every hosted provider is compatible.
 
-Sources: [docs/phases/01-foundation.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/phases/01-foundation.md), [docs/phases/01-dependency-updates.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/phases/01-dependency-updates.md), [docs/phases/06-ci-maintenance.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/phases/06-ci-maintenance.md), [pyproject.toml](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/pyproject.toml)
+Sources: [docs/phases/01-foundation.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/01-foundation.md), [docs/phases/01-dependency-updates.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/01-dependency-updates.md), [docs/phases/06-ci-maintenance.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/06-ci-maintenance.md), [pyproject.toml](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/pyproject.toml)
 
 ## 08. Phase 2 · From SSE frames to trusted events
 Purpose: remove noise and establish a compact transport contract.
@@ -222,7 +222,7 @@ Accepted records use key enwiki:101 and headers source=fixture, source_id=fixtur
 **Next dependency**
 Phase 3 receives validated old/new revision IDs and direction. It still has to fetch the actual changed content; metadata alone cannot establish a semantic change.
 
-Sources: [connect/ingest.yaml](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/connect/ingest.yaml), [connect/ingest_test.yaml](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/connect/ingest_test.yaml), [tests/fixtures/ingestion/expected-edits.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/tests/fixtures/ingestion/expected-edits.json), [docs/phases/02-ingestion.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/phases/02-ingestion.md)
+Sources: [connect/ingest.yaml](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/connect/ingest.yaml), [connect/ingest_test.yaml](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/connect/ingest_test.yaml), [tests/fixtures/ingestion/expected-edits.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/tests/fixtures/ingestion/expected-edits.json), [docs/phases/02-ingestion.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/02-ingestion.md)
 
 ## 09. Ingestion filters, tests and source limitations
 Purpose: distinguish source selection from delivery guarantees.
@@ -248,7 +248,7 @@ The Phase 2 metrics snapshot counted 789 processed segments: 25 accepted, 763 fi
 **Guarantee boundary**
 The implementation supports Wikimedia’s observed event-first SSE profile, not arbitrary SSE ordering. Reconnect has no durable Last-Event-ID checkpoint. Events may be missed or repeated upstream; Kafka guarantees begin after broker acknowledgement.
 
-Sources: [docs/phases/02-ingestion.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/phases/02-ingestion.md), [docs/evidence/phase-2-live.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/phase-2-live.json), [tests/test_ingestion.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/tests/test_ingestion.py)
+Sources: [docs/phases/02-ingestion.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/02-ingestion.md), [docs/evidence/phase-2-live.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/phase-2-live.json), [tests/test_ingestion.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/tests/test_ingestion.py)
 
 ## 10. Phase 3 · Fetch the evidence the model needs
 Purpose: replace metadata-only labeling with content-based analysis.
@@ -284,7 +284,7 @@ The recorded live comparison matched the fixture exactly in 0.287 seconds, with 
 **Next dependency**
 Phase 4 can reason over a validated source result, and can route missing or incomplete evidence explicitly instead of manufacturing a confident label.
 
-Sources: [src/triage/enrichment.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/enrichment.py), [src/triage/diff.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/diff.py), [docs/phases/03-enrichment.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/phases/03-enrichment.md), [docs/evidence/phase-3-live.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/phase-3-live.json)
+Sources: [src/triage/enrichment.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/enrichment.py), [src/triage/diff.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/diff.py), [docs/phases/03-enrichment.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/03-enrichment.md), [docs/evidence/phase-3-live.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/phase-3-live.json)
 
 ## 11. Enrichment bounds and explicit failure outcomes
 Purpose: prevent oversized, mismatched or unsupported data becoming “complete evidence”.
@@ -292,7 +292,7 @@ Purpose: prevent oversized, mismatched or unsupported data becoming “complete 
 | Boundary | Implemented behavior |
 | --- | --- |
 | Response bytes | Stream at most 256 KiB; reject unexpected compression and close on overflow. |
-| Evidence | At most 20 hunks; 4,096 characters per side; 16,000 characters total. Whole over-limit hunks are omitted and incompleteness is explicit. |
+| Evidence | New processing: at most eight complete hunks, 4,096 characters per side and 16,000 total. Nine or more hunks produce evidence_limit with explicit truncation and zero model calls. Historical v1 records retain a 20-hunk read limit. |
 | Time and retries | 20-second cooperative budget, each I/O wait at most 5 seconds; at most two serial requests for retryable failures. |
 | Retry-After | Honor valid values only within the 10-second retry and remaining-time limits; do not retry early. |
 | Identity / structure | Validate revision/page/namespace identity and supported table structure; parser nesting limit 16. |
@@ -310,7 +310,7 @@ Tests check provenance mismatch, insertions/deletions, escaped markup, retry tim
 **Important nuance**
 A cooperative deadline is checked between operations; it is not hard cancellation. An in-flight bounded I/O wait may exceed the nominal budget. More context or citation retrieval is future work, not a hidden feature of this client.
 
-Sources: [docs/phases/03-enrichment.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/phases/03-enrichment.md), [src/triage/enrichment.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/enrichment.py), [tests/test_enrichment.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/tests/test_enrichment.py)
+Sources: [docs/phases/03-enrichment.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/03-enrichment.md), [src/triage/enrichment.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/enrichment.py), [tests/test_enrichment.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/tests/test_enrichment.py), [src/triage/limits.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/limits.py), [docs/phases/06-evidence-limits.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/06-evidence-limits.md)
 
 ## 12. Phase 4 · Bounded multi-step reasoning
 Purpose: give the model semantic work while keeping control flow in code.
@@ -330,7 +330,7 @@ Each stage gets at most two attempts, including repair or technical retry, and a
 **Why this is more than classification by metadata**
 The model compares actual changed text, explains changes to qualifiers, claims, entities and citations, and grounds its output in source quotes. Deterministic code validates and routes; it does not replace the semantic comparison with an edit-comment keyword rule.
 
-Sources: [src/triage/reasoning.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/reasoning.py), [src/triage/prompts.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/prompts.py), [docs/phases/04-reasoning.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/phases/04-reasoning.md)
+Sources: [src/triage/reasoning.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/reasoning.py), [src/triage/prompts.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/prompts.py), [docs/phases/04-reasoning.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/04-reasoning.md)
 
 ## 13. Trace a two-step result
 A controlled example makes the contract easier to defend.
@@ -370,7 +370,7 @@ The prompts explicitly treat titles, article text and prior model output as untr
 **Two versions, two jobs**
 edit-triage-v2 identifies prompt templates. triage-v1 identifies the analysis/storage namespace. They are not interchangeable, and changing the model does not automatically create a new storage key.
 
-Sources: [src/triage/prompts.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/prompts.py), [src/triage/reasoning.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/reasoning.py), [tests/fixtures/worker/scenario.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/tests/fixtures/worker/scenario.py), [docs/evidence/phase-4-delivery.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/phase-4-delivery.json)
+Sources: [src/triage/prompts.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/prompts.py), [src/triage/reasoning.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/reasoning.py), [tests/fixtures/worker/scenario.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/tests/fixtures/worker/scenario.py), [docs/evidence/phase-4-delivery.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/phase-4-delivery.json)
 
 ## 14. Dirty output, uncertainty and call budgets
 Purpose: fail explicitly instead of accepting plausible-looking garbage.
@@ -388,14 +388,14 @@ Repair sends the source/schema again with repair=true. It does not feed a detail
 
 ### Resource budgets
 
-The default completion budget is 1,024 tokens per call; total prompt text is capped at 32,000 characters, provider response bytes at 64 KiB, and input events at 8 KiB. Extraction permits up to eight changes with 512-character quotes. The source parser can accept 20 hunks, but extraction must cover every one: a larger number can therefore exhaust validation and abstain. This is an explicit improvement opportunity.
+The default completion budget is 1,024 tokens per call; total prompt text is capped at 32,000 characters, provider response bytes at 64 KiB, and input events at 8 KiB. Extraction permits up to eight changes with 512-character quotes. New enrichment and extraction share MAX_REASONING_HUNKS=8. Oversized edits abstain before inference; historical ready inputs with nine to 20 hunks receive the same defensive check. All accepted hunks must still be represented. The 20-hunk wire limit preserves old records, not new inference capacity.
 
 The worker starts a shared 240-second cooperative item deadline before enrichment. Network timeouts are reduced to remaining time. Slowly progressing I/O can still exceed the nominal wall-clock deadline before control returns; do not describe this as hard real-time cancellation.
 
 **Evidence of test strength**
 Removing duplicate-key rejection or lowering the confidence threshold broke targeted tests. The deliberately red demonstration also fails when it wrongly expects an invented quote to be accepted. The normal suite stays green.
 
-Sources: [src/triage/reasoning.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/reasoning.py), [src/triage/llm.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/llm.py), [docs/evidence/phase-4-mutations.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/phase-4-mutations.json), [tests/fixtures/acceptance/intentional_failure.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/tests/fixtures/acceptance/intentional_failure.py)
+Sources: [src/triage/reasoning.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/reasoning.py), [src/triage/llm.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/llm.py), [docs/evidence/phase-4-mutations.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/phase-4-mutations.json), [tests/fixtures/acceptance/intentional_failure.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/tests/fixtures/acceptance/intentional_failure.py), [src/triage/limits.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/limits.py), [tests/test_evidence_limits.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/tests/test_evidence_limits.py), [docs/phases/06-evidence-limits.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/06-evidence-limits.md)
 
 ## 15. Kafka delivery: acknowledge output, then commit input
 Purpose: avoid losing accepted input when downstream publication fails.
@@ -419,7 +419,7 @@ A real missing-result-topic test keeps the committed offset at -1001 (the client
 **Do not claim exactly once**
 Producer idempotence handles producer-level retries; it does not deduplicate new inference after process restart. Kafka and Postgres are not joined by one distributed transaction. Also, acks=all acknowledges only one replica in this single-node setup.
 
-Sources: [src/triage/broker.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/broker.py), [src/triage/worker.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/worker.py), [docs/evidence/phase-4-delivery.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/phase-4-delivery.json), [docs/evidence/phase-6-crash.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/phase-6-crash.json)
+Sources: [src/triage/broker.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/broker.py), [src/triage/worker.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/worker.py), [docs/evidence/phase-4-delivery.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/phase-4-delivery.json), [docs/evidence/phase-6-crash.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/phase-6-crash.json)
 
 ## 16. Phase 5 · Durable, idempotent persistence
 Purpose: make results queryable without coupling the worker to SQL.
@@ -438,7 +438,7 @@ The unique key provides one logical row per analysis identity. A newer result-to
 
 ### Migration and API boundaries
 
-Migration 2 creates the result table and indexes with transactional, idempotent DDL and an advisory lock. It runs on startup before sink/API readiness, including against older Phase 1 volumes. No database reset is required for that migration.
+Migration 2 creates the result table and indexes with transactional, idempotent DDL and an advisory lock. It runs on startup before sink/API readiness, including against older Phase 1 volumes. No data reset is needed. Startup also runs db/003-service-roles.sql: API uses triage_reader (SELECT), sink uses triage_writer (SELECT/INSERT/UPDATE and sequence usage); only the migration helper receives administrator credentials. Role reconciliation does not change schema version 2.
 
 The Python storage layer uses parameterized read-only queries with connection/query/lock timeouts. It validates stored payloads before serving them. The API exposes summaries and complete details, not raw SQL or untrusted HTML. It makes no model requests.
 
@@ -447,7 +447,7 @@ The source-offset replay guard assumes results partition 0 and stable topic hist
 
 This is a replayable architecture: a new sink consumer group can rebuild SQL from retained results without rerunning inference. Replaying edits through the worker is different and can incur new model calls.
 
-Sources: [connect/sink.yaml](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/connect/sink.yaml), [db/002-results.sql](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/db/002-results.sql), [src/triage/storage.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/storage.py), [docs/phases/05-serving.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/phases/05-serving.md)
+Sources: [connect/sink.yaml](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/connect/sink.yaml), [db/002-results.sql](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/db/002-results.sql), [src/triage/storage.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/storage.py), [docs/phases/05-serving.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/05-serving.md), [db/003-service-roles.sql](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/db/003-service-roles.sql), [tests/test_database_security.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/tests/test_database_security.py)
 
 ## 17. Serving: queries, responses and proof of persistence
 Purpose: let a reviewer inspect an analysis and its evidence.
@@ -479,7 +479,7 @@ The Phase 5 gate passed 371 unit, 25 integration and 72 native Connect cases. A 
 **Verify delivery, not just health**
 A ready API does not prove the sink caught up. Check triage-store-v1 lag and query the expected analysis key. List responses are summaries; retrieve detail to inspect original evidence and reasoning-stage outcomes.
 
-Sources: [src/triage/api.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/api.py), [src/triage/storage.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/storage.py), [docs/evidence/phase-5-serving.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/phase-5-serving.json), [tests/test_serving_integration.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/tests/test_serving_integration.py)
+Sources: [src/triage/api.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/api.py), [src/triage/storage.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/storage.py), [docs/evidence/phase-5-serving.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/phase-5-serving.json), [tests/test_serving_integration.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/tests/test_serving_integration.py)
 
 ## 18. Phase 6 · Operational acceptance and handover
 Purpose: prove the assembled system can start, fail safely and be operated.
@@ -499,12 +499,14 @@ Added a small test/cleanup menu, separate local/frontier model tests, a frozen a
 
 The image was hardened using a two-stage build and pinned Debian 13 Python base with runtime build tools removed. CI caught a floating-point clock assertion and it was fixed with a deterministic clock. Later action/dependency maintenance moved actions to native Node 24, adopted the supported test transport and made Python warnings errors.
 
-The executed follow-up found CLI helpers inheriting anonymous image volumes. Giving only topics and db-migrate small temporary filesystems fixed the leak. A real-Docker regression was red before the fix and green after it; the latest integration total is 30.
+The executed follow-up found CLI helpers inheriting anonymous image volumes. Giving only topics and db-migrate small temporary filesystems fixed the leak. A real-Docker regression was red before the fix and green after it; that checkpoint had 30 integration tests. The merged current gate has 32, including later database permission checks.
+
+Post-phase fixes aligned new evidence and extraction at eight hunks, added restricted service roles and private atomic reports, and enforced security/complexity checks with shared named limits. Current totals are 453 unit / 32 integration / 72 Connect. These corrections do not establish public-deployment security or fresh model accuracy.
 
 **Scope of acceptance**
 The tests establish specific local startup, delivery, recovery and cleanup contracts. They do not establish high availability, calibrated model accuracy, a security certification or production load capacity.
 
-Sources: [docs/phases/06-acceptance.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/phases/06-acceptance.md), [docs/phases/06-ci-maintenance.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/phases/06-ci-maintenance.md), [docs/evaluations/submission-demo.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evaluations/submission-demo.md)
+Sources: [docs/phases/06-acceptance.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/06-acceptance.md), [docs/phases/06-ci-maintenance.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/06-ci-maintenance.md), [docs/evaluations/submission-demo.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evaluations/submission-demo.md), [docs/phases/06-evidence-limits.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/06-evidence-limits.md), [docs/phases/06-security-quality.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/06-security-quality.md)
 
 ## 19. How the evidence was assembled
 100% unit coverage is one layer of a larger verification strategy.
@@ -530,13 +532,14 @@ Sources: [docs/phases/06-acceptance.md](https://github.com/damogallagher/redpand
 | Serving | 371 | 25 | 72 | 946 / 242 |
 | Acceptance | 416 | 29 | 72 | 1082 / 276 |
 | Demo fix | 416 | 30 | 72 | 1082 / 276 |
+| Merged main 30510a8 | 453 | 32 | 72 | 1172 / 286 |
 
 Every listed application coverage checkpoint is 100% lines and branches without exclusions. Shell scripts, YAML, infrastructure and model quality require their own evidence; they are not included in that Python percentage. Earlier commands run current code when used at HEAD, so their historical test counts only apply to the recorded commit.
 
-**Latest recorded gate**
-Local and Linux CI at 71a0680: 416 unit / 30 integration / 72 Connect, 1,082 lines and 276 branches, zero missing/excluded coverage, zero warnings and zero warning annotations.
+**Current recorded gate**
+Merged main 30510a8, Linux CI 39859001474 on 22 October 2026: 453 unit / 32 integration / 72 Connect; all 1,172 lines and 286 branches covered; zero failures, skips, exclusions, emitted warnings or check annotations. Model tests and vulnerability scans are separate evidence.
 
-Sources: [docs/testing.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/testing.md), [docs/evidence/submission-demo-verification.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/submission-demo-verification.json), [docs/evidence/startup-launchers.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/startup-launchers.json), [docs/evidence/phase-4-mutations.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/phase-4-mutations.json)
+Sources: [docs/testing.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/testing.md), [docs/evidence/submission-demo-verification.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/submission-demo-verification.json), [docs/evidence/startup-launchers.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/startup-launchers.json), [docs/evidence/phase-4-mutations.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/phase-4-mutations.json), [docs/evidence/security-quality-verification.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/security-quality-verification.json)
 
 ## 20. Local versus frontier: one contract, explicit choices
 Purpose: support different reviewer hardware without hiding data movement or cost.
@@ -560,10 +563,10 @@ Hosted support is specifically the implemented OpenAI contract, with its fixed b
 **Useful explanation**
 There is no silent local-to-hosted fallback. That makes costs, data transfer and provider identity explicit, and makes failures visible instead of quietly changing the experiment.
 
-Sources: [docs/startup.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/startup.md), [src/triage/config.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/config.py), [src/triage/llm.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/llm.py), [scripts/start.sh](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/scripts/start.sh), [scripts/test-local.sh](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/scripts/test-local.sh), [scripts/test-frontier.sh](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/scripts/test-frontier.sh)
+Sources: [docs/startup.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/startup.md), [src/triage/config.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/config.py), [src/triage/llm.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/llm.py), [scripts/start.sh](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/scripts/start.sh), [scripts/test-local.sh](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/scripts/test-local.sh), [scripts/test-frontier.sh](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/scripts/test-frontier.sh)
 
-## 21. What the final real demonstrations showed
-Read delivery, semantic assessment and evaluation separately.
+## 21. What the recorded real demonstrations showed
+Historical runs on 20 October 2026; not new results from the current images.
 
 | Observed measure | Ollama | Frontier |
 | --- | --- | --- |
@@ -578,16 +581,16 @@ Read delivery, semantic assessment and evaluation separately.
 | Storage-consumer lag | 0 | 0 |
 | Total model calls | 20 local | 18 paid |
 
-The local run started with fresh Qwen weights; evaluation plus bootstrap took 165.757 seconds. Total evaluation/startup/live durations were 362.216 seconds local and 64.240 seconds frontier. These are single-run observations, not controlled throughput comparisons; the live edits differ and local bootstrap adds work.
+These runs predate the final hardening and Ollama 0.40.8 update. The local run started with fresh Qwen weights; evaluation plus bootstrap took 165.757 seconds. Total evaluation/startup/live durations were 362.216 seconds local and 64.240 seconds frontier. These are single-run observations, not controlled throughput comparisons; the live edits differ and local bootstrap adds work.
 
-The nine fixed cases include two routine edits, five substantive edits and two no-call abstentions. They were frozen before their first Phase 6 run and separate from development tuning. The final demo reuses them, so it is regression evidence, not a new unseen evaluation. Success on nine curated cases does not establish general accuracy on messy Wikipedia diffs.
+The nine fixed cases include two routine edits, five substantive edits and two no-call abstentions. They were frozen before their first Phase 6 run and separate from development tuning. The recorded demo reuses them, so it is regression evidence, not a new unseen evaluation. Success on nine curated cases does not establish general accuracy on messy Wikipedia diffs.
 
 All three outputs per provider reached storage, including abstentions. The frontier total of 18 calls remained below the declared 40-call ceiling. Currency cost was not measured. No extra paid rerun was used to improve the recorded result.
 
 **Balanced interpretation**
 Ollama demonstrated safe delivery but successfully assessed only one of three live edits in this run. Frontier assessed two. That is a limitation to investigate, not a reason to relabel abstentions as successful semantic judgments.
 
-Sources: [docs/evaluations/submission-demo.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evaluations/submission-demo.md), [docs/evidence/submission-demo-verification.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/submission-demo-verification.json), [docs/evaluations/acceptance.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evaluations/acceptance.md)
+Sources: [docs/evaluations/submission-demo.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evaluations/submission-demo.md), [docs/evidence/submission-demo-verification.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/submission-demo-verification.json), [docs/evaluations/acceptance.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evaluations/acceptance.md)
 
 ## 22. Docker lifecycle, cleanup and persistence
 Purpose: make operational actions understandable and scoped.
@@ -609,7 +612,7 @@ Explicit data cleanup retained model weights; explicit model cleanup then remove
 **One-shot service status**
 topics, db-migrate, model-init and a completed bounded worker can show Exited (0) on a successful run. Healthy long-running containers alone do not prove that an edit reached the API.
 
-Sources: [src/triage/operations.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/operations.py), [docs/operations.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/operations.md), [compose.infrastructure.yml](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/compose.infrastructure.yml), [docs/evidence/submission-demo-verification.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/submission-demo-verification.json)
+Sources: [src/triage/operations.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/operations.py), [docs/operations.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/operations.md), [compose.infrastructure.yml](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/compose.infrastructure.yml), [docs/evidence/submission-demo-verification.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/submission-demo-verification.json)
 
 ## 23. Failure map: where does this input end up?
 Purpose: avoid conflating exclusion, abstention and technical failure.
@@ -631,93 +634,78 @@ A worker batch can exit 0 after committing processing-error records. Therefore �
 
 ```text
 docker compose logs --tail=60 worker connect sink api
-docker compose exec -T redpanda rpk group describe triage-v1
-docker compose exec -T redpanda rpk group describe triage-store-v1
-docker compose exec -T redpanda rpk topic consume processing-errors --offset :end --format '%v\n'
+docker compose exec -T redpanda rpk group describe triage-v1 </dev/null
+docker compose exec -T redpanda rpk group describe triage-store-v1 </dev/null
+docker compose exec -T redpanda rpk topic consume processing-errors \
+  --offset :end --format '%v\n' </dev/null
 ```
 Read diagnostics; --offset :end reads up to the current end instead of waiting forever
 
-Sources: [src/triage/worker.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/worker.py), [connect/ingest.yaml](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/connect/ingest.yaml), [connect/sink.yaml](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/connect/sink.yaml), [docs/submission-demo.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/submission-demo.md)
+Sources: [src/triage/worker.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/worker.py), [connect/ingest.yaml](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/connect/ingest.yaml), [connect/sink.yaml](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/connect/sink.yaml), [docs/submission-demo.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/submission-demo.md)
 
 ## 24. A clean presentation demo, step by step
 Run one operation at a time; preserve reports before rerunning.
 
+Use docs/submission-demo.md for the complete copy-paste sequence, profile setup, report capture, cleanup and troubleshooting. This chapter is a rehearsal checklist; do not skip setup by executing an isolated snippet. Start Docker, resolve local Git changes and update your clone to merged main first.
+
 ```text
-cd /Users/damien/Development/sourceControl/redpanda
+git switch main
+git pull --ff-only
 export UV='uvx --from uv==0.13.4 uv'
-make test
-make demo-success
-make demo-failures
 ```
-Start Docker first. Before PR #13 merges, use its review branch for the 30-test integration total.
+From your clone’s root, with a clean working tree. Do not discard local edits.
 
-Expected: all three exit 0. The full gate reports 416 unit, 30 integration and 72 Connect checks with 100% application line/branch coverage. Separately run make demo-test-failure to show the intentionally red assertion; do not present that nonzero exit as an accidental regression.
+| Stage | Action and expected evidence |
+| --- | --- |
+| Prepare profiles | Create missing profiles privately; retain existing values. Keep project name and all three database passwords consistent. Set both profiles to three items, sample-all, triage-v1 / triage-store-v1 groups. |
+| Free gate | Use the guide’s unique DEMO_TEST_PROJECT for make test, then remove its helpers. Expect 453 unit / 32 integration / 72 Connect and 100% application lines/branches. |
+| Success and recovery | make demo-success: one end-to-end scenario; make demo-failures: 19 expected fault/recovery scenarios. No real model calls. |
+| Intentional failure | make demo-test-failure must fail (observed Make exit 2); then make test-unit must pass. A red demonstration is not a passing test. |
+| Local run | Save existing results before --delete-data. test-local.sh evaluates the selected model; start-local.sh runs the live pipeline. A passing evaluation is 9/9, not a guarantee. |
+| Frontier run | Save local reports, reset only demo data and repeat with test-frontier.sh / start-frontier.sh. Up to 40 paid calls per complete attempt. |
+| Inspect and finish | Stop ingestion after the bounded worker finishes. Account for every outcome; inspect details, errors and sink lag. Retain reports and stop the project without deleting weights. |
 
-### Configure and run Ollama
+**Three consumed events need not mean three rows**
+A worker can commit a technical-error record; duplicate revisions can share a SQL key. Check actual output topics and distinct analysis keys. Model tests can fail; inspect the fresh report and exit status before continuing. Do not rerun solely to hide abstentions.
 
-Create private profiles from the example files if missing, without overwriting existing ones. In both profiles set WORKER_MAX_ITEMS=3 and INGEST_SAMPLE_ALL=true for a bounded demonstration. Preserve the chosen project/database password. The local profile must download and request the same model.
-
-```text
-./scripts/clean-docker.sh --delete-data
-./scripts/test-local.sh
-./scripts/start-local.sh
-docker compose logs -f worker
-# After worker_stopped reports processed: 3:
-docker compose stop connect
-```
-Data deletion is explicit: save any existing broker/database results first. Weights are retained.
-
-Expected local model test: PASS 9/9 with a saved report. Live worker: three commits, each inspected for output_topic=results, then a clean stop. Follow the API/detail checks on the next page. Press Ctrl+C to stop following logs if necessary.
-
-### Reset data, then switch to frontier
-
-```text
-./scripts/clean-docker.sh --delete-data
-./scripts/test-frontier.sh
-./scripts/start-frontier.sh
-docker compose logs -f worker
-# After the three-edit batch finishes:
-docker compose stop connect
-```
-Hosted calls incur charges; maximum 40 per complete bounded attempt, including evaluation.
-
-Repeat the same API checks and save frontier reports separately. Do not launch another batch merely because a model abstained. Use clean-docker.sh at the end to retain data and weights. The full repository walkthrough includes report-saving commands and troubleshooting.
-
-Sources: [docs/submission-demo.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/submission-demo.md), [docs/operations.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/operations.md), [Makefile](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/Makefile)
+Sources: [docs/submission-demo.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/submission-demo.md), [docs/operations.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/operations.md), [Makefile](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/Makefile)
 
 ## 25. Prove the end-to-end result on screen
 A short evidence checklist is stronger than showing only containers.
 
 ```text
 DEMO_API="http://$(docker compose port api 8000)"
-curl --fail "$DEMO_API/health/ready"
-curl --fail "$DEMO_API/results?analysis_version=triage-v1&limit=10"
-docker compose exec -T redpanda rpk group describe triage-store-v1
+curl --fail --connect-timeout 3 --max-time 15 \
+  "$DEMO_API/health/ready"
+curl --fail --connect-timeout 3 --max-time 15 \
+  "$DEMO_API/results?analysis_version=triage-v1&limit=10"
+docker compose exec -T redpanda rpk group describe triage-store-v1 </dev/null
 ```
 Readiness, persisted results and sink lag are separate observations.
 
-Choose an actual revision_id from that list. Replace REVISION below with it; do not use synthetic 101 to imply a real live judgment. A fresh batch normally needs a few seconds for asynchronous sink delivery.
+Choose an actual revision_id from that list. Replace REVISION below with it; do not use synthetic 101 to imply a real live judgment. Allow bounded waiting for asynchronous sink delivery using the full demo guide. Account for processing-errors and sink-errors; do not require three rows solely because three events were consumed.
 
 ```text
-curl --fail "$DEMO_API/results/enwiki/REVISION?analysis_version=triage-v1"
+curl --fail --connect-timeout 3 --max-time 15 \
+  "$DEMO_API/results/enwiki/REVISION?analysis_version=triage-v1"
 ```
 Template command: substitute an observed revision ID.
 
 | Field to show | What to explain |
 | --- | --- |
-| analysis.backend / model / prompt_version | Which implementation produced the recommendation. |
-| analysis.decision / explanation / evidence | What was recommended and what quoted text supports it. |
-| enrichment.provenance / source_url | How the exact revision pair was identified. |
-| extraction / steps / outcome | Whether the edit was assessed, reviewed or safely abstained. |
-| attempts / content_truncated | How much work was done and whether evidence was incomplete. |
-| Storage ID / timestamps / version | What is persisted and how replay is logically identified. |
+| result.analysis.backend / model / prompt_version | Which provider, model and prompt version produced the recommendation. |
+| result.analysis.decision / explanation / evidence | What was recommended and what quoted text supports it. |
+| result.enrichment.provenance / source_url | The revision provenance is nested; the detail response also has a top-level source_url. |
+| result.extraction / steps / outcome | Read extraction, steps and outcome under result: assessed, reviewed or safely abstained. |
+| result.analysis.attempts / content_truncated | Both fields are under result.analysis: calls attempted and evidence completeness. |
+| id / created_at / updated_at | Top-level storage metadata. The analysis namespace is result.analysis.analysis_version. |
 
-In the saved final demo, storage lag was zero but input lag remained nonzero: local 207 and frontier 10 at their snapshots. This is expected when all eligible edits are ingested but the worker deliberately stops at three. Zero storage lag means published results caught up; it does not mean all accepted source edits were processed.
+In the saved 20 October demo, storage lag was zero but input lag remained nonzero: local 207 and frontier 10 at their snapshots. This is expected when all eligible edits are ingested but the worker deliberately stops at three. Zero storage lag means published results caught up; it does not mean all accepted source edits were processed.
 
 **Saved evidence location**
 The executed demo’s private logs, API pages/details, JUnit and coverage reports are under reports/submission-demo-20261020/ in Damien’s checkout. Sanitized summary evidence and synthetic transcripts are committed; routine live content is not automatically public.
 
-Sources: [docs/submission-demo.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/submission-demo.md), [docs/evidence/submission-demo-verification.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/submission-demo-verification.json), [src/triage/api.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/api.py)
+Sources: [docs/submission-demo.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/submission-demo.md), [docs/evidence/submission-demo-verification.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/submission-demo-verification.json), [src/triage/api.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/api.py)
 
 ## 26. The code tour: follow one input, not every file
 Use these entry points to explain responsibilities and invariants.
@@ -726,14 +714,14 @@ Use these entry points to explain responsibilities and invariants.
 | --- | --- | --- |
 | 1 | connect/ingest.yaml | Which frames survive, and how is identity preserved? |
 | 2 | schema.py · EditEvent | Which invalid events cannot cross the boundary? |
-| 3 | enrichment.py · enrich; diff.py | Where do actual before/after text and provenance come from? |
+| 3 | enrichment.py · enrich; diff.py; limits.py | Where do actual before/after text and provenance come from? |
 | 4 | prompts.py; reasoning.py · reason | What does each model stage receive, and when does code branch? |
 | 5 | reasoning.py · parse_output / validate_grounding | How are malformed output and invented quotes rejected? |
 | 6 | llm.py · complete | Who selects the provider and owns each individual request? |
 | 7 | worker.py · process / run_worker | How do results and technical failures route? |
 | 8 | broker.py · publish / commit | Where is the output-ack-before-input-commit invariant? |
 | 9 | connect/sink.yaml; db/002-results.sql | What makes replay safe at the SQL boundary? |
-| 10 | storage.py; api.py | How are stored results validated and paginated? |
+| 10 | storage.py; api.py; db/003-service-roles.sql | How are stored results validated, paginated and protected by DB roles? |
 | 11 | evaluation.py; operations.py; scripts/ | How do evaluation, mode switching and cleanup remain bounded? |
 
 All Python files above are under src/triage/. Worker and API share one package/container image but run as separate processes. The design intentionally avoids an agent framework, ORM, migration framework and frontend build. That keeps the behavior traceable in the application and Connect configuration.
@@ -745,7 +733,7 @@ For each function, name its input contract, allowed output, side effect and fail
 **Do not memorize line numbers**
 Use symbols and source links in this pack. Line numbers can move; the responsibility and invariant should remain clear.
 
-Sources: [docs/handover.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/handover.md), [src/triage/worker.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/worker.py), [src/triage/broker.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/broker.py), [src/triage/reasoning.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/reasoning.py)
+Sources: [docs/handover.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/handover.md), [src/triage/worker.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/worker.py), [src/triage/broker.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/broker.py), [src/triage/reasoning.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/reasoning.py), [src/triage/limits.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/limits.py), [db/003-service-roles.sql](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/db/003-service-roles.sql), [tests/test_database_security.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/tests/test_database_security.py)
 
 ## 27. Prompts, responses and evidence provenance
 Two audit trails serve different purposes.
@@ -771,17 +759,17 @@ The acceptance evidence records frozen-input hashes, model identities, call coun
 **How to discuss AI assistance**
 Explain the code you can defend and the checks that caught mistakes. The audit establishes what was requested and observed; it does not substitute for your understanding or your independent README judgments.
 
-Sources: [docs/ai-log/README.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/ai-log/README.md), [docs/ai-log/sessions/2026-10-20-executed-demo.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/ai-log/sessions/2026-10-20-executed-demo.md), [docs/evaluations/development.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evaluations/development.md), [src/triage/prompts.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/prompts.py)
+Sources: [docs/ai-log/README.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/ai-log/README.md), [docs/ai-log/sessions/2026-10-20-executed-demo.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/ai-log/sessions/2026-10-20-executed-demo.md), [docs/evaluations/development.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evaluations/development.md), [src/triage/prompts.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/prompts.py)
 
 ## 28. Prioritized improvement roadmap
 Proposed work: tie each change to a failure mode and a measurable acceptance test.
 
 | Priority / area | Why the current design needs it | Evidence required before calling it done |
 | --- | --- | --- |
-| P1 · Model reliability | Small-model invalid-output abstentions on real diffs; 20 source hunks versus 8 extracted changes | Label realistic edits independently; measure decision precision/recall, abstention rate, grounding and per-item call cost. Preserve an untouched holdout. |
+| P1 · Model reliability | Small-model invalid-output abstentions on real diffs; edits beyond the eight-hunk capacity safely abstain | Label realistic edits independently; measure decision precision/recall, abstention rate, grounding and per-item call cost. Preserve an untouched holdout. |
 | P1 · Operational visibility | Logs/lag exist; there is no integrated SLO/alerting | Dashboards for input/result lag, source failures, abstentions, latency and provider errors; exercise actionable alerts. |
 | P1 · Replay operations | Error topics are not automatic scheduled retries | Audited requeue tooling with scoped IDs, retry budgets and duplicate-safe verification. |
-| P1 · Security / data durability | Local roles, no auth/TLS or backup/restore workflow | Separate roles, secret management, authentication, transport protection and a measured restore drill. |
+| P1 · Security / data durability | Restricted DB roles exist; external auth/TLS, secret management and tested backup/restore remain | Retain least-privilege roles; add external secrets, authentication, transport protection and a measured restore drill. |
 | P2 · Source continuity | No durable source cursor; disconnects can lose edits | Checkpoint/backfill design with overlap deduplication and a controlled disconnect/recovery test. |
 | P2 · Capacity / concurrency | Single partition and sequential inference; selection is not a rate limit | Load tests, backlog SLO and bounded concurrency; redesign persistence ordering before repartitioning. |
 | P2 · Evidence breadth | No citation retrieval or full-article context | Bounded allowlisted retrieval with attribution, privacy/cost limits and adversarial tests. |
@@ -790,9 +778,9 @@ Proposed work: tie each change to a failure mode and a measurable acceptance tes
 These priorities are suggested engineering sequencing, not implemented features or the candidate’s personal tradeoff essay. Choose actual priorities with a customer’s workload, failure cost, privacy requirements and deployment constraints.
 
 **First experiment to consider**
-Replay a fixed, human-labelled sample of real diffs through both providers, including large multi-hunk edits, and inspect why extraction fails. Improve the evidence/model contract before simply increasing retry counts or weakening quote validation.
+Replay a fixed, human-labelled sample of real diffs through both providers, including large multi-hunk edits, and inspect why extraction fails. Measure the eight-hunk limit’s coverage and abstention cost before designing chunking; retain exact-quote validation and call budgets.
 
-Sources: [docs/handover.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/handover.md), [docs/evaluations/submission-demo.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evaluations/submission-demo.md), [src/triage/reasoning.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/reasoning.py), [docs/security-review.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/security-review.md)
+Sources: [docs/handover.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/handover.md), [docs/evaluations/submission-demo.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evaluations/submission-demo.md), [src/triage/reasoning.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/reasoning.py), [docs/security-review.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/security-review.md), [docs/phases/06-evidence-limits.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/06-evidence-limits.md), [docs/phases/06-security-quality.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/06-security-quality.md)
 
 ## 29. What must change for a real customer deployment
 Quality practices are present; deployment guarantees remain bounded.
@@ -805,16 +793,16 @@ Repartitioning is a contract change here: source offsets are only ordered within
 
 ### Security and privacy
 
-The API and diagnostics bind to loopback, broker/database ports are internal, and app containers are non-root/read-only with dropped capabilities. Those reduce local exposure. They do not provide authentication, TLS, tenant isolation or separate read/write/migration roles. Hosted mode sends selected article evidence to a provider; a customer-data version needs an explicit data-handling design.
+The API and diagnostics bind to loopback, broker/database ports are internal, and app containers are non-root/read-only with dropped capabilities. Those reduce local exposure. Reader/writer/migration roles are now separate, and API Host validation rejects unsupported hostnames. Authentication, TLS and tenant isolation still require a deployment design. Hosted mode sends selected article evidence to a provider; a customer-data version needs an explicit data-handling design.
 
 ### Recorded security evidence, not a current certification
 
-The maintenance Python audit found no known advisories in 36 installed packages at that point in time. The hardened ARM64 application image had zero critical and zero Python high/critical findings, but 44 high package/advisory pairs across eight Debian advisories remained. The later dependency update did not repeat the OS scan. Broader infrastructure/architecture scanning and vendor updates remain future work.
+The 21-22 October audit found zero advisories in 63 locked Python packages. ARM64 scans covered the app and all four deployed upstream images: app 0 critical/44 high, Redpanda 0/48, Connect 0/1, Postgres 4/96, Ollama 0/50 package/advisory pairs. Every vulnerability scan exited 1; none is a clean security pass. AMD64 Ollama matched; other AMD64 images were not separately scanned. Vendor fixes and deployment-specific assessment remain necessary.
 
 **A precise claim**
 The project is a small, tested local reference implementation with explicit failure handling. It is not highly available, lossless from the public source, generally accurate as a classifier, or vulnerability-free.
 
-Sources: [docs/security-review.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/security-review.md), [docs/handover.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/handover.md), [docs/evidence/actions-dependency-audit.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/actions-dependency-audit.json), [docs/evidence/phase-6-container-audit.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/phase-6-container-audit.json)
+Sources: [docs/security-review.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/security-review.md), [docs/handover.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/handover.md), [docs/evidence/actions-dependency-audit.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/actions-dependency-audit.json), [docs/evidence/phase-6-container-audit.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/phase-6-container-audit.json), [docs/evidence/security-quality-images.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/security-quality-images.json), [docs/phases/06-security-quality.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/06-security-quality.md)
 
 ## 30. Questions you should be able to answer
 Use the answer cues to check understanding, then explain in your own words.
@@ -834,7 +822,7 @@ Use the answer cues to check understanding, then explain in your own words.
 | Why did both models pass 9/9 but live outputs abstain? | Small curated cases differ from large messy diffs. Regression success does not generalize automatically. |
 | What is the cheapest replay? | Replay results into storage with a new sink group; replaying edits through the worker invokes inference again. |
 
-Sources: [docs/handover.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/handover.md), [docs/testing.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/testing.md), [docs/evaluations/acceptance.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evaluations/acceptance.md), [src/triage/reasoning.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/reasoning.py)
+Sources: [docs/handover.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/handover.md), [docs/testing.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/testing.md), [docs/evaluations/acceptance.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evaluations/acceptance.md), [src/triage/reasoning.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/reasoning.py)
 
 ## 31. A 60-minute walkthrough plan
 Allocate time to evidence and questions, not only architecture slides.
@@ -847,14 +835,14 @@ Allocate time to evidence and questions, not only architecture slides.
 | 22-34 min | Reasoning function + worked example | Extraction, assessment, conflict, repair and shared budgets. |
 | 34-43 min | Replay/failure demo + sink/API | Ack/commit order, duplicate handling, DB recovery and health semantics. |
 | 43-50 min | Local/frontier recorded results | Same contract, explicit costs, observed abstentions and quality limits. |
-| 50-56 min | Extension diff or proposed change path | What changes where, how it is tested and what might break. |
+| 50-56 min | Actual extension diff when supplied | What changes where, how it is tested and what might break. |
 | 56-60 min | Open questions + improvement priorities | State uncertainty precisely and point to evidence. |
 
 The HTML companion includes a presentation mode for this sequence and a step-through of the event lifecycle. Its interactive traces are explanatory simulations using saved/controlled examples; they do not start Docker, fetch Wikipedia, spend model credits or submit any external action.
 
 ### Rehearsal checklist
 
-- Explain the causal-claim example without reading the prompt.
+- Before screen-sharing: pull merged main, run the current gate and chosen model check, cache weights, hide secrets, and open a saved success plus a failure record.
 - Trace one malformed response and one crash after publication.
 - Find the exact quote validator, call budget and offset commit in code.
 - Show one complete API detail and distinguish its summary from source evidence.
@@ -864,12 +852,12 @@ The HTML companion includes a presentation mode for this sequence and a step-thr
 **Independent preparation**
 Write your own Tradeoffs, Surprises/production failure modes and Why this matters sections. Use questions, observations and source links here as study material; do not paste this guide as the independently authored submission.
 
-Sources: [docs/assignment/fde-take-home-exercise.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/assignment/fde-take-home-exercise.md), [docs/submission-demo.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/submission-demo.md), [docs/handover.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/handover.md)
+Sources: [docs/assignment/fde-take-home-exercise.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/assignment/fde-take-home-exercise.md), [docs/submission-demo.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/submission-demo.md), [docs/handover.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/handover.md)
 
 ## 32. Preparing for the pre-walkthrough extension
 Change the smallest boundary that actually owns the new requirement.
 
-The assignment may supply a small change to the reasoning service shortly before the walkthrough. No specific extension has been supplied yet. The examples below are rehearsal exercises, not commitments or implemented features.
+The assignment says an extension will arrive about two days before the walkthrough, scoped to under an hour; there is no live coding in the session. No specific extension has been supplied yet. The examples below are rehearsal exercises, not commitments or implemented features.
 
 | Hypothetical change | Likely impact | Essential checks |
 | --- | --- | --- |
@@ -883,14 +871,14 @@ The assignment may supply a small change to the reasoning service shortly before
 - Restate the input, new observable output and compatibility decision.
 - Locate the owning layer and the contracts crossing it.
 - Create a focused test that fails for the missing behavior.
-- Implement the smallest change and run targeted checks, then the cumulative gate.
+- Implement the smallest change; run targeted checks, then make verify-phase-6 with 100% application line/branch coverage.
 - Inspect one complete input-to-output record; update phase evidence and the visible prompt log.
-- Open a reviewable diff; explain remaining limits and migration/replay implications.
+- Use a focused branch from the submitted commit; return the diff before the session. Explain placement, tests, compatibility and replay risks.
 
 **Avoid a common trap**
 Adding a field is not complete because it appears in one Python class. Strict schemas, Connect validation, saved fixtures and the API may all reject or omit it until the contract is changed end to end.
 
-Sources: [docs/assignment/fde-take-home-exercise.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/assignment/fde-take-home-exercise.md), [src/triage/schema.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/schema.py), [schemas/reasoned-edit.v1.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/schemas/reasoned-edit.v1.json), [connect/sink.yaml](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/connect/sink.yaml)
+Sources: [docs/assignment/fde-take-home-exercise.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/assignment/fde-take-home-exercise.md), [src/triage/schema.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/schema.py), [schemas/reasoned-edit.v1.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/schemas/reasoned-edit.v1.json), [connect/sink.yaml](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/connect/sink.yaml)
 
 ## 33. Glossary and quick distinctions
 Use these terms precisely during the walkthrough.
@@ -916,12 +904,12 @@ Use these terms precisely during the walkthrough.
 
 Keep one final distinction in mind: the two Connect services run the same product with different configurations. Redpanda is the Kafka-compatible broker. Ollama is the local inference server. Docker Compose runs the local topology. None of those is an agent framework.
 
-Sources: [docs/handover.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/handover.md), [src/triage/broker.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/broker.py), [src/triage/schema.py](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/src/triage/schema.py)
+Sources: [docs/handover.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/handover.md), [src/triage/broker.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/broker.py), [src/triage/schema.py](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/src/triage/schema.py)
 
 ## 34. Source map and evidence register
 Prefer exact code and retained observations over recollection.
 
-All repository links in this pack are pinned to snapshot 859b166 unless they point to a PR, commit or CI run. That prevents the guide’s claims drifting when main changes. Older phase documents sometimes contain historical “open PR” wording; the phase map in this pack uses the actual review status checked at preparation time.
+All repository links in this pack are pinned to merged-main snapshot 30510a8 unless they point to a PR, commit or CI run. That prevents the guide’s claims drifting when main changes. Earlier phase records keep historical counts and review status. The refreshed phase map uses merged status as of 22 October 2026. Live-model observations remain dated to their original runs.
 
 | Study question | Primary repository evidence |
 | --- | --- |
@@ -935,14 +923,14 @@ All repository links in this pack are pinned to snapshot 859b166 unless they poi
 | Where are limits disclosed? | docs/handover.md; docs/security-review.md; docs/evaluations/acceptance.md |
 | Where is the development audit? | docs/ai-log/README.md and its linked session files. |
 
-Key review links: PR #7 enrichment; #8 reasoning; #9 persistence/API; #11 operational acceptance and CI; #13 executed demo and helper cleanup. Latest implementation verification used 71a0680 (implementation ce40ca6), with Linux CI run 39494682046. Snapshot 859b166 adds documentation/evidence closeout only.
+Review trail: #7 enrichment; #8 reasoning; #9 storage/API; #11 acceptance; #13 demo cleanup; #14 original pack; #15 evidence limits; #16 security; #17 scan/CI evidence; #18 demo corrections; #19 README draft. All are merged at 30510a8. Main CI run 39859001474 verified the current deterministic totals. This pack refresh changes documentation only.
 
 The original assignment’s preserved SHA-256 is 89a4840092423818c59a81f4042f9007d36e90fe7da7bc8111a4d96f1662e40a. This study pack does not alter the assignment, runtime code, private profiles or personal README sections. Generated-artifact QA is separate from the application’s recorded unit coverage.
 
 **How to use the links**
 Each section ends with direct source links. The editable guide includes the complete narrative; the HTML adds local interactions and presentation mode. Use the repository’s commands for real execution, and the saved evidence to discuss what actually happened.
 
-Sources: [docs/progress.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/progress.md), [docs/evidence/submission-demo-verification.json](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/evidence/submission-demo-verification.json), [docs/assignment/README.md](https://github.com/damogallagher/redpanda/blob/859b1662f574a6ff749689834f2dfc3ef48c9748/docs/assignment/README.md)
+Sources: [docs/progress.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/progress.md), [docs/evidence/submission-demo-verification.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/submission-demo-verification.json), [docs/assignment/README.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/assignment/README.md), [docs/phases/06-evidence-limits.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/06-evidence-limits.md), [docs/phases/06-security-quality.md](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/phases/06-security-quality.md), [docs/evidence/security-quality-images.json](https://github.com/damogallagher/redpanda/blob/30510a88e54f7f75b374773c5ec725be090974f1/docs/evidence/security-quality-images.json)
 
 ## Presentation outline
 
@@ -986,7 +974,7 @@ Revision IDs become bounded before/after evidence.
 
 - Fixed endpoint and verified revision/page identity.
 - Whole hunks, preserved direction and provenance.
-- Missing or oversized evidence stays explicit.
+- Eight-hunk processing limit; oversized edits abstain with zero calls.
 
 ### 7. Phase 4 · reasoning
 Extract → assess → review or repair when needed.
@@ -1005,7 +993,7 @@ Output acknowledgement precedes input offset commit.
 ### 9. Phase 5 · serving
 Persist an analysis once logically; inspect it through JSON.
 
-- Connect owns parameterized SQL writes.
+- Connect owns SQL writes; API, sink and migration have separate DB roles.
 - Unique analysis key plus source-offset replay guard.
 - Single-partition assumption and separate readiness/lag checks.
 
@@ -1016,17 +1004,17 @@ Exercise the operations a reviewer will actually perform.
 - Real model evaluations and fresh startup.
 - Scoped cleanup, recovery and saved evidence.
 
-### 11. Actual model results
+### 11. Recorded model results · 20 October
 Both providers passed 9/9 fixed cases; live quality remained mixed.
 
 - Ollama: 1 assessment + 2 invalid-output abstentions.
 - Frontier: 2 assessments + 1 incomplete-source abstention.
-- Three persisted results each; 18 total hosted calls.
+- Three results each; 18 hosted calls. Runs predate final hardening/image updates.
 
 ### 12. Verification, with limits
-416 unit · 30 integration · 72 Connect · 100% lines/branches.
+453 unit · 32 integration · 72 Connect · 100% lines/branches.
 
-- Separate Python coverage from config and live-model evidence.
+- Main 30510a8 CI: zero warnings; model results and image scans are separate.
 - Mutation probes demonstrate meaningful assertions.
 - Small synthetic scores are not general accuracy.
 
@@ -1042,5 +1030,5 @@ Trace one input and one failure all the way through.
 
 - Why this boundary? What happens when it fails?
 - Which observation supports the claim?
-- What remains unproven, and how would we test it?
+- Walk through the supplied extension diff, its tests and remaining risks.
 

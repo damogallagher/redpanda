@@ -14,3 +14,5 @@ Every phase has its own branch and PR into `main`. Status and test evidence must
 - [Correctness follow-up: evidence-count boundaries and compatibility](06-evidence-limits.md)
 
 Phases are sequential because each checkpoint extends the previous working system. Phases 1–6 have executable checks; each record distinguishes observed evidence at its tested commit from pending checks and later follow-ups.
+
+- [Walkthrough follow-up: refreshed guides, PDF and interactive study pack](06-walkthrough-refresh.md)
