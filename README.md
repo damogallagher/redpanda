@@ -2,7 +2,7 @@
 
 Wikipedia edit triage in Python, using Redpanda and a selectable local or hosted model.
 
-**Phase 6 adds operational acceptance and handover.** Redpanda Connect ingests Wikipedia edits; a Python worker enriches and reasons over revision evidence; a second Connect pipeline validates and upserts results into Postgres. The API exposes decisions, evidence, versions, and step outcomes with bounded pagination.
+Redpanda Connect ingests Wikipedia edits; a Python worker enriches and reasons over revision evidence; a second Connect pipeline validates and upserts results into Postgres. The API exposes decisions, evidence, versions, and step outcomes with bounded pagination.
 
 - [Presentation study pack: PDF, interactive walkthrough and rehearsal](docs/study-guide/README.md)
 - [Simple run/test/cleanup guide](docs/operations.md)
@@ -39,7 +39,7 @@ For a clean Ollama → frontier submission walkthrough with exact commands and e
 | Delete this project's broker/database data | `./scripts/clean-docker.sh --delete-data` |
 | Delete this project's downloaded model weights | `./scripts/clean-ollama.sh --delete-models` |
 
-The [operator guide](docs/operations.md) gives profile setup, expected pass/fail output, report locations, fresh-start acceptance, restart steps and troubleshooting. Cleanup is scoped to this project. Model tests preserve active `.env`; the startup scripts below copy the selected profile over it. Run one operation at a time. **Submission still needs Damien's independently written personal sections at the end of this README.**
+The [operator guide](docs/operations.md) gives profile setup, expected pass/fail output, report locations, fresh-start acceptance, restart steps and troubleshooting. Cleanup is scoped to this project. Model tests preserve active `.env`; the startup scripts below copy the selected profile over it. Run one operation at a time.
 
 ## Quick verification — no model or API key needed
 
@@ -208,12 +208,22 @@ This is the assignment's single-node development deployment: internal broker/dat
 
 ## Tradeoffs
 
-Reserved for Damien to write independently, in his own words, as requested by the assignment. Choose two of the assignment's pairs and describe the choice, alternative, and when to change it. No AI-authored submission prose has been supplied.
+I split the model work into extraction and assessment so I could inspect how it reached a decision. First it identifies changes and quotes the exact revision text. Then it assesses those changes against the original, with another review or a repair attempt if needed. This makes it easier to check the evidence and see where something went wrong. A single classification call could reduce latency and use fewer requests, although it would put extraction and judgment in the same response. The normal path now takes two model calls, and there are more validation and failure paths to maintain. Everything, including repairs and retries, has to fit within four calls per edit. Unusable evidence or repeatedly invalid output produces an insufficient-evidence result. The extra steps still leave room for mistakes: during development, extraction and assessment repeated the same wrong interpretation. I'd consider a single call if it performed comparably on representative edits, including difficult cases and cases where it should abstain, and the saving in cost or latency made the change worthwhile.
+
+I kept the database writes in Connect. The Python worker publishes a result to Kafka, then Connect checks it and inserts or updates the Postgres row. That leaves Python responsible for fetching and interpreting evidence, while Connect handles delivery to the database and retries. Results can wait in the topic during a database outage and be written after recovery. Writing directly from Python would remove a pipeline and keep more of the system in one language, but the worker would then need to manage database connections, SQL retries and when to commit its Kafka offset after a write. Keeping the sink separate has its own drawbacks. Python, Connect and Postgres must agree on the result format, and tracing a failure means checking more than one service. Replaying a result leaves one logical database row; a worker crash can still repeat the model calls, so processing is at least once. I'd move the writes into Python if the application needed complex business transactions or database logic that was becoming awkward to express and test in Connect. The current result schema is small, and the persistence tests cover replay and recovery from a database outage.
 
 ## Surprises and production failure modes
 
-Reserved for Damien's independently written observations after running the system.
+I was surprised by the quality of the model I could run locally on my laptop. That led me to support both local and frontier models, so reviewers can use their own hardware or choose hosted inference without changing the processing flow. The app only uses the selected provider; it doesn't switch automatically. The local demo also showed the limits of a small test set. Ollama passed all nine fixed cases, then abstained on two of three live edits because its extraction output failed validation. Those results don't establish how well it will handle other edits. Before using this with a customer, I'd test the model against their content and review criteria. The worker handles one edit at a time and can fall behind the feed; reconnecting to Wikipedia can also miss events. Public deployment would need authentication, TLS, backup and restore, and availability work. The 100% code coverage doesn't answer those questions.
 
 ## Why this matters
 
-Reserved for Damien's independently written three-to-four-sentence explanation for a non-technical customer stakeholder.
+People reviewing Wikipedia edits could use this to decide which changes deserve a closer look. They get the before-and-after text and a reason to check an edit, while keeping the final decision themselves. False alarms waste their time, and a missed change or unavailable result can leave a misleading edit unnoticed. Wikipedia is the example here; using the same approach for a customer's knowledge base would need its own evaluation against that team's content and review process.
+
+## Supporting records
+
+- [Development evaluation](docs/evaluations/development.md)
+- [Reasoning and delivery tests](docs/phases/04-reasoning.md)
+- [Persistence and recovery tests](docs/phases/05-serving.md)
+- [Recorded local and frontier demo](docs/evaluations/submission-demo.md)
+- [Deployment limits](docs/handover.md#deployment-limits-and-next-operational-decisions)
