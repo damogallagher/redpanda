@@ -290,5 +290,51 @@
     "check_annotations": 0,
     "optional_uv_cache_disabled": true,
     "review_pr": "https://github.com/damogallagher/redpanda/pull/17"
+  },
+  "main_after_pr17": {
+    "status": "success",
+    "run_id": 39840801993,
+    "tested_commit": "54e31574266d33723fa4f69ce4feb1ab4e2848cd",
+    "url": "https://github.com/damogallagher/redpanda/actions/runs/39840801993",
+    "command": "make verify-phase-6",
+    "unit": {
+      "tests": 453,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "integration": {
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "native_connect_cases": 72,
+    "coverage": {
+      "covered_lines": 1172,
+      "num_statements": 1172,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100.00",
+      "missing_lines": 0,
+      "excluded_lines": 0,
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100.00",
+      "num_branches": 286,
+      "num_partial_branches": 0,
+      "covered_branches": 286,
+      "missing_branches": 0,
+      "percent_branches_covered": 100.0,
+      "percent_branches_covered_display": "100.00"
+    },
+    "emitted_warning_markers": 0,
+    "check_annotations": 0,
+    "artifact_sha256": {
+      "unit.xml": "a0711042b677672dc108d60232f01dbb0166f9a821cc2b60db46372751e55c11",
+      "integration.xml": "7f960c275cb99b06f958d64ad6db667c4f6cc6bc11597503003c1d1e9ee6a7c4",
+      "coverage.json": "f96d6743b8eb5965faf35f489dec793c6d16bd2354ce53d1156d054f93e96a3a",
+      "ci-main-submission-readiness.log": "aa6c6c15b2392cef2abd38e99ba4620c17ce63d365d31b56dfc2e6735a20e3d0",
+      "ci-main-submission-readiness-checks.json": "243e294a9e200c1d315d1f3f72bf895f572206d8a03902e9f1de6963f9e411c0"
+    },
+    "scope": "Deterministic CI on merged main; no new live model evaluation or container vulnerability scan."
   }
 }

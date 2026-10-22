@@ -2,9 +2,9 @@
 
 This walkthrough builds on merged Phase 6 and includes the helper-cleanup fix in [PR #13](https://github.com/damogallagher/redpanda/pull/13). Run commands from the repository root, in order, in one terminal. It resets this project's broker/database data between providers, retains downloaded Ollama weights, and processes at most **three live edits per provider**. It does not change application code.
 
-For the current evidence-count correction, see the [follow-up record](phases/06-evidence-limits.md). Its added tests increase the baseline counts below; the current [README](../README.md) gives this branch's expected totals. Oversized edits now abstain before inference, so new model-call counts can differ from the earlier recorded demos.
+This guide reflects merged main after PR #17, including the [evidence-count correction](phases/06-evidence-limits.md) and [security hardening](phases/06-security-quality.md). The test counts below match the current [README](../README.md). Oversized edits abstain before inference, so new model-call counts can differ from the earlier recorded demos.
 
-The commands below are for you to execute. Expected outcomes are based on the implemented contracts; see the [executed demo record](evaluations/submission-demo.md) for actual runs, fixes, and saved evidence. Live Wikipedia edits and model responses vary. The fixed-case evaluations previously passed 9/9 for both configured models.
+The commands below are for you to execute. Expected outcomes are based on the implemented contracts; see the [executed demo record](evaluations/submission-demo.md) for actual runs, fixes, and saved evidence. Live Wikipedia edits and model responses vary. The fixed-case evaluations previously passed 9/9 for both configured models. Those recorded model runs predate the final hardening and Ollama image update; they are historical evidence, not a new evaluation of the current images. Rerun the model checks below for your chosen configuration.
 
 ## 1. Prepare and stop the existing application
 
@@ -20,9 +20,7 @@ mkdir -p reports
 ./scripts/clean-docker.sh
 ```
 
-To reproduce PR #13 before it is merged, replace `git switch main` and `git pull --ff-only` above with `gh pr checkout 13`. The new helper regression increases the integration count from 29 to 30.
-
-Expected: the clean merged checkout (or the selected review branch) is selected; cleanup prints `PASS: project stopped. All data and model weights retained.` Existing `.env` is required and is already present on Damien's machine. For a new clone, create the profiles from the examples and select/copy one to `.env` first, as described in the [operator guide](operations.md). Stop if Git reports local changes that prevent switching; do not discard them.
+Expected: the clean merged checkout is selected; cleanup prints `PASS: project stopped. All data and model weights retained.` Existing `.env` is required and is already present on Damien's machine. For a new clone, create the profiles from the examples and select/copy one to `.env` first, as described in the [operator guide](operations.md). Stop if Git reports local changes that prevent switching; do not discard them.
 
 Use a fresh terminal without manually exported application/Compose settings; launchers clear conflicting settings themselves, while direct `docker compose` inspection commands use the terminal environment.
 
@@ -34,7 +32,7 @@ make demo-success
 make demo-failures
 ```
 
-Expected: all exit 0. `make test` reports **416 unit tests, 30 integration/configuration checks, 72 native Connect cases, 100% application line and branch coverage**, and no warnings. It ends with `PASS: Phase 6 deterministic acceptance. Real model/live-source checks are separate.` The narrower demonstrations repeat subsets so you can watch them individually; they are already included in `make test`.
+Expected: all exit 0. `make test` reports **453 unit tests, 32 integration/configuration checks, 72 native Connect cases, 100% application line and branch coverage**, and no warnings. It ends with `PASS: Phase 6 deterministic acceptance. Real model/live-source checks are separate.` These totals passed on merged main `54e3157` in [GitHub CI](https://github.com/damogallagher/redpanda/actions/runs/39840801993). The narrower demonstrations repeat subsets so you can watch them individually; they are already included in `make test`.
 
 `demo-success` verifies fixture source → real Connect/broker → actual worker → sink/Postgres → API, using controlled Wikipedia/model responses. Two edits become `review` results with two reasoning stages. `demo-failures` passes only when invalid output, outages, replay and recovery behave as asserted. These commands create and remove disposable projects, make no model calls, and do not change your application volumes.
 
@@ -59,7 +57,7 @@ WORKER_MAX_ITEMS=3
 INGEST_SAMPLE_ALL=true
 ```
 
-Save the files. Keep the shared project name/database password unchanged. Keep `.env.local` on `LLM_BACKEND=ollama`, `LLM_MODEL=qwen2.5:7b`, `OLLAMA_MODEL=qwen2.5:7b`, and `COMPOSE_FILE=docker-compose.yml`. Keep `.env.frontier` on `LLM_BACKEND=openai`, `LLM_MODEL=gpt-6.1-sol`, `LLM_BASE_URL=https://api.openai.com/v1`, and `COMPOSE_FILE=compose.infrastructure.yml`, with your private key configured. The existing profiles already have these provider settings.
+Save the files. Keep the shared project name and database passwords unchanged and consistent between profiles: `POSTGRES_PASSWORD`, `TRIAGE_READER_PASSWORD`, and `TRIAGE_WRITER_PASSWORD`. Older profiles without the two service passwords use the documented local defaults; see [database permissions](phases/06-security-quality.md#applying-the-database-permissions). Keep `.env.local` on `LLM_BACKEND=ollama`, `LLM_MODEL=qwen2.5:7b`, `OLLAMA_MODEL=qwen2.5:7b`, and `COMPOSE_FILE=docker-compose.yml`. Keep `.env.frontier` on `LLM_BACKEND=openai`, `LLM_MODEL=gpt-6.1-sol`, `LLM_BASE_URL=https://api.openai.com/v1`, and `COMPOSE_FILE=compose.infrastructure.yml`, with your private key configured. The existing profiles already have these provider settings.
 
 `INGEST_SAMPLE_ALL=true` bypasses the normal 1% sample to shorten the wait for eligible English Wikipedia edits; normal filtering still applies. The three-edit limit bounds inference, not the number of events ingested. Do not use `WORKER_MAX_ITEMS=0` for this bounded demonstration. Setting these in the shell will not override the launchers' authoritative profiles.
 
