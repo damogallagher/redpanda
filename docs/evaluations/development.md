@@ -1,6 +1,8 @@
 # Phase 4 development evaluation
 
-This is a six-case development set, specified before the first Phase 4 model run. It is not a held-out accuracy benchmark or a human-reviewed release evaluation. Damien should check the explanations against the rubric before presenting them. Phase 6 owns the separate held-out set.
+Historical model observations from 20 October 2026, before the later evidence-limit/security changes and Ollama image update. The reproduction command still applies to the current code; these saved results do not verify a new model run.
+
+This is a six-case development set, specified before the first Phase 4 model run. It is not a held-out accuracy benchmark or a human-reviewed release evaluation. Damien should check the explanations against the rubric before presenting them. The separate [Phase 6 acceptance set](acceptance.md) was subsequently run; repeated use now makes it a regression set rather than an unseen benchmark.
 
 The [case manifest](../../tests/fixtures/development/cases.json) defines expected labels and explanation criteria: regional spelling, association changed to causation, citation removal, an embedded instruction, missing source, and removal of voice credits in the attributed Belle edit. The first five cases are synthetic; their revision IDs are placeholders, never queried. Belle uses the unchanged [public fixture and attribution](../../tests/fixtures/enrichment/README.md).
 
@@ -33,7 +35,7 @@ Observed results are recorded below, including model identity, runtime, call cou
 
 Prompt `edit-triage-v1` passed 5/6 label checks in 96.815 seconds on local Qwen2.5 7B. The [complete initial transcript](../evidence/phase-4-development-initial.json) is retained. On Belle, extraction wrongly called the removal of two voice actors a line-break change, and both assessments repeated that mistake. The conflict between extraction kind `evidence` and decision `routine` caused the application to abstain; it did not publish a routine decision. This is still a failed development case, not a correct semantic analysis.
 
-Prompt `edit-triage-v2` adds a general requirement to compare named entities, list members, quantities, qualifiers and citations, and to verify extraction summaries against the original text. It contains no case-specific names or expected answers. The same predeclared six cases will be rerun. This is development tuning, so neither run estimates held-out accuracy.
+Prompt `edit-triage-v2` adds a general requirement to compare named entities, list members, quantities, qualifiers and citations, and to verify extraction summaries against the original text. It contains no case-specific names or expected answers. The same predeclared six cases were rerun, with results recorded below. This is development tuning, so neither run estimates held-out accuracy.
 
 ## Final development observation
 
@@ -48,4 +50,4 @@ Prompt `edit-triage-v2` passed **6/6 label and call-budget checks** in **67.232 
 | Missing source | insufficient_evidence | 0 | 0.000 | Explicit unavailable-source explanation |
 | Belle credits | review | 2 | 25.183 | Correctly identified removal of Susan Egan and Julie Nathanson; did not decide factual correctness |
 
-All extracted quotes passed exact-source validation. The model selected one routine and four review decisions; one source was unavailable. No ready-case abstentions occurred in the final run. These are observations on development examples, not calibrated error rates. The initial failure remains relevant: quote grounding and schema validation cannot guarantee semantic correctness. Damien's independent review and Phase 6's held-out evaluation remain pending. No paid hosted model was called in Phase 4.
+All extracted quotes passed exact-source validation. The model selected one routine and four review decisions; one source was unavailable. No ready-case abstentions occurred in the final run. These are observations on development examples, not calibrated error rates. The initial failure remains relevant: quote grounding and schema validation cannot guarantee semantic correctness. Damien's independent review remains required. Phase 6 subsequently completed the separate [first acceptance runs](acceptance.md#first-real-runs--20-october-2026); later runs of those cases are regression checks. No paid hosted model was called in Phase 4.

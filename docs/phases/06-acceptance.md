@@ -1,6 +1,8 @@
 # Phase 06: Operational acceptance and handover
 
-Branch: `phase/06-acceptance`, from merged main `f9375ff` (PR #10). Status: implemented and verified; [PR #11](https://github.com/damogallagher/redpanda/pull/11) is for Damien’s review. Damien reviews and merges.
+Historical checkpoint, merged in [PR #11](https://github.com/damogallagher/redpanda/pull/11). Behavior, versions, counts and handover statements below describe their recorded commits. Check out the recorded revision to reproduce that checkpoint. For the current system, use the [README](../../README.md), [verification commands](../phase-verification.md) and [handover](../handover.md).
+
+Branch: `phase/06-acceptance`, from merged main `f9375ff` (PR #10). Status: implemented and verified; [PR #11](https://github.com/damogallagher/redpanda/pull/11) was merged by Damien. Damien reviews and merges.
 
 ## What changed
 

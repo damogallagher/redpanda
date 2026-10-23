@@ -23,6 +23,28 @@ Redpanda Connect ingests Wikipedia edits; a Python worker enriches and reasons o
 
 For a clean Ollama → frontier submission walkthrough with exact commands and expected results, see [the demo guide](docs/submission-demo.md).
 
+## Getting started
+
+Use a POSIX shell (the recorded runs used macOS and Linux). Install and start Docker with Compose **2.20 or newer**. The application launchers need only Docker and a shell; **Make and [uv](https://docs.astral.sh/uv/getting-started/installation/)** are also needed for tests, model evaluations and the cleanup helpers. CI pins uv to **0.13.4**; uv installs Python **3.13.16** when needed. First use needs internet for packages, images and local model weights.
+
+Clone the repository, or extract the submitted ZIP and open its root folder:
+
+```sh
+git clone https://github.com/damogallagher/redpanda.git
+cd redpanda
+```
+
+Run the remaining commands from that folder, one operation at a time. Stop and inspect any unexpected nonzero exit before continuing. Use a fresh terminal without exported application/Compose settings so direct inspection commands use the selected `.env`.
+
+| First task | Follow |
+|---|---|
+| Verify the code without a model or key | [Quick verification](#quick-verification--no-model-or-api-key-needed) |
+| Run the full application with bundled Ollama | [Local setup](#run-with-a-local-model) |
+| Run the full application with OpenAI, without local weights | [Frontier setup](#run-with-a-hosted-frontier-model) |
+| Test only the selected model, then rehearse a bounded live run | [Operator guide](docs/operations.md#check-a-real-model-without-starting-the-full-application) and [submission demo](docs/submission-demo.md) |
+
+Create the private profile using the guarded copy command in your chosen setup path; the launcher copies it over active `.env`. Never put a key in a tracked example file. Both modes share data by default. Keep `COMPOSE_PROJECT_NAME`, `POSTGRES_PASSWORD`, `TRIAGE_READER_PASSWORD` and `TRIAGE_WRITER_PASSWORD` consistent when switching. The provided passwords are for the isolated local demo; keep an existing database's administrator password. See [profile setup and permissions](docs/startup.md).
+
 ## Simple command menu
 
 | I want to… | Run |
@@ -43,12 +65,13 @@ The [operator guide](docs/operations.md) gives profile setup, expected pass/fail
 
 ## Quick verification — no model or API key needed
 
-Prerequisites: Docker with Compose **2.20 or newer**, Make, and [uv](https://docs.astral.sh/uv/getting-started/installation/) (tested/pinned in CI: 0.13.4). Start Docker first. Python 3.13.16 is installed automatically by uv if needed.
+Prerequisites: Docker, Make and uv as described in [Getting started](#getting-started). Start Docker first.
 
 From the repository root:
 
 ```sh
-make test
+README_TEST_PROJECT="triage-readme-check-$(date +%s)-$$"
+COMPOSE_PROJECT_NAME="$README_TEST_PROJECT" make test
 ```
 
 This runs formatting/lint/type checks, unit tests with **100% line and branch coverage**, configuration checks, real broker/database and HTTP ingestion tests, native Connect tests, an application-container build/configuration check, offline inspection of an attributed Wikipedia diff, real-broker acknowledgement/replay/shutdown tests, and a real Connect/Postgres/API fixture path including database outage recovery. The infrastructure tests create unique disposable projects and remove only their own volumes. Initial dependency/image downloads need internet; subsequent unit tests require no network. Test reports appear in `reports/` and as PR workflow artifacts.
@@ -59,7 +82,16 @@ Expected final line:
 PASS: Phase 6 deterministic acceptance. Real model/live-source checks are separate.
 ```
 
-Expected on this branch: **453 unit tests, 32 integration/configuration tests, 72 native Connect tests, 100% Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, run `make test UV='uvx --from uv==0.13.4 uv'`.
+Expected for the current implementation: **453 unit tests, 32 integration/configuration tests, 72 native Connect tests, 100% application Python line and branch coverage**. For narrower checks use `make test-unit`, `make test-connect`, or `make test-integration`. `make verify-phase-1` still checks the foundation only. If your global uv differs, add `UV='uvx --from uv==0.13.4 uv'` to the Make command.
+
+After the gate, including on failure, remove its build/Connect helper project in the same terminal. Keep the generated test project name; do not substitute your application project:
+
+```sh
+docker compose --env-file /dev/null -f compose.infrastructure.yml \
+  -p "$README_TEST_PROJECT" --profile tools down --volumes --remove-orphans
+```
+
+Integration fixtures clean up their own separate test projects. The command above removes only the named helper project, without deleting application data or downloaded model weights. The complete [demo guide](docs/submission-demo.md#2-run-the-free-verification-gate) explains the success, expected-fault and intentionally red demonstrations.
 
 To demonstrate live ingestion without a model or key, run `make smoke-ingestion` (about 40 seconds with cached images). It samples the public stream for 30 seconds in an isolated project, prints validated topic records and counts, and cleans up. See [Phase 2](docs/phases/02-ingestion.md) for exact expected fixture outputs, interactive `rpk` inspection, metrics, cleanup, and reconnect limitations.
 
@@ -125,22 +157,23 @@ Allow a few seconds after publication. Expect three synthetic decisions; revisio
 
 The default local model is **Qwen2.5 7B** (about 4.7 GB of weights). Allow approximately 12 GB free disk for the local setup and 12 GiB of Docker memory; the recorded run used a 32 GiB Apple Silicon machine. These are practical starting allocations, not validated minimums. Use hosted inference on smaller machines.
 
-Create the private profiles once on a fresh clone, preserving existing files:
+Create the local profile once, preserving any existing file:
 
 ```sh
 test -f .env.local || (umask 077; cp .env.local.example .env.local)
-test -f .env.frontier || (umask 077; cp .env.frontier.example .env.frontier)
 ```
 
 Start local mode:
 
 ```sh
 ./scripts/start-local.sh
+docker compose ps -a
+docker compose logs -f model-init
 ```
 
 The script validates `.env.local`, stops the previous mode while retaining volumes, copies it over `.env`, and starts the stack in the background. Edit `.env.local` for lasting local settings. See the [startup guide](docs/startup.md) for switching, failure behavior, and focused tests.
 
-`topics`, `db-migrate`, and `model-init` are one-time initialization services: **exit code 0 is success**. Wait for `model-init` to report `success`. First startup downloads model weights; later starts reuse the persistent volume. Redpanda, Postgres, both Connect pipelines, the results API, and Ollama remain running. Connect starts ingesting with deterministic 1% selection. The worker waits for model initialization, then processes **ten edits** by default and exits successfully. Each ready edit normally takes two model calls, at most four. Set `WORKER_MAX_ITEMS=0` in the selected profile for continuous processing. After model initialization completes, an optional extra connectivity check is:
+`topics`, `db-migrate`, and `model-init` are one-time initialization services: **exit code 0 is success**. Wait for `model-init` to report `success`; Ctrl+C ends log viewing if it remains open, without stopping services. First startup downloads model weights; later starts reuse the persistent volume. Redpanda, Postgres, both Connect pipelines, the results API, and Ollama remain running. Connect starts ingesting with deterministic 1% selection. The worker waits for model initialization, then processes **ten edits** by default and exits successfully. Each ready edit normally takes two model calls, at most four. Set `WORKER_MAX_ITEMS=0` in the selected profile for continuous processing. After model initialization completes, an optional extra connectivity check is:
 
 ```sh
 make smoke-model
@@ -152,19 +185,27 @@ Connect readiness and metrics use host loopback port 4195 (configurable with `CO
 
 ```sh
 docker compose exec redpanda rpk topic list
-docker compose exec postgres psql -U triage -d triage -c 'TABLE schema_migrations;'
+docker compose exec -T postgres psql -U triage -d triage \
+  -c 'TABLE schema_migrations;' -c "SELECT to_regclass('public.triage_results');" </dev/null
 ```
 
 Expected: five topics (`edits`, `results`, `ingest-errors`, `processing-errors`, `sink-errors`), migration versions `1` and `2`, and the `triage_results` table. Existing Phase 1 volumes are migrated automatically; retain their administrator database password. Startup also reconciles restricted `triage_reader` and `triage_writer` roles. See the [security follow-up](docs/phases/06-security-quality.md#applying-the-database-permissions) for service passwords and rotation.
 
 ## Run with a hosted frontier model
 
-The first supported hosted provider is OpenAI, using its Chat Completions API. A user-supplied key and provider billing are required. The model name is configurable; **GPT-6.1 Sol** was verified in the smoke check. Other models/providers are not automatically guaranteed compatible.
+The supported hosted provider is OpenAI, using its Chat Completions API. A user-supplied key, billing and access to the selected model are required. The model name is configurable; **GPT-6.1 Sol** has [recorded 20 October evaluation evidence](docs/evaluations/submission-demo.md). Recheck your chosen model now; other models/providers are not automatically guaranteed compatible.
+
+You can start here without running Ollama. Create the frontier profile once, preserving any existing file:
+
+```sh
+test -f .env.frontier || (umask 077; cp .env.frontier.example .env.frontier)
+```
 
 Edit `.env.frontier` and set your `OPENAI_API_KEY`. Its template already selects `COMPOSE_FILE=compose.infrastructure.yml`, `LLM_BACKEND=openai`, `LLM_MODEL=gpt-6.1-sol`, and `LLM_BASE_URL=https://api.openai.com/v1`. Then:
 
 ```sh
 ./scripts/start-frontier.sh
+docker compose ps -a
 ```
 
 The script validates the profile, stops the current stack without deleting volumes, copies `.env.frontier` over `.env`, and starts the hosted configuration. **Startup now begins paid model processing**, bounded to ten edits / at most 40 calls per worker run by default. The configuration preflight itself is offline. To make an additional connectivity check afterward:
@@ -173,7 +214,23 @@ The script validates the profile, stops the current stack without deleting volum
 make smoke-model
 ```
 
-Hosted mode starts **no Ollama container and downloads no local weights**. The smoke makes one paid request with a 1,024-token completion budget, including any reasoning tokens. The smoke makes one attempt. Reasoning has a shared four-call budget including repairs/retries; there is no fallback between providers. Secrets stay in `.env` and out of Git, build context, CLI output, and committed evidence. Allow about 4 GiB of Docker memory for this foundation without local inference.
+Hosted mode starts **no Ollama container and downloads no local weights**. The smoke makes one paid request with the profile's completion budget (1,024 tokens by default), including any reasoning tokens. The smoke makes one attempt. Reasoning has a shared four-call budget including repairs/retries; there is no fallback between providers. Private keys stay in the untracked frontier profile and active `.env`, outside the Docker build context and committed evidence. Allow about 4 GiB of Docker memory as a starting allocation without local inference; this is not a validated minimum.
+
+## Check the selected mode and view results
+
+After either launcher, inspect the worker and query the read-only API (default port 8000):
+
+```sh
+docker compose logs --tail=20 worker
+curl --fail --silent --show-error --connect-timeout 3 --max-time 15 \
+  --write-out '\n' http://localhost:8000/health/ready
+curl --fail --silent --show-error --connect-timeout 3 --max-time 15 \
+  --write-out '\n' 'http://localhost:8000/results?analysis_version=triage-v1&limit=5'
+```
+
+Expected readiness is `{"status":"ready"}`. The results response has `items` and `next_before_id`; an empty list is normal before selected edits finish and the asynchronous sink stores them. If startup is still in progress, wait and retry. Use your configured `API_PORT` if changed. A successful ten-edit batch logs `worker_stopped` with `processed: 10`; run `docker compose start worker` for the next batch. The fixed 1% sample and model speed affect how long that takes. Unusable evidence may produce `insufficient_evidence`; technical failures go to `processing-errors`, so consumed-event counts need not equal stored-row counts.
+
+For a bounded nine-case model evaluation, use `./scripts/test-local.sh` or `./scripts/test-frontier.sh` after creating that mode's profile. These leave active `.env` unchanged and do not start ingestion or a worker; any existing application continues independently. A pass prints `PASS: 9/9 cases` and saves `reports/model-local.json` or `reports/model-frontier.json`. A failure exits nonzero and must be investigated; a small fixed-case pass does not establish general accuracy. Hosted evaluation makes up to 28 paid calls. See the [operator guide](docs/operations.md#check-a-real-model-without-starting-the-full-application) for isolation, report freshness and cleanup.
 
 ## Use native Ollama or another local model
 
@@ -192,7 +249,7 @@ LLM_MODEL=qwen2.5:7b
 LLM_BASE_URL=http://host.docker.internal:11434
 ```
 
-The native server must accept connections from Docker; the Compose tool container supplies a host-gateway mapping. If it refuses connections, check the server's listen address and firewall. Native-host inference is an optional path; the recorded local smoke used containerized Ollama. Changing a model requires its own quality check in later phases.
+The native server must accept connections from Docker; both the worker and model-check container supply a host-gateway mapping. If it refuses connections, check the server's listen address and firewall. Native-host inference is an optional path; the recorded local smoke used containerized Ollama. Re-evaluate any different model using the current [model-test instructions](docs/operations.md#check-a-real-model-without-starting-the-full-application).
 
 To change the model managed by the local launcher, edit `.env.local`: keep `COMPOSE_FILE=docker-compose.yml` and `LLM_BASE_URL=http://ollama:11434`, and set **both** `OLLAMA_MODEL` (download) and `LLM_MODEL` (request) to the same tag. Rerun `./scripts/start-local.sh`. The local adapter disables thinking where supported and requests deterministic sampling; the worker validates output shape and source quotes. Image digests and Python dependencies are pinned. Model tags can move: record the actual model digest for evaluation runs.
 

@@ -1,5 +1,7 @@
 # Progress
 
+This is a chronological history, not a list of current blockers. Earlier entries retain their original counts, branch states and next steps. As of the 22 October 2026 baseline check, PRs #1–#20 are merged and main `7a34108` passed 453 unit / 32 integration / 72 Connect cases with 100% application line/branch coverage and zero CI warnings or annotations. Use the [handover](handover.md) and [current demo guide](submission-demo.md) for current instructions.
+
 ## 20 October 2026 — Phase 0
 
 Completed planning activities:
@@ -222,3 +224,9 @@ Started `docs/walkthrough-refresh` from merged main `30510a8` after PR #19. Corr
 The [refresh record](phases/06-walkthrough-refresh.md) documents reproduction and scope. Local `make verify-phase-6` passed 453 unit / 32 integration / 72 Connect cases with 100% of 1,172 lines and 286 branches, no missing/excluded lines or emitted warnings. Artifact checks cover 36 PDF pages, 34 contents destinations, seven interactive traces, 18 provider/case views and 14 slides at four viewport widths. No model calls or new vulnerability scans were made. The entire root README, original assignment and application/test/workflow files are unchanged; the [new conversation log](ai-log/sessions/2026-10-22-walkthrough-refresh.md) records only this refresh. Damien retains review/merge control.
 
 Review: [PR #20](https://github.com/damogallagher/redpanda/pull/20), initial content commit `af110ea`. GitGuardian passed; the separate Phase 6 PR workflow was in progress when this link was recorded. The PR shows current checks for the final head.
+
+## 22 October 2026 — Final repository documentation review
+
+Reviewed merged main `7a34108` after PR #20 and opened `docs/final-repository-review`. Improved the README's first-run prerequisites, independent local/frontier setup, profile handling, bounded costs, API inspection and test-helper cleanup. Corrected the database command's expected-output mismatch, the five-case foundation target, and the stale pending-evaluation statement. Added clear historical scope to plans, phase records, progress, dependency reviews and model/scan results; original evidence and conversation wording are retained.
+
+The local cumulative gate passed **453 unit / 32 integration / 72 Connect cases**, **100% of 1,172 lines and 286 branches**, with zero failures, skips, exclusions or emitted warnings. The README's profile-copy commands preserved existing files; its topic/schema/API/detail commands passed on isolated synthetic data from a clean tracked-file export. Cleanup retained all 24 existing volumes and left no containers. No model calls, live feed requests or new vulnerability scans were made. The [audit record](phases/06-final-review.md), [verification](evidence/final-repository-review.json) and [conversation](ai-log/sessions/2026-10-22-final-repository-review.md) record scope and checks. Personal README sections, study-pack artifacts, assignment and runtime/test/configuration files are unchanged.

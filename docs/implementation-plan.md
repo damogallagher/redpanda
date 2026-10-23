@@ -1,12 +1,12 @@
 # Implementation plan
 
-Date: 20 October 2026. Status: implementation plan with user-confirmed direction; exact model/version and capacity remain to be measured. This is engineering planning, not the candidate's required personal write-up.
+Historical plan, agreed on 20 October 2026 before implementation. Phases 1–6 and their follow-ups are now merged; use the [handover](handover.md), [phase verification guide](phase-verification.md) and [README](../README.md) for the delivered system and current commands. The proposals below explain the original decisions, not unfinished work or instructions to reset the repository again. This is engineering planning, not the candidate's required personal write-up.
 
 ## Scope and evidence
 
 The assignment is preserved unchanged in [the original assignment file](assignment/fde-take-home-exercise.md), supplied by Damien. Use the [phase verification guide](phase-verification.md) to run and assess each completed checkpoint. His additional requirements are a simple, production-quality implementation, 100% unit-test coverage, phase documentation, a prompt/response log, and one branch/PR per phase into `main`.
 
-Damien explicitly requested entirely new work and removal of previous repository history. Initialize a fresh main baseline, then open the planning PR. Do not restore, reuse, or describe earlier implementation as work completed for this build.
+At planning time Damien explicitly requested entirely new work and removal of the earlier repository history. That one-time reset preceded this build. Preserve the current phase history; no further reset is intended.
 
 ## Proposed product and minimal architecture
 

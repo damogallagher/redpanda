@@ -1,5 +1,7 @@
 # Phase 00: Planning and audit trail
 
+Historical checkpoint, merged in [PR #1](https://github.com/damogallagher/redpanda/pull/1). Behavior, versions, counts and handover statements below describe their recorded commits. Check out the recorded revision to reproduce that checkpoint. For the current system, use the [README](../../README.md), [verification commands](../phase-verification.md) and [handover](../handover.md).
+
 Status: planning documents prepared; validation and PR evidence recorded in progress log.
 Branch: `phase/00-plan`. Base: fresh `main` baseline. PR: [#1](https://github.com/damogallagher/redpanda/pull/1).
 
@@ -25,7 +27,7 @@ A reviewer can trace each assignment requirement to a planned phase and see whic
 
 ## Actual work and evidence
 
-Prepared the implementation plan, six phase specifications, test policy, PR template, README scaffold, progress record, and visible interaction log. Verified relative links across all 15 Markdown files (zero broken links) and passed `git diff --cached --check`. See the planning PR and progress log. No application tests exist yet.
+Prepared the implementation plan, six phase specifications, test policy, PR template, README scaffold, progress record, and visible interaction log. Verified relative links across all 15 Markdown files (zero broken links) and passed `git diff --cached --check`. See the planning PR and progress log. No application tests existed at this planning checkpoint.
 
 ## Walkthrough checkpoint
 

@@ -1,5 +1,7 @@
 # Phase 05: Persistence and readable results
 
+Historical checkpoint, merged in [PR #9](https://github.com/damogallagher/redpanda/pull/9). Behavior, versions, counts and handover statements below describe their recorded commits. Check out the recorded revision to reproduce that checkpoint. For the current system, use the [README](../../README.md), [verification commands](../phase-verification.md) and [handover](../handover.md).
+
 Status: implemented, verified locally and in Linux CI, and merged in [PR #9](https://github.com/damogallagher/redpanda/pull/9) as `c19565d`.
 Branch: `phase/05-serving`, from merged PR #8 (`b80908b`). Damien reviews and merges.
 

@@ -1,5 +1,7 @@
 # Model acceptance rubric
 
+The rubric is used by the current model-test scripts. The observations below are historical 20 October 2026 runs, before later evidence-limit/security changes and the Ollama image update. Use the [current demo guide](../submission-demo.md) to evaluate your selected configuration.
+
 The nine synthetic cases in `tests/fixtures/acceptance/cases.json` were frozen before the first Phase 6 model run. They were not used for the Phase 4 prompt tuning. Seven ready comparisons require the exact declared decision, valid grounded output and two to four calls; two unavailable/empty comparisons require abstention with zero calls. Maximum: 28 calls per run. Technical provider failure stops the run early and fails it; a wrong decision fails the case but the remaining cases continue.
 
 The rubric covers punctuation, reordered facts, reversed negation, changed study population, removed attribution, replaced supporting citation, and two distinct hunks. These are small acceptance examples, not a statistical accuracy benchmark. The program checks decisions, grounding and budgets; read explanations against the per-case rubric as well. No automated judge is used. Damien's independent review is still required.
@@ -25,4 +27,4 @@ After the runtime image was hardened (commit `7fc26f1`), one additional hosted s
 
 ## Live-feed quality is separate
 
-The fresh-start observation on the final hardened image produced three `insufficient_evidence` results, all after invalid extraction output (two attempts each). It verified safe abstention/delivery but **zero successful semantic assessments** in that sample. The earlier public-feed observation produced two routine and one review result. Both are retained in the Phase 6 record; neither is a representative accuracy estimate. The small nine-case success should not be extrapolated to large, messy Wikipedia diffs. No prompt tuning or expected-label changes were made to erase this limitation.
+The fresh-start observation on the image hardened during Phase 6 produced three `insufficient_evidence` results, all after invalid extraction output (two attempts each). It verified safe abstention/delivery but **zero successful semantic assessments** in that sample. The earlier public-feed observation produced two routine and one review result. Both are retained in the Phase 6 record; neither is a representative accuracy estimate. The small nine-case success should not be extrapolated to large, messy Wikipedia diffs. No prompt tuning or expected-label changes were made to erase this limitation.

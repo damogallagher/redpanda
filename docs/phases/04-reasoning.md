@@ -1,6 +1,8 @@
 # Phase 4: Multi-step reasoning and durable delivery
 
-Status: implemented and verified locally and in Linux CI. [PR #8](https://github.com/damogallagher/redpanda/pull/8) is open for Damien’s review.
+Historical checkpoint, merged in [PR #8](https://github.com/damogallagher/redpanda/pull/8). Behavior, versions, counts and handover statements below describe their recorded commits. Check out the recorded revision to reproduce that checkpoint. For the current system, use the [README](../../README.md), [verification commands](../phase-verification.md) and [handover](../handover.md).
+
+Status: implemented and verified locally and in Linux CI. [PR #8](https://github.com/damogallagher/redpanda/pull/8) was merged by Damien before Phase 5.
 Branch: `phase/04-reasoning`, based on merged PR #7 (`efbd03a`). Damien reviews and merges.
 
 ## What changed
@@ -151,8 +153,8 @@ The adapter follows the official [Confluent Python API](https://docs.confluent.i
 
 ## Review handover
 
-[PR #8](https://github.com/damogallagher/redpanda/pull/8) remains unmerged. The [first Linux CI run](https://github.com/damogallagher/redpanda/actions/runs/39471232357) passed on `1d56d5a` in 2m20s. The final parser hardening additionally rejects excessive nesting in both provider envelopes and model JSON; its 333-test local gate is recorded above. [Current PR checks](https://github.com/damogallagher/redpanda/pull/8/checks) show verification of the latest head, with downloadable `phase-4-test-reports` artifacts.
+[PR #8](https://github.com/damogallagher/redpanda/pull/8) was awaiting review at this checkpoint and is now merged. The [first Linux CI run](https://github.com/damogallagher/redpanda/actions/runs/39471232357) passed on `1d56d5a` in 2m20s. The final parser hardening additionally rejects excessive nesting in both provider envelopes and model JSON; its 333-test local gate is recorded above. [Current PR checks](https://github.com/damogallagher/redpanda/pull/8/checks) show verification of the latest head, with downloadable `phase-4-test-reports` artifacts.
 
-Damien's clean checkout is on `phase/04-reasoning`. The exact `make demo-reasoning UV='uvx --from uv==0.13.3 uv'` command passed there: two scenarios in 14.52 seconds, including printed rpk results and failed-publication replay. All three private profiles remained byte-for-byte unchanged. The existing four running demo services and their volumes were retained; the updated launcher starts the new worker when Damien chooses to run it. Review/merge stays with Damien; Phase 5 is not started.
+At this handover, Damien's clean checkout was on `phase/04-reasoning`. The exact `make demo-reasoning UV='uvx --from uv==0.13.3 uv'` command passed there: two scenarios in 14.52 seconds, including printed rpk results and failed-publication replay. All three private profiles remained byte-for-byte unchanged. The existing four running demo services and their volumes were retained; the updated launcher starts the new worker when Damien chooses to run it. Review/merge stayed with Damien; Phase 5 had not started at that checkpoint.
 
 Final implementation CI passed on `1154c86`: [Linux workflow and artifacts](https://github.com/damogallagher/redpanda/actions/runs/39472093773). This run includes the 333-test suite and nesting regressions. The user's checkout also passed all 333 unit tests in 3.03 seconds with 100% line/branch coverage. All 131 relative documentation links resolved. The closing commit records CI and the visible handover only; application code remains `63de01e`.

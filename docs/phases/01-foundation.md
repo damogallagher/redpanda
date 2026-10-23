@@ -1,5 +1,7 @@
 # Phase 01: Foundation and feasibility
 
+Historical checkpoint, merged in [PR #3](https://github.com/damogallagher/redpanda/pull/3). Behavior, versions, counts and handover statements below describe their recorded commits. Check out the recorded revision to reproduce that checkpoint. For the current system, use the [README](../../README.md), [verification commands](../phase-verification.md) and [handover](../handover.md).
+
 Status: implemented and locally verified; PR #3 merged by Damien on 20 October 2026.
 Branch: `phase/01-foundation`. Base: merged Phase 0/documentation work (`8e0fa6e`).
 
@@ -19,7 +21,7 @@ No live Wikipedia ingestion, multi-step reasoning, sink, or serving API is inclu
 
 ## Versions and resources
 
-The [dependency update record](01-dependency-updates.md) documents the latest pins and verification. The initial Phase 1 evidence at the end of this page retains its original versions and results.
+The [dependency update record](01-dependency-updates.md) documents the Phase 1 maintenance pins and verification; current pins are in the root configuration files. The initial Phase 1 evidence at the end of this page retains its original versions and results.
 
 - Python 3.13.16, uv 0.13.3, Hatchling 1.32.4; runtime/test dependencies and hashes in `uv.lock`.
 - Redpanda v26.2.5; Postgres 16.15-bookworm; Ollama 0.40.6; Python slim image. All container bases use multi-architecture manifest digests for ARM64/AMD64.

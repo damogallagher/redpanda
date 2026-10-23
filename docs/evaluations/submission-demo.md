@@ -1,10 +1,12 @@
 # Executed submission demo — 20 October 2026
 
+Historical execution evidence for the commits and images recorded here. Later evidence-limit/security changes and the Ollama image update are not a new model evaluation. Follow the [current demo guide](../submission-demo.md) for a fresh run; it includes subsequent setup and diagnostic corrections.
+
 Requested after PR #11 merged. Extends the walkthrough in PR #12, which merged during execution; the fix is on `fix/submission-demo` from main `447920f`. The execution uses project `triage-submission-20261020`, private copies of the selected profiles, random loopback ports, empty broker/database/model volumes, and exactly three live edits per provider. Existing user data/model volumes and private profiles are retained. The application implementation at the start is unchanged from `55fdf4e`; execution begins at documentation commit `92262eb`.
 
 ## Reproduction
 
-Follow [the walkthrough](../submission-demo.md). The recorded execution uses a separate project and port 0 in its private profile copies, with `WORKER_MAX_ITEMS=3` and `INGEST_SAMPLE_ALL=true`; commands and application code are otherwise the same. Run Ollama's fixed cases and live batch first, reset only this demonstration's data, then run frontier fixed cases and live batch. The maximum initial hosted budget is 40 requests. Original profiles are restored afterward.
+Follow [the walkthrough](../submission-demo.md). The recorded execution uses a separate project and port 0 in its private profile copies, with `WORKER_MAX_ITEMS=3` and `INGEST_SAMPLE_ALL=true`; the original execution used the application code identified above. Current instructions and behavior include later fixes, so new outcomes and model-call counts may differ. Run Ollama's fixed cases and live batch first, reset only this demonstration's data, then run frontier fixed cases and live batch. The maximum initial hosted budget is 40 requests. Original profiles are restored afterward.
 
 Fixed cases and prompt templates are frozen before this run, identified by hashes in the evidence manifest. These are regression checks of previously used cases, not newly held-out evaluation. Actual failures, fixes, reruns and abstentions are retained. Live source content/model behavior varies; safe abstention does not establish semantic accuracy.
 

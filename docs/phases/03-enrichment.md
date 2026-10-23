@@ -1,5 +1,7 @@
 # Phase 3: Wikipedia revision enrichment
 
+Historical checkpoint, merged in [PR #7](https://github.com/damogallagher/redpanda/pull/7). Behavior, versions, counts and handover statements below describe their recorded commits. Check out the recorded revision to reproduce that checkpoint. For the current system, use the [README](../../README.md), [verification commands](../phase-verification.md) and [handover](../handover.md).
+
 Status: implemented and verified locally and in Linux CI. [PR #7](https://github.com/damogallagher/redpanda/pull/7) was merged by Damien before Phase 4.
 Branch: `phase/03-enrichment`, based on merged PR #6 (`9749745`). Damien reviews and merges.
 

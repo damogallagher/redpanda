@@ -1,6 +1,8 @@
 # Phase 02: Connect ingestion and routing
 
-Status: implemented; awaiting Damien's review and merge in [PR #6](https://github.com/damogallagher/redpanda/pull/6).
+Historical checkpoint, merged in [PR #6](https://github.com/damogallagher/redpanda/pull/6). Behavior, versions, counts and handover statements below describe their recorded commits. Check out the recorded revision to reproduce that checkpoint. For the current system, use the [README](../../README.md), [verification commands](../phase-verification.md) and [handover](../handover.md).
+
+Status: implemented and merged in [PR #6](https://github.com/damogallagher/redpanda/pull/6).
 Branch: `phase/02-ingestion`, from merged PR #5 at `cf2cf4c`.
 Ingestion and cleanup tested: `0b9e370`. The later [startup follow-up](../startup.md), tested at `d550e78`, adds launchers and profile tests; original ingestion evidence remains unchanged.
 

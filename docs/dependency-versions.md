@@ -1,7 +1,7 @@
 # Dependency version review
 
 Reviewed on 20 October 2026 against merged Phase 1 (`62f2330`).
-This historical snapshot records the recommendations made before implementation. The subsequent [dependency update record](phases/01-dependency-updates.md) documents their implementation and verification.
+This historical snapshot records the recommendations made before implementation. For the checked-in versions, read `pyproject.toml`, `uv.lock`, `Dockerfile`, the Compose files and `.github/workflows/ci.yml`; the later [security follow-up](phases/06-security-quality.md) includes the Ollama 0.40.8 and vendor-digest updates. The subsequent [dependency update record](phases/01-dependency-updates.md) documents their implementation and verification.
 
 ## PostgreSQL
 

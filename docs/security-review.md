@@ -1,6 +1,8 @@
 # Phase 6 security and dependency review
 
-Reviewed 20 October 2026. Scope: this local exercise, its locked Python environment, application boundaries, scripts, and container configuration. This is not a penetration test or certification.
+Historical audit sequence: the initial 20 October 2026 findings are retained below; the [21–22 October follow-up](#2122-october-2026-security-and-code-quality-follow-up) supersedes its role, tool and image descriptions. Read the later scan table for the selected images and remaining findings. No new container vulnerability scan is implied by a later passing functional CI run.
+
+Initial scope: this local exercise, its locked Python environment, application boundaries, scripts, and container configuration. This is not a penetration test or certification.
 
 ## Locked Python dependencies
 
@@ -30,7 +32,7 @@ Observed exit 0: **36 installed packages, zero known vulnerabilities, zero skipp
 ## Boundary review
 
 - Real content is treated as untrusted text. Fixed Wikipedia endpoint, bounded response size/time, strict provenance checks, schema validation and exact-source quotes limit malformed/injected content. The model cannot execute tools or alter Wikipedia. Semantic mistakes remain possible.
-- Kafka acknowledges output before committing input. Native Connect tests and real recovery drills cover invalid records, failed publication, replay and duplicate upsert. SQL uses bound parameters, API limits and sanitized errors. Database role separation/TLS/auth are not part of this local deployment.
+- Kafka acknowledges output before committing input. Native Connect tests and real recovery drills cover invalid records, failed publication, replay and duplicate upsert. SQL uses bound parameters, API limits and sanitized errors. At this initial checkpoint, database role separation/TLS/auth were not implemented. The later follow-up adds role separation; TLS and API user authentication remain deployment work.
 - Default ports exposed to the host bind to loopback. App containers run non-root with read-only filesystems, dropped capabilities and no-new-privileges. Docker still requires a trusted local operator.
 - `.env` and both profiles remain ignored and outside the explicit Docker build allowlist. Model-only test commands capture config in memory without printing it; failure tests check redaction. Reports save only curated synthetic prompts and outputs with private file permissions. Runtime logs retain bounded metadata, not routine full prompts/responses.
 - Cleanup defaults retain all volumes; destructive flags require exact project/logical-volume labels and reject external volumes. Tests verify separate data/weight deletion and another project's sentinel preservation. No global pruning or host-model deletion is implemented.

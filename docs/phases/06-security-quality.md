@@ -1,6 +1,8 @@
 # Security and code-quality follow-up
 
-Requested 21 October 2026. Branch `hardening/security-quality-audit` follows the evidence-count fix in PR #15. PR #15 merged during this audit; the unpublished branch was fast-forwarded to main `298edac` with an identical tree before committing. This PR targets main directly. Damien retains merge control. PRs #13 and #14 remain separate. The original assignment and independent personal README sections are unchanged.
+Historical checkpoint, merged in [PR #16](https://github.com/damogallagher/redpanda/pull/16). Behavior, versions, counts and handover statements below describe their recorded commits. Check out the recorded revision to reproduce that checkpoint. For the current system, use the [README](../../README.md), [verification commands](../phase-verification.md) and [handover](../handover.md).
+
+Requested 21 October 2026. Branch `hardening/security-quality-audit` follows the evidence-count fix in PR #15. PR #15 merged during this audit; the unpublished branch was fast-forwarded to main `298edac` with an identical tree before committing. PR #16 targeted main directly and was merged by Damien. PRs #13 and #14 were separate at that checkpoint and were subsequently merged. The original assignment and independent personal README sections are unchanged.
 
 ## What changed and why
 
