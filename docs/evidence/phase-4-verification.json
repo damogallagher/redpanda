@@ -81,7 +81,7 @@
   "cleanup": "No triage-test containers, networks or volumes remained; user demo resources retained.",
   "handover_demo": {
     "command": "make demo-reasoning UV='uvx --from uv==0.13.3 uv'",
-    "checkout": "/Users/damien/Development/sourceControl/redpanda",
+    "checkout": "[REDACTED: local checkout path]",
     "tests": 2,
     "passed": 2,
     "seconds": 14.52,

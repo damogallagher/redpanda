@@ -157,7 +157,7 @@ Tested implementation commit: `29bf3c3b0a4f06a301cd73fa0c571c0bf4ded7ef`. Full e
 
 [PR #7](https://github.com/damogallagher/redpanda/pull/7) is open and [Linux CI passed](https://github.com/damogallagher/redpanda/actions/runs/39458242006) on `375902a` in 1m43s. The `phase-3-test-reports` artifact contains JUnit and coverage reports. Later commits only add audit/verification documentation; application code remains `29bf3c3`.
 
-The user’s checkout at `/Users/damien/Development/sourceControl/redpanda` is on `phase/03-enrichment`. `make inspect-enrichment` passed there, and both documented failure examples returned the expected JSON and exit 1. All three private environment files remained byte-for-byte unchanged.
+The user’s checkout at `[REDACTED: local checkout path]` is on `phase/03-enrichment`. `make inspect-enrichment` passed there, and both documented failure examples returned the expected JSON and exit 1. All three private environment files remained byte-for-byte unchanged.
 
 Next: Damien reviews this PR; Phase 4 begins only after merge and a new request.
 

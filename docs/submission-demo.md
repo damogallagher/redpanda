@@ -10,10 +10,10 @@ The commands below are for you to execute. Expected outcomes are based on the im
 
 Prerequisites: Docker Desktop with Compose 2.20+, Make, uv/uvx, and internet for initial downloads and live checks. Python 3.13.16 is installed by uv if needed. The local defaults use Qwen2.5 7B (about 4.7 GB of weights); see [README resource guidance](../README.md#run-with-a-local-model) before allocating Docker memory/disk. Hosted mode requires your own OpenAI key, billing and access to the configured model.
 
-This guide assumes a Git checkout so its update commands can select merged main. A ZIP supports normal README startup/tests, but has no Git history; use a clone for this sequence and the optional fresh-checkout acceptance target. These are POSIX-shell commands using Damien's macOS checkout path. Replace the `cd` path with your clone's location; on Linux, replace `open -e` below with your editor. Resolve any local Git changes before switching branches or pulling; do not discard them. Run one operation at a time and stop on any unexpected nonzero exit: these interactive blocks do not automatically stop later lines after an error. Start Docker Desktop and wait until it is ready, then:
+This guide assumes a Git checkout so its update commands can select merged main. A ZIP supports normal README startup/tests, but has no Git history; use a clone for this sequence and the optional fresh-checkout acceptance target. These are POSIX-shell commands. Replace `/path/to/redpanda` with your clone's location; on Linux, replace `open -e` below with your editor. Resolve any local Git changes before switching branches or pulling; do not discard them. Run one operation at a time and stop on any unexpected nonzero exit: these interactive blocks do not automatically stop later lines after an error. Start Docker Desktop and wait until it is ready, then:
 
 ```sh
-cd /Users/damien/Development/sourceControl/redpanda
+cd /path/to/redpanda
 git switch main
 git pull --ff-only
 docker info --format '{{.ServerVersion}}'

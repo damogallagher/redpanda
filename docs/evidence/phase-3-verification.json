@@ -79,7 +79,7 @@
   ],
   "pull_request": "https://github.com/damogallagher/redpanda/pull/7",
   "local_handover": {
-    "path": "/Users/damien/Development/sourceControl/redpanda",
+    "path": "[REDACTED: local checkout path]",
     "branch": "phase/03-enrichment",
     "private_profiles": "All three byte-for-byte unchanged",
     "walkthroughs": [

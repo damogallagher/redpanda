@@ -1,5 +1,7 @@
 # Submission demo walkthrough — 20 October 2026
 
+Privacy redaction: the personal checkout path in the historical commands is replaced with `/path/to/redpanda`. Substitute your own clone location.
+
 Context: PR #11 merged as `2b8b62c`; documentation follow-up. Commands are supplied for Damien to run; the assistant does not execute resets or paid inference during this turn.
 
 ## User
@@ -27,7 +29,7 @@ Use this sequence **one block at a time**. I saved the [complete walkthrough](ht
 Start Docker Desktop, then:
 
 ```sh
-cd /Users/damien/Development/sourceControl/redpanda
+cd /path/to/redpanda
 git switch main
 git pull --ff-only
 export UV='uvx --from uv==0.13.4 uv'
