@@ -1,5 +1,7 @@
 # Presentation study pack — 20 October 2026
 
+Privacy redaction: local artifact paths have been removed. Where available, local file links now point to the corresponding files in the repository; the historical ZIP path is redacted.
+
 Documentation/artifact authoring from frozen repository snapshot 859b166. No application or model execution is claimed.
 
 ## User
@@ -46,13 +48,13 @@ Can  you generate document and / or pdf / and or presentation / and or interacti
 
 Created a detailed study pack grounded in the repository and recorded test evidence.
 
-- [Download the complete pack](/Users/damien/Documents/Codex/2026-10-20/i-have-this-take-home-test/outputs/redpanda-study-pack.zip)
-- [Open the interactive companion](/Users/damien/Documents/Codex/2026-10-20/i-have-this-take-home-test/outputs/redpanda-study-companion.html) — phase explorer, six event traces, saved model responses, rehearsal questions and **14-slide presentation mode**.
-- [Editable written guide](/Users/damien/Documents/Codex/2026-10-20/i-have-this-take-home-test/outputs/redpanda-study-guide.md)
+- Download the complete pack — [REDACTED: local ZIP artifact path]
+- [Open the interactive companion](../../study-guide/redpanda-study-companion.html) — phase explorer, six event traces, saved model responses, rehearsal questions and **14-slide presentation mode**.
+- [Editable written guide](../../study-guide/redpanda-study-guide.md)
 
 The **36-page PDF** covers each phase’s purpose, inputs, outputs, tests and dependencies, plus architecture, failure handling, actual results, code walkthroughs and prioritized improvements.
 
-:codex-file-citation{path="/Users/damien/Documents/Codex/2026-10-20/i-have-this-take-home-test/outputs/redpanda-study-guide.pdf" purpose="output"}
+[PDF guide](../../study-guide/redpanda-study-guide.pdf)
 
 Everything is saved in [PR #14](https://github.com/damogallagher/redpanda/pull/14), including the updated prompt log. The PDF was visually reviewed and the HTML tested offline at desktop and mobile widths.
 

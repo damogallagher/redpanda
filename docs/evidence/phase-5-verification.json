@@ -81,7 +81,7 @@
   ],
   "pull_request": "https://github.com/damogallagher/redpanda/pull/9",
   "handover": {
-    "checkout": "/Users/damien/Development/sourceControl/redpanda",
+    "checkout": "[REDACTED: local checkout path]",
     "commit": "ce97ce2760c96d8beec05a261f7ec6005bef6ccb",
     "command": "make seed-results",
     "exit_code": 0,

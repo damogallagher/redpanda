@@ -1,5 +1,7 @@
 # Submission readiness — 22 October 2026
 
+Privacy redaction: the personal email address is explicitly redacted below. Local documentation links have been replaced with repository-relative links; the remaining historical wording is preserved.
+
 Initial read-only assessment of merged PR #17 (`54e31574266d33723fa4f69ce4feb1ab4e2848cd`), followed by the requested documentation cleanup. No application, profile, model, or container was changed. GitHub confirmed the repository is public and there were no open PRs/issues at the assessment. The merged tree matches the PR's closing tree. Main CI `39840801993` was still running during the initial assessment; its completed lint/dependency steps passed, with no check annotations at that point. The later completed result is recorded below; earlier replies retain their original wording.
 
 ## User
@@ -290,7 +292,7 @@ I can help you identify points from the project. One caution: the assignment exp
 
 ## Assistant — response
 
-Yes—here are **factual reminders and questions to help you find your own points**. The [assignment](/Users/damien/Documents/ChatGPT/Redpanda/repo/docs/assignment/fde-take-home-exercise.md:96) asks for these sections without AI help, so your conclusions and wording should come from you.
+Yes—here are **factual reminders and questions to help you find your own points**. The [assignment](../../assignment/fde-take-home-exercise.md#required-write-up-about-30-minutes) asks for these sections without AI help, so your conclusions and wording should come from you.
 
 For **Tradeoffs**, these two decisions have clear implementation evidence:
 
@@ -299,13 +301,13 @@ For **Tradeoffs**, these two decisions have clear implementation evidence:
 | Multi-step reasoning versus one classification call | Extraction of changes with exact quotes, assessment, and optional review or repair; a shared limit of four calls per edit. | What did inspecting the separate steps teach you? What extra complexity, latency or cost did you observe? What evidence would make you choose a single call? |
 | Connect as the sink versus database writes in Python | Python publishes results to Kafka. Connect validates and upserts them into Postgres. Replayed results retain one logical database row. | Which responsibilities did this separation make easier or harder to understand? What was awkward about maintaining the Connect configuration? Under what requirements would you move writes into Python? |
 
-Use the [reasoning record](/Users/damien/Documents/ChatGPT/Redpanda/repo/docs/phases/04-reasoning.md) and [persistence record](/Users/damien/Documents/ChatGPT/Redpanda/repo/docs/phases/05-serving.md) to check details. Choose these pairs only if you feel comfortable defending them.
+Use the [reasoning record](../../phases/04-reasoning.md) and [persistence record](../../phases/05-serving.md) to check details. Choose these pairs only if you feel comfortable defending them.
 
 For **Surprises and production failure modes**, revisit these actual observations:
 
-- **Passing fixed model cases did not guarantee success on live edits.** Ollama passed nine fixed cases, then abstained on two of three live edits after invalid extraction output. See the [executed demo](/Users/damien/Documents/ChatGPT/Redpanda/repo/docs/evaluations/submission-demo.md).
-- **Two individually valid limits conflicted.** Enrichment previously accepted up to 20 change blocks, while extraction could represent only eight. The [fix](/Users/damien/Documents/ChatGPT/Redpanda/repo/docs/phases/06-evidence-limits.md) detects oversized evidence before spending model calls.
-- **Production limits remain explicit.** A sequential worker can fall behind ingestion; the upstream stream can lose events across reconnects; public deployment needs additional security and operational controls. See the [handover](/Users/damien/Documents/ChatGPT/Redpanda/repo/docs/handover.md).
+- **Passing fixed model cases did not guarantee success on live edits.** Ollama passed nine fixed cases, then abstained on two of three live edits after invalid extraction output. See the [executed demo](../../evaluations/submission-demo.md).
+- **Two individually valid limits conflicted.** Enrichment previously accepted up to 20 change blocks, while extraction could represent only eight. The [fix](../../phases/06-evidence-limits.md) detects oversized evidence before spending model calls.
+- **Production limits remain explicit.** A sequential worker can fall behind ingestion; the upstream stream can lose events across reconnects; public deployment needs additional security and operational controls. See the [handover](../../handover.md).
 
 Which observation actually surprised you? What assumption did it change? Which failure would you address first, and why?
 
@@ -324,7 +326,7 @@ Read the original write-up requirements and existing implementation/evaluation r
 
 ## User
 
-Send an email to damien.gallagher@gmail.com with keypoints I should add to any section that I need to update
+Send an email to [REDACTED: personal email address] with keypoints I should add to any section that I need to update
 
 ## Assistant — progress
 
@@ -332,7 +334,7 @@ I’ll email you a concise checklist for each README section, with factual remin
 
 ## Sent email
 
-Recipient: damien.gallagher@gmail.com
+Recipient: [REDACTED: personal email address]
 
 Subject: Redpanda submission — README sections to finish and final checklist
 
@@ -390,4 +392,4 @@ Gmail confirmed successful sending with the SENT label. No README, application, 
 
 ## Assistant — response
 
-Sent to **damien.gallagher@gmail.com** with section-by-section points, links to the project evidence, and the final submission checklist.
+Sent to **[REDACTED: personal email address]** with section-by-section points, links to the project evidence, and the final submission checklist.

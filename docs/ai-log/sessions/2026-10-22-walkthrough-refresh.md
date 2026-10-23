@@ -1,5 +1,7 @@
 # Walkthrough refresh - 22 October 2026
 
+Privacy redaction: the local PDF path has been replaced with a repository-relative link.
+
 Scope: update walkthrough documentation and study artifacts from merged main `30510a8`; preserve personal README sections. This log starts with the new documentation request and does not reconstruct the previously omitted personal-writing exchanges. Tool outcomes are recorded separately in the phase/evidence files.
 
 ## User
@@ -48,4 +50,4 @@ Opened [PR #20](https://github.com/damogallagher/redpanda/pull/20) for review.
 
 Your personal README sections are unchanged. No live model calls were made.
 
-:codex-file-citation{path="/Users/damien/Documents/ChatGPT/Redpanda/repo/docs/study-guide/redpanda-study-guide.pdf" purpose="output"}
+[PDF guide](../../study-guide/redpanda-study-guide.pdf)
